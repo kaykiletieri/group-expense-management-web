@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+/tmp
+out-tsc/
+coverage/
+
+# Angular
+.angular/
+.npmrc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Env
+.env
+.env.*
+!.env.example
