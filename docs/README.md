@@ -14,6 +14,7 @@ Frontend Angular do Group Expense Management. Consome a API do repositório irm�
 | `design-system.md` | Tokens de design, tipografia, componentes, padrões |
 | `ui-spec.md` | Mapa de rotas/telas, contratos de API por tela, estados e mensagens |
 | `decisions.md` | Registro de decisões (ADRs) |
+| `deploy.md` | Build, fontes self-hosted e publicação same-origin |
 
 ## Referências visuais (fonte canônica)
 

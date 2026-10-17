@@ -10,7 +10,7 @@
   (sem Angular Material, PrimeNG etc.).
 - **Sem NgRx / stores externos**: estado via `signal()` em services.effects não usado
   diretamente para estado; preferir computeds e calls explícitos.
-- Fontes via Google Fonts CDN no MVP; self-host na etapa de publicação (D3).
+- Fontes self-hosted em `public/fonts/` (ver `deploy.md`; decisão D3 atualizada).
 - Ícones: Material Symbols Outlined (fonte).
 
 ## Scaffold

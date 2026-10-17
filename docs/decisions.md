@@ -11,8 +11,9 @@ e atualização deste registro.
 - **D2 — Sem kit de UI e sem Tailwind na implementação.**
   Componentes próprios com tokens em SCSS/custom properties (permitir fidelidade total aos
   protótipos editorial hard-shadow). Tailwind só existe nos HTML de protótipo.
-- **D3 — Fontes Space Grotesk + Manrope + Material Symbols via CDN no MVP; self-host na
-  etapa de publicação.** Menor atrito agora; publicação sem CDN externo é hardening.
+- **D3 — Fontes Space Grotesk + Manrope + Material Symbols self-hosted** (`public/fonts/`,
+  referenciadas por `fonts/fonts.css`; script de regeneração em `tools/download-fonts.ps1`).
+  Inicialmente via CDN no MVP; migração para self-host concluída na etapa de publicação.
 - **D4 — Dinheiro como centavos inteiros em toda a UI.** Formatação central `formatBrl`;
   input com máscara própria e conversão testada. Jamais float/double no cliente.
 - **D5 — Auth por cookie httpOnly + proxy dev same-origin (`/api → https://localhost:3000`,
