@@ -113,14 +113,23 @@
               <span class="expense-split tabular-nums">
                 ÷ {{ expense.shares.length }} · {{ shareEstimate(expense) }} cada
               </span>
-              <button
-                class="expense-delete"
-                type="button"
-                aria-label="Excluir despesa"
-                (click)="confirmDeleteExpense(expense)"
-              >
-                <span class="material-symbols-outlined">delete</span>
-              </button>
+              <div class="expense-actions">
+                <a
+                  class="expense-edit"
+                  routerLink="/grupos/{{ groupId }}/despesas/{{ expense.id }}/editar"
+                  aria-label="Editar despesa"
+                >
+                  <span class="material-symbols-outlined">edit</span>
+                </a>
+                <button
+                  class="expense-delete"
+                  type="button"
+                  aria-label="Excluir despesa"
+                  (click)="confirmDeleteExpense(expense)"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
             </div>
           </li>
         }

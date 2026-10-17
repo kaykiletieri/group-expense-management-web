@@ -196,6 +196,26 @@ h2 {
   font-size: var(--text-caption);
 }
 
+.expense-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.expense-edit,
+.expense-edit:hover,
+.expense-edit:focus-visible {
+  border-color: transparent;
+  color: var(--color-ink-soft);
+}
+
+.expense-edit:hover,
+.expense-edit:focus-visible {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
 .expense-delete {
   display: inline-flex;
   align-items: center;
