@@ -1,0 +1,57 @@
+// Design tokens — "Bold & Playful Editorial" (ver docs/design-system.md)
+
+:root {
+  // Cores
+  --color-canvas: #fbf9f4;
+  --color-surface: #f7f3ea;
+  --color-card: #ffffff;
+  --color-ink: #20211e;
+  --color-ink-soft: #6b6a61;
+  --color-primary: #2546f0;
+  --color-cta: #ff7139;
+  --color-positive: #d9f36a;
+  --color-positive-text: #3e7c2b;
+  --color-error: #d7402b;
+
+  // Bordas e sombras "hard editorial"
+  --border-width: 1.5px;
+  --border-color: var(--color-ink);
+  --shadow-hard: 3px 3px 0 var(--color-ink);
+  --shadow-hard-strong: 4px 4px 0 var(--color-ink);
+
+  // Raio
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-card: 14px;
+  --radius-pill: 999px;
+
+  // Tipografia
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --text-display: 2rem;   // 32px
+  --text-h1: 1.625rem;    // 26px
+  --text-h2: 1.25rem;     // 20px
+  --text-body: 1rem;      // 16px
+  --text-small: 0.875rem; // 14px
+  --text-caption: 0.8125rem; // 13px
+  --text-label: 0.6875rem;   // 11px
+
+  // Espaçamento
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  // Layout
+  --container-max: 480px;
+  // Alturas do shell (usadas nas páginas via calc)
+  --header-h: 60px;
+  --bottom-nav-h: 64px;
+
+  // Transições
+  --press-shift: 1px;
+}
