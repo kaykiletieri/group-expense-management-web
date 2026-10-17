@@ -27,6 +27,9 @@ const shortDate = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'sho
   imports: [RouterLink, ReactiveFormsModule, Avatar],
   templateUrl: './grupo-detail-page.html',
   styleUrl: './grupo-detail-page.scss',
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
 })
 export class GrupoDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -69,6 +72,16 @@ export class GrupoDetailPage implements OnInit {
 
   ngOnInit(): void {
     void this.refresh();
+  }
+
+  onEscape() {
+    if (this.confirmState()) {
+      this.closeConfirm();
+    }
+    if (this.renameOpen()) {
+      this.renameOpen.set(false);
+    }
+    this.menuOpen.set(false);
   }
 
   participantName(id: string): string {

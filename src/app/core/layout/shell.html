@@ -8,11 +8,21 @@
   </main>
 
   <nav class="shell-nav" aria-label="Navegação principal">
-    <a routerLink="/grupos" routerLinkActive="is-active">
+    <a
+      routerLink="/grupos"
+      routerLinkActive="is-active"
+      #gruposLink="routerLinkActive"
+      [attr.aria-current]="gruposLink.isActive ? 'page' : null"
+    >
       <span class="material-symbols-outlined">groups</span>
       <span class="shell-nav-label label-caps">Grupos</span>
     </a>
-    <a routerLink="/ajustes" routerLinkActive="is-active">
+    <a
+      routerLink="/ajustes"
+      routerLinkActive="is-active"
+      #ajustesLink="routerLinkActive"
+      [attr.aria-current]="ajustesLink.isActive ? 'page' : null"
+    >
       <span class="material-symbols-outlined">settings</span>
       <span class="shell-nav-label label-caps">Ajustes</span>
     </a>

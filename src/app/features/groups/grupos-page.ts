@@ -21,6 +21,9 @@ interface GroupOverview {
   imports: [RouterLink, ReactiveFormsModule, Avatar],
   templateUrl: './grupos-page.html',
   styleUrl: './grupos-page.scss',
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
 })
 export class GruposPage implements OnInit {
   private readonly router = inject(Router);
@@ -56,6 +59,10 @@ export class GruposPage implements OnInit {
 
   ngOnInit(): void {
     void this.refresh();
+  }
+
+  onEscape() {
+    this.createOpen.set(false);
   }
 
   async refresh(): Promise<void> {
