@@ -1,9 +1,58 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
-.page-note {
+.page-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
+}
+
+.page-card-label {
   color: var(--color-ink-soft);
+}
+
+.page-card-value {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.page-error {
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-error);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-error);
+  font-size: var(--text-caption);
+}
+
+.btn-secondary {
+  height: 48px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: 600;
+  box-shadow: var(--shadow-hard);
+}
+
+.btn-secondary:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: default;
 }

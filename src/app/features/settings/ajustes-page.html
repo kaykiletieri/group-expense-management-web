@@ -1,4 +1,16 @@
 <section class="page">
   <h1>Ajustes</h1>
-  <p class="page-note">Conta e sessão estarão disponíveis em breve.</p>
+
+  <div class="page-card">
+    <span class="label-caps page-card-label">Conta</span>
+    <p class="page-card-value">{{ user()?.email ?? '—' }}</p>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="page-error" role="alert">{{ errorMessage() }}</p>
+  }
+
+  <button class="btn-secondary" type="button" [disabled]="loggingOut()" (click)="logout()">
+    {{ loggingOut() ? 'Saindo…' : 'Sair' }}
+  </button>
 </section>
