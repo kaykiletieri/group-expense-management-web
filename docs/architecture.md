@@ -18,6 +18,9 @@
 O repo é o root da aplicação: `ng new racha-web --directory . --style=scss --ssr=false`
 (ajustar flags na execução). Nome interno provisório `racha-web` até marca final ser decidida.
 
+Scaffold executado com Angular CLI **21.2** (o ambiente usa Node 24.14; a CLI 22 exige
+Node 24.15+ — atualizar Node antes de migrar para a CLI 22, opcional).
+
 ## Organização de pastas (alvo)
 
 ```
@@ -65,7 +68,8 @@ src/
 
 ## Testes
 
-- Runner padrão do Angular CLI (conforme versão instada; `ng test`).
+- Runner: **Vitest** (padrão do Angular 21), rodando em jsdom — `npm test`.
+- App é **zoneless por padrão** (Angular 21): mudanças de estado via signals.
 - Prioridade: formatação de dinheiro + máscara, guard auth, formulário de despesa
   (validações e montagem do payload), mensagens de erro 409/401.
 - Sem e2e no MVP.
