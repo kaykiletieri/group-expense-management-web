@@ -1,0 +1,20 @@
+<div class="shell">
+  <header class="shell-header">
+    <span class="shell-brand">racha.</span>
+  </header>
+
+  <main class="shell-main">
+    <router-outlet />
+  </main>
+
+  <nav class="shell-nav" aria-label="Navegação principal">
+    <a routerLink="/grupos" routerLinkActive="is-active">
+      <span class="material-symbols-outlined">groups</span>
+      <span class="shell-nav-label label-caps">Grupos</span>
+    </a>
+    <a routerLink="/ajustes" routerLinkActive="is-active">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="shell-nav-label label-caps">Ajustes</span>
+    </a>
+  </nav>
+</div>

@@ -1,0 +1,12 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.page-empty {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 500;
+  color: var(--color-ink-soft);
+}
