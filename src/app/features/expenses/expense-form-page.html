@@ -1,0 +1,116 @@
+<main class="page">
+  <header class="form-header">
+    <a class="back-btn" [routerLink]="backLink()" aria-label="Voltar">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+      <h1>{{ isEdit ? 'Editar despesa' : 'Nova despesa' }}</h1>
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton skeleton-field"></div>
+    <div class="skeleton skeleton-field"></div>
+  } @else if (notFound()) {
+    <p class="page-error" role="alert">Despesa não encontrada.</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="label-caps" for="expense-desc">O que foi comprado?</label>
+        <input
+          id="expense-desc"
+          type="text"
+          formControlName="description"
+          placeholder="Ex: Jantar de sábado, Pedágio…"
+          maxlength="120"
+          [class.has-error]="showError('description')"
+        />
+        @if (showError('description')) {
+          <span class="field-error">Informe a descrição.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label-caps" for="expense-amount">Valor total</label>
+        <div class="amount-wrap">
+          <span class="amount-prefix">R$</span>
+          <input
+            id="expense-amount"
+            class="amount tabular-nums"
+            inputmode="decimal"
+            formControlName="amount"
+            placeholder="0,00"
+            #amountInput
+            (input)="amountText.set(amountInput.value)"
+            [class.has-error]="amountInvalid() || showError('amount')"
+          />
+        </div>
+        @if (amountInvalid() || showError('amount')) {
+          <span class="field-error">Informe um valor válido maior que zero.</span>
+        }
+      </div>
+
+      <div class="field-chips">
+        <h2 class="label-caps">Pagador único</h2>
+        <div class="chip-list chip-list-single">
+          @for (participant of participants(); track participant.id) {
+            <button
+              type="button"
+              class="chip-select"
+              [class.is-selected]="payerId() === participant.id"
+              (click)="setPayer(participant.id)"
+            >
+              <app-avatar [name]="participant.name" [size]="28" />
+              {{ participant.name }}
+            </button>
+          } @empty {
+            <span class="chip-empty">Adicione participantes no grupo primeiro.</span>
+          }
+        </div>
+        @if (payerInvalid()) {
+          <span class="field-error">Escolha quem pagou.</span>
+        }
+      </div>
+
+      <div class="field-chips">
+        <div class="field-chips-head">
+          <h2 class="label-caps">Dividir igualmente</h2>
+          <span class="section-note">Entre {{ splitIds().size }} pessoa(s)</span>
+        </div>
+        <div class="chip-list">
+          @for (participant of participants(); track participant.id) {
+            <button
+              type="button"
+              class="chip-select"
+              [class.is-selected]="splitIds().has(participant.id)"
+              (click)="toggleSplit(participant.id)"
+            >
+              <app-avatar [name]="participant.name" [size]="28" />
+              {{ participant.name }}
+            </button>
+          }
+        </div>
+        <p class="estimate tabular-nums">
+          @if (estimate()) {
+            {{ estimate()!.label }} por pessoa
+          }
+        </p>
+        @if (splitInvalid()) {
+          <span class="field-error">Selecione pelo menos uma pessoa para o rateio.</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="page-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (participants().length > 0) {
+        <button class="btn-primary" type="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            Salvando…
+          } @else {
+            Salvar despesa
+          }
+        </button>
+      }
+    </form>
+  }
+</main>
