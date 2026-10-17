@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-high": "#e9e8e3", "inverse-primary": "#bbc3ff", "primary": "#002ccc", "on-primary-fixed-variant": "#002cce", "on-secondary-fixed-variant": "#812900", "surface-dim": "#dbdad5", "on-error-container": "#93000a", "on-surface-variant": "#444656", "on-background": "#1b1c19", "tertiary-container": "#546400", "on-secondary-container": "#601c00", "error": "#ba1a1a", "on-error": "#ffffff", "outline-variant": "#c4c5d9", "surface": "#fbf9f4", "surface-bright": "#fbf9f4", "surface-container-lowest": "#ffffff", "surface-variant": "#e4e2dd", "on-secondary": "#ffffff", "surface-container-low": "#f5f4ee", "secondary-fixed-dim": "#ffb59b", "on-secondary-fixed": "#380d00", "surface-container-highest": "#e4e2dd", "secondary-container": "#fd7038", "inverse-surface": "#30312d", "on-tertiary-container": "#c9e25c", "primary-container": "#2546f0", "on-primary-container": "#d0d5ff", "on-primary": "#ffffff", "secondary-fixed": "#ffdbcf", "error-container": "#ffdad6", "primary-fixed": "#dee0ff", "background": "#fbf9f4", "on-tertiary-fixed": "#181e00", "inverse-on-surface": "#f2f1eb", "on-tertiary-fixed-variant": "#3f4c00", "on-primary-fixed": "#000f5d", "surface-container": "#efeee9", "tertiary-fixed-dim": "#b9d24d", "primary-fixed-dim": "#bbc3ff", "outline": "#757688", "on-surface": "#1b1c19", "on-tertiary": "#ffffff", "tertiary-fixed": "#d4ee66", "surface-tint": "#2647f1", "secondary": "#a93800", "tertiary": "#3e4b00" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-md": "1rem", "space-xs": "0.25rem", "gutter-lg": "1.5rem", "gutter": "1rem", "margin": "1.25rem", "space-2xl": "3rem", "margin-mobile": "1rem", "space-sm": "0.5rem", "gutter-sm": "0.75rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin-tablet": "2rem", "space-2xs": "0.125rem" }, fontFamily: { "display-hero": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "currency-display": ["Space Grotesk"], "body-sm": ["Manrope"], "headline-lg": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "body-md": ["Manrope"], "label-md": ["Space Grotesk"], "body-lg": ["Manrope"], "headline-md": ["Space Grotesk"], "label-caps": ["Space Grotesk"], "display-hero-mobile": ["Space Grotesk"], "currency-md": ["Space Grotesk"] }, fontSize: { "display-hero": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.04em", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "currency-display": ["40px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }], "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "display-hero-mobile": ["38px", { "lineHeight": "42px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "currency-md": ["20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><button aria-label="Voltar" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface hover:text-primary transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight uppercase truncate max-w-[200px]">Editar Despesa</h1></div><div class="flex items-center gap-space-xs"><button aria-label="Opções" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[24px]">more_vert</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-space-xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 bg-surface flex-grow"><div class="flex flex-col w-full pb-safe">
+<div class="px-margin-mobile pt-space-sm pb-space-lg flex flex-col gap-space-md">
+<!-- Top Editorial Metadata Strip -->
+<div class="flex items-center justify-between gap-space-sm pt-space-xs">
+<div class="inline-flex items-center gap-space-xs bg-secondary-container text-on-secondary px-space-sm py-space-2xs rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-surface animate-pulse"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider">Modo Edição</span>
+</div>
+<div class="inline-flex items-center gap-space-xs bg-surface-container-high px-space-sm py-space-2xs rounded-full">
+<span class="material-symbols-outlined text-[14px] text-primary">sailing</span>
+<span class="font-label-md text-label-md text-on-surface truncate max-w-[150px]">Viagem para Ubatuba</span>
+</div>
+</div>
+<!-- Title Badge Bar -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md flex items-center justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Atualizar Lançamento</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-space-2xs">Editar despesa</h2>
+</div>
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[26px]">receipt_long</span>
+</div>
+</div>
+<!-- Hero Value Input Card -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="expense-amount">Valor Total</label>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps px-space-xs py-space-2xs rounded">BRL</span>
+</div>
+<div class="flex items-baseline gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-headline-md text-headline-md text-outline">R$</span>
+<input class="font-currency-display text-currency-display text-on-surface bg-transparent outline-none w-full tracking-tight tabular-nums" id="expense-amount" oninput="recalculateSplit(this.value)" type="text" value="280,00"/>
+</div>
+<!-- Description Input -->
+<div class="flex flex-col gap-space-2xs mt-space-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="expense-desc">Descrição da Conta</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-primary text-[20px]">shopping_basket</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-lg text-body-lg pl-10 pr-space-md py-space-sm rounded-lg outline-none" id="expense-desc" type="text" value="Supermercado e Bebidas"/>
+</div>
+</div>
+</div>
+<!-- Payer Selection (Quem pagou?) -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wide">Quem pagou a conta?</span>
+<span class="font-label-caps text-label-caps text-primary font-bold">1 selecionado</span>
+</div>
+<!-- Horizontal Scrollable Avatars -->
+<div class="grid grid-cols-4 gap-space-xs pt-space-xs">
+<!-- Ana (Selected) -->
+<button class="group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" onclick="selectPayer(this, 'Ana')" type="button">
+<div class="relative w-12 h-12 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Close-up joyful young Brazilian woman with natural wavy dark hair, warm natural lighting, candid energetic editorial photo portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpKYinJMoDs0sIykR4Xy0VjAUzErtWhH3Pez4kgtglx0mENMQPo6PXPsALeXNHXUU-P0gvQnAW2Wr_DBIF8k6kV7oFqW_BwKWkJ6zqZ7_Uzfb3kdPg3Fy7Iw8RXGT3RzAReNiHvsdw8MlidR6qn-O9WKihXeCYhd5zKV2Rgz9KQm5s7dK6wtWf1IsmNdMB0UECbZm7Viv-20_nKPyek-B_986hQaLch5byt9CWt7CtPkYWe9c-4QbwYw"/>
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-surface text-[18px]">check_circle</span>
+</div>
+</div>
+<span class="font-label-md text-label-md truncate max-w-full">Ana</span>
+<span class="font-label-caps text-label-caps bg-surface text-primary px-space-xs py-space-2xs rounded-full">Pagou</span>
+</button>
+<!-- Rodrigo -->
+<button class="group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-all" onclick="selectPayer(this, 'Rodrigo')" type="button">
+<div class="relative w-12 h-12 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of young man with friendly smile, sun kissed skin, coastal outdoor lighting, high editorial contrast" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB31Ky52GZealStkmGggQ6uocIWMnbOuWXdkwYCApwgYzHjDS9TEaNxVCkLdPT2qR_6woHtCOnd02CjAgAhNaWSRsP5zQ6TFRzhnnYOvrnqTIXYfM5_Xuzbx6o8rrWvHZAVCB2XmKUCU3DlbkYFOeJP1l_MFFWn-QvGrnjE8E0hUwrsNdw6tTq8hmbWR7UEkYS6gyNUCrKiqDNAfjrxNQ3dt3QVrcZdGu_WN0Cf_M_lI9BMuK4Ko3bP4g"/>
+</div>
+<span class="font-label-md text-label-md truncate max-w-full">Rodrigo</span>
+<span class="font-label-caps text-label-caps text-outline px-space-xs py-space-2xs">R$ 0,00</span>
+</button>
+<!-- Camila -->
+<button class="group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-all" onclick="selectPayer(this, 'Camila')" type="button">
+<div class="relative w-12 h-12 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Creative young woman smiling warmly with dyed strands, sunny afternoon beach vibes, vivid expressive photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD44u9XPf-Cj5R_z2-1LppjeYIW9ft7H_w3O8a1ypPe5R2JRzWa7RQ6udgIsI1Fomg4hwYOwIuYQWreZbuYAQ1YVS69RV3VXgmMZCarNR3ClZbbFy3rTyVW0kXHNPOMykZplum4bMEO_aTMEE-x_Ucigpmj-B8b3jxUc430ch6IyAziMxCo6b__FPZg9ss8i0riR8QniSg6qs1uZJ1G9ACxuPiUSXf0c8Ah7QBsK-JSGVXxyq82QQJGnw"/>
+</div>
+<span class="font-label-md text-label-md truncate max-w-full">Camila</span>
+<span class="font-label-caps text-label-caps text-outline px-space-xs py-space-2xs">R$ 0,00</span>
+</button>
+<!-- Lucas -->
+<button class="group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-all" onclick="selectPayer(this, 'Lucas')" type="button">
+<div class="relative w-12 h-12 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Young man with sunglasses on forehead laughing naturally, vibrant coastal holiday atmosphere, warm tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6KA8oqBYgBdgRcTqchHIsESalLPfSNlIV-vLQaJEscxz-vAMR6D5E6EdmX1HtSS3xZx_IFhXpC6GdkUq9_Q0hLo2UfQdGwNltKveM9NacViGRy3rYZyaP-1_baW1StPP4rmYrO_YoVQ66eOdP__-75ngp_XJSMm0pYSI5oBVPowoVJY2UkV3nj_XMd-SXqr_jLHbvV_h0AZadEcV-7sEcDbJAD8dMdfDagHyqgX1o3POCDgmyqk3Bzw"/>
+</div>
+<span class="font-label-md text-label-md truncate max-w-full">Lucas</span>
+<span class="font-label-caps text-label-caps text-outline px-space-xs py-space-2xs">R$ 0,00</span>
+</button>
+</div>
+</div>
+<!-- Split Mode & Breakdown Section -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wide">Divisão do Grupo</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-space-2xs">Dividir igualmente entre</h3>
+</div>
+<div class="bg-tertiary-fixed text-on-tertiary-fixed px-space-sm py-space-xs rounded-lg flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">call_split</span>
+<span class="font-label-caps text-label-caps font-bold">4 Pessoas</span>
+</div>
+</div>
+<!-- Itemized Participant Split Stacks -->
+<div class="flex flex-col gap-space-xs">
+<!-- Ana -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of Ana, Brazilian woman with expressive eyes, soft ambient sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmuztAx0t_ptJ1ILvC5no69VOzkKLe99r8ZAw8H-npgeqSlhB0Qb8vf6ngccB_r-B18U5h50-p40QEFRcD3Xo-MPiPc04qLCPR4rftZPlDHNsb6l2A0-LN3TvplosAE5NKV6SunrM8ZzC959LSe09y2Kr1ORAgQHrk0ef1BEp21R2kmBpP8JrMG33ihPp0dXIXvVaXoKHrSLjuGhmEVTEx1pd_n5OJojQgeJxc36qOeq4iTor991XKPg"/>
+</div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md text-on-surface font-semibold truncate">Ana</p>
+<p class="font-body-sm text-body-sm text-tertiary-container font-semibold">Pagante da rodada</p>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-space-xs">
+<span class="font-currency-md text-currency-md text-on-surface split-val">R$ 70,00</span>
+<p class="font-body-sm text-body-sm text-outline">25% do total</p>
+</div>
+</div>
+<!-- Rodrigo -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of Rodrigo smiling playfully, modern street lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN1cL3ipnApsxEVLgjWIgaN9nR5dU6NsE-lQj23TDZmPkulgIdpTM8aFONA0hH-4it8xrVgS2VgCgIle3hVZLdeF9CelLpY59ZLSBi4p133khQUVMd4YGEZo3dRFVsbSqrXfOC7kKRYZofsBgywf-JsUG1SVLmfXkT13hnYLwkIArCA6Ohqr_c7sUIvotH9XS14RfCKExAo34_LdI-82Qio1RTsUvLkrioS5e0CyDwnKWdo42jLF0Yrg"/>
+</div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md text-on-surface font-semibold truncate">Rodrigo</p>
+<p class="font-body-sm text-body-sm text-outline">Participante</p>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-space-xs">
+<span class="font-currency-md text-currency-md text-on-surface split-val">R$ 70,00</span>
+<p class="font-body-sm text-body-sm text-outline">25% do total</p>
+</div>
+</div>
+<!-- Camila -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of Camila smiling cheerfully, golden hour glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIerd5yCn6mVtv1DGYZDj4fbZvTnZx0AmoVPa6GEyPiBDp8-sB1J6qPI9zGdtmnIOyIzw-otdlUd5Njp2bN8jHUM1_L6yA0-povvX5r3hStZC7hTPV_kizYgzqnakZ9O8Hkp7mB8oXThetxDjY-39aznc2KEHeHLW2uSD2ZonZfWPYHlGF-YCmCLTgdVB-zqDdsxeSoBO8YVC14g7nyz_V3wyRbfB-vfcWCkk1-_KKPR9YbwiB4scW6Q"/>
+</div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md text-on-surface font-semibold truncate">Camila</p>
+<p class="font-body-sm text-body-sm text-outline">Participante</p>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-space-xs">
+<span class="font-currency-md text-currency-md text-on-surface split-val">R$ 70,00</span>
+<p class="font-body-sm text-body-sm text-outline">25% do total</p>
+</div>
+</div>
+<!-- Lucas -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="Portrait of Lucas laughing casually, high contrast sunny background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9sYJD4v19EWDKu-jrm-EwD5ZSG5-wpTFQef5CFcTslQT9BX67B9wyEdxGorVH2oFRh3VDUVr_Lw6kfdc85Cht3Ull9lELt1y4vW871MifuDDLFgOEWvSGq0tzN5qfPaLvbBkWE7ZfrgGyiMjTk_X-rRxCnzkFLAuPgzXLIwPG5m8c06fKfQ-4MkyEccoAnIc12qNrq6Z1eq1iYo_bVQ5usvS6nefYB0-QMcghW1h3EZVbkZhmcYgt1A"/>
+</div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md text-on-surface font-semibold truncate">Lucas</p>
+<p class="font-body-sm text-body-sm text-outline">Participante</p>
+</div>
+</div>
+<div class="text-right flex-shrink-0 pl-space-xs">
+<span class="font-currency-md text-currency-md text-on-surface split-val">R$ 70,00</span>
+<p class="font-body-sm text-body-sm text-outline">25% do total</p>
+</div>
+</div>
+</div>
+<!-- Quick Math Feedback Pill -->
+<div class="flex items-center justify-between px-space-sm py-space-xs bg-surface-container-high rounded-lg text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">pie_chart</span>
+<span class="font-body-sm text-body-sm font-semibold">Conta redonda</span>
+</div>
+<span class="font-label-caps text-label-caps tracking-wide uppercase text-on-surface font-bold">4 x R$ 70,00 = R$ 280,00</span>
+</div>
+</div>
+<!-- Action Buttons Block -->
+<div class="flex flex-col gap-space-sm mt-space-sm pt-space-xs">
+<!-- Primary Save Button -->
+<button class="w-full py-space-md px-space-lg bg-primary-container text-on-primary font-label-md text-label-md tracking-wider uppercase rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-space-sm" id="save-btn" onclick="handleSaveAnimation(this)" type="button">
+<span class="material-symbols-outlined text-[20px]">check</span>
+<span>Salvar alterações</span>
+</button>
+<!-- Secondary Cancel Button -->
+<button class="w-full py-space-sm px-space-lg bg-surface-container-high text-on-surface font-label-md text-label-md uppercase tracking-wider rounded-xl hover:bg-surface-container-highest transition-colors flex items-center justify-center" onclick="history.back()" type="button">
+        Cancelar
+      </button>
+<!-- Discreet Danger Delete Action -->
+<div class="flex justify-center pt-space-xs">
+<button class="inline-flex items-center gap-space-xs text-error py-space-xs px-space-sm rounded-lg hover:bg-error-container/40 transition-colors" onclick="confirmDeletion(this)" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span class="font-label-md text-label-md font-semibold">Excluir esta despesa</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function recalculateSplit(rawVal) {
+    const cleanStr = rawVal.replace(/[^\d,\.]/g, '').replace(',', '.');
+    const total = parseFloat(cleanStr);
+    const splitEls = document.querySelectorAll('.split-val');
+    if (!isNaN(total) && total > 0) {
+      const perPerson = (total / 4).toFixed(2).replace('.', ',');
+      splitEls.forEach(el => {
+        el.innerText = 'R$ ' + perPerson;
+      });
+    }
+  }
+
+  function selectPayer(btn, name) {
+    const buttons = btn.parentElement.querySelectorAll('button');
+    buttons.forEach(b => {
+      b.className = 'group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-all';
+      const label = b.querySelector('.font-label-caps');
+      if (label) {
+        label.className = 'font-label-caps text-label-caps text-outline px-space-xs py-space-2xs';
+        label.innerText = 'R$ 0,00';
+      }
+    });
+
+    btn.className = 'group flex flex-col items-center gap-space-xs p-space-xs rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all';
+    const activeLabel = btn.querySelector('.font-label-caps');
+    if (activeLabel) {
+      activeLabel.className = 'font-label-caps text-label-caps bg-surface text-primary px-space-xs py-space-2xs rounded-full font-bold';
+      activeLabel.innerText = 'Pagou';
+    }
+  }
+
+  function handleSaveAnimation(btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">refresh</span><span>Salvando...</span>';
+    btn.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">done_all</span><span>Salvo com sucesso!</span>';
+      setTimeout(() => {
+        history.back();
+      }, 700);
+    }, 600);
+  }
+
+  function confirmDeletion(btn) {
+    if (confirm('Tem certeza que deseja excluir esta despesa do grupo?')) {
+      btn.innerText = 'Excluindo...';
+      setTimeout(() => {
+        history.back();
+      }, 400);
+    }
+  }
+</script></main></body></html>
