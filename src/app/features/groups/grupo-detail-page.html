@@ -1,0 +1,209 @@
+@if (notFound()) {
+  <section class="page">
+    <h1>Grupo não encontrado</h1>
+    <p class="page-note">Este grupo não existe ou não pertence a sua conta.</p>
+    <a class="btn-secondary" routerLink="/grupos">Voltar aos grupos</a>
+  </section>
+} @else if (loadError()) {
+  <section class="page">
+    <h1>Ops…</h1>
+    <p class="page-note">Não foi possível carregar o grupo. Tente de novo.</p>
+    <button class="btn-primary" type="button" (click)="refresh()">Tentar novamente</button>
+  </section>
+} @else if (loading()) {
+  <div class="page">
+    <div class="skeleton skeleton-title"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+  </div>
+} @else {
+  <div class="page">
+    <header class="group-header">
+      <a class="back-btn" routerLink="/grupos" aria-label="Voltar">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </a>
+      <h1 class="group-name" [class.is-empty]="!groupName()">{{ groupName() || 'Grupo sem nome' }}</h1>
+      <button
+        class="menu-btn"
+        type="button"
+        aria-label="Mais opções"
+        (click)="menuOpen.set(!menuOpen())"
+      >
+        <span class="material-symbols-outlined">more_horiz</span>
+      </button>
+
+      @if (menuOpen()) {
+        <button class="menu-backdrop" type="button" aria-label="Fechar menu" (click)="menuOpen.set(false)"></button>
+        <div class="menu">
+          <button type="button" (click)="confirmRename()">
+            <span class="material-symbols-outlined">edit</span> Renomear grupo
+          </button>
+          <button type="button" class="menu-danger" (click)="confirmDeleteGroup()">
+            <span class="material-symbols-outlined">delete</span> Excluir grupo
+          </button>
+        </div>
+      }
+    </header>
+
+    <section>
+      <div class="section-row">
+        <h2>Saldos</h2>
+        <a class="btn-chip" routerLink="/grupos/{{ groupId }}/despesas/nova">+ Despesa</a>
+      </div>
+
+      @if (nobodyOwes()) {
+        <div class="banner-zero">
+          <span class="material-symbols-outlined">task_alt</span>
+          Ninguém deve nada por aqui.
+        </div>
+      }
+
+      <div class="card">
+        @for (balance of balances(); track balance.participantId) {
+          <div class="balance-row">
+            <app-avatar [name]="participantName(balance.participantId)" />
+            <div class="balance-info">
+              <span class="balance-name">{{ participantName(balance.participantId) }}</span>
+              <span class="balance-paid tabular-nums">Pagou {{ formatBrl(balance.totalPaidInCents) }}</span>
+            </div>
+            @if (balance.balanceInCents > 0) {
+              <span class="chip chip-positive tabular-nums">
+                Recebe {{ formatBrl(balance.balanceInCents) }}
+              </span>
+            } @else if (balance.balanceInCents < 0) {
+              <span class="chip chip-debt tabular-nums">
+                Deve {{ formatBrl(-balance.balanceInCents) }}
+              </span>
+            } @else {
+              <span class="chip chip-quit">Quitado</span>
+            }
+          </div>
+        } @empty {
+          <p class="section-empty">Ninguém está no grupo ainda.</p>
+        }
+      </div>
+    </section>
+
+    <section>
+      <div class="section-row">
+        <h2>Despesas <span class="section-count">{{ expenses().length }}</span></h2>
+        <span class="section-note tabular-nums">Total {{ formatBrl(totalSpent()) }}</span>
+      </div>
+
+      @if (expenses().length === 0) {
+        <div class="card card-empty">
+          <p>Nenhuma despesa por aqui ainda.</p>
+          <p class="section-note">A primeira despesa aparece aqui.</p>
+        </div>
+      }
+
+      <ul class="expense-list">
+        @for (expense of expenses(); track expense.id) {
+          <li class="card expense-item">
+            <div class="expense-main">
+              <span class="expense-desc">{{ expense.description }}</span>
+              <span class="expense-value tabular-nums">
+                {{ formatBrl(expense.totalAmountInCents) }}
+              </span>
+            </div>
+            <div class="expense-meta">
+              <span class="label-caps">
+                {{ dateShort(expense.createdAtUtc) }} · Pagou {{ participantName(expense.payerParticipantId) }}
+              </span>
+              <span class="expense-split tabular-nums">
+                ÷ {{ expense.shares.length }} · {{ shareEstimate(expense) }} cada
+              </span>
+              <button
+                class="expense-delete"
+                type="button"
+                aria-label="Excluir despesa"
+                (click)="confirmDeleteExpense(expense)"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>Participantes <span class="section-count">{{ participants().length }}</span></h2>
+
+      <div class="participant-add">
+        <input
+          type="text"
+          placeholder="Nome da pessoa…"
+          [formControl]="participantNameControl"
+          (keyup.enter)="addParticipant()"
+          maxlength="60"
+        />
+        <button class="btn-chip" type="button" (click)="addParticipant()">Adicionar</button>
+      </div>
+
+      @if (actionError()) {
+        <p class="page-error" role="alert">{{ actionError() }}</p>
+      }
+
+      <div class="card">
+        @for (participant of participants(); track participant.id) {
+          <div class="balance-row">
+            <app-avatar [name]="participant.name" />
+            <div class="balance-info">
+              <span class="balance-name">{{ participant.name }}</span>
+            </div>
+            <button
+              class="expense-delete"
+              type="button"
+              aria-label="Remover participante"
+              (click)="confirmDeleteParticipant(participant)"
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        } @empty {
+          <p class="section-empty">É só você por enquanto.</p>
+        }
+      </div>
+    </section>
+  </div>
+
+  @if (confirmState(); as confirm) {
+    <button class="modal-backdrop" type="button" (click)="closeConfirm()" aria-label="Cancelar"></button>
+    <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="confirm.title">
+      <h2 class="modal-title">{{ confirm.title }}</h2>
+      <p class="modal-message">{{ confirm.message }}</p>
+      @if (actionError()) {
+        <p class="page-error" role="alert">{{ actionError() }}</p>
+      }
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" (click)="closeConfirm()">Cancelar</button>
+        <button class="btn-danger" type="button" [disabled]="submitting()" (click)="runConfirm()">
+          {{ confirm.confirmLabel }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (renameOpen()) {
+    <button class="modal-backdrop" type="button" (click)="renameOpen.set(false)" aria-label="Cancelar"></button>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Renomear grupo">
+      <h2 class="modal-title">Renomear grupo</h2>
+      <input
+        type="text"
+        [formControl]="newName"
+        maxlength="80"
+        (keyup.enter)="submitRename()"
+      />
+      @if (actionError()) {
+        <p class="page-error" role="alert">{{ actionError() }}</p>
+      }
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" (click)="renameOpen.set(false)">Cancelar</button>
+        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitRename()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  }
+}

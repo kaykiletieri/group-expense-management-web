@@ -1,12 +1,73 @@
+:host {
+  display: block;
+}
+
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
-.page-empty {
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.list-head h1 {
+  font-size: var(--text-h1);
+}
+
+.list-summary {
+  color: var(--color-ink-soft);
+}
+
+.group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.group-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-hard);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.group-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard-strong);
+}
+
+.group-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+.group-card-name {
   font-family: var(--font-display);
   font-size: var(--text-h2);
-  font-weight: 500;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.group-card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.group-card-arrow {
   color: var(--color-ink-soft);
 }

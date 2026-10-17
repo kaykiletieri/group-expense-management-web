@@ -1,8 +1,88 @@
 <section class="page">
-  <h1>Meus grupos</h1>
-  <p class="page-empty">
-    Nenhum grupo ainda.
-    <br />
-    Crie o primeiro para começar a rachar as contas.
-  </p>
+  <header class="list-head">
+    <h1>Meus grupos</h1>
+    <button class="btn-chip" type="button" (click)="openCreation()">
+      <span class="material-symbols-outlined">add</span>
+      Novo grupo
+    </button>
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+  } @else if (loadError()) {
+    <div class="card card-empty">
+      <p>Não foi possível carregar seus grupos.</p>
+      <button class="btn-secondary" type="button" (click)="refresh()">Tentar novamente</button>
+    </div>
+  } @else if (overviews().length === 0) {
+    <div class="card card-empty">
+      <p class="empty-title">Nenhum grupo ainda.</p>
+      <p class="section-note">Crie o primeiro para começar a rachar as contas.</p>
+      <button class="btn-primary" type="button" (click)="openCreation()">Criar grupo</button>
+    </div>
+  } @else {
+    @if (nothingOwedAnywhere()) {
+      <div class="banner-zero">
+        <span class="material-symbols-outlined">task_alt</span>
+        Ninguém deve nada por aqui.
+      </div>
+    }
+
+    <div class="list-summary label-caps">
+      {{ overviews().length }} grupo(s) · {{ totalParticipants() }} pessoa(s) ·
+      {{ formatBrl(totalMovement()) }} movimentados
+    </div>
+
+    <ul class="group-list">
+      @for (overview of overviews(); track overview.group.id) {
+        <li>
+          <a class="card group-card" routerLink="/grupos/{{ overview.group.id }}">
+            <app-avatar [name]="overview.group.name" />
+            <div class="group-card-info">
+              <span class="group-card-name">{{ overview.group.name }}</span>
+              <div class="group-card-chips">
+                <span class="chip chip-soft">{{ overview.participantCount }} pessoa(s)</span>
+                @if (overview.totalPaidInCents === 0) {
+                  <span class="chip chip-quit">Sem despesas</span>
+                } @else {
+                  <span class="chip chip-soft tabular-nums">
+                    {{ formatBrl(overview.totalPaidInCents) }} em despesas
+                  </span>
+                }
+              </div>
+            </div>
+            <span class="material-symbols-outlined group-card-arrow">chevron_right</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
 </section>
+
+@if (createOpen()) {
+  <button class="modal-backdrop" type="button" (click)="closeCreation()" aria-label="Cancelar"></button>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Novo grupo">
+    <h2 class="modal-title">Novo grupo</h2>
+    <input
+      type="text"
+      placeholder="Nome do grupo (ex: Viagem a Ubatuba)…"
+      [formControl]="creationName"
+      maxlength="80"
+      (keyup.enter)="submitCreation()"
+      autofocus
+    />
+    @if (creationName.touched && creationName.invalid) {
+      <span class="field-error">Dê um nome ao grupo.</span>
+    }
+    @if (createError()) {
+      <p class="page-error" role="alert">{{ createError() }}</p>
+    }
+    <div class="modal-actions">
+      <button class="btn-secondary" type="button" (click)="closeCreation()">Cancelar</button>
+      <button class="btn-primary" type="button" [disabled]="creating()" (click)="submitCreation()">
+        {{ creating() ? 'Criando…' : 'Criar grupo' }}
+      </button>
+    </div>
+  </div>
+}

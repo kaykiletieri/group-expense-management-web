@@ -1,0 +1,234 @@
+:host {
+  display: block;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Header */
+.group-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  box-shadow: var(--shadow-hard);
+  text-decoration: none;
+  color: var(--color-ink);
+}
+
+.group-name {
+  flex: 1;
+  font-size: var(--text-h1);
+  overflow-wrap: anywhere;
+}
+
+.group-name.is-empty {
+  color: var(--color-ink-soft);
+}
+
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  box-shadow: var(--shadow-hard);
+  color: var(--color-ink);
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: var(--space-2);
+  background: var(--color-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-hard-strong);
+}
+
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+.menu button:hover {
+  background: var(--color-surface);
+}
+
+.menu-danger {
+  color: var(--color-error) !important;
+}
+
+/* Seções */
+.section-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.section-row h2,
+h2 {
+  font-size: var(--text-h2);
+  font-weight: 700;
+}
+
+.section-count {
+  font-size: var(--text-small);
+  color: var(--color-ink-soft);
+  font-weight: 500;
+}
+
+.page-note {
+  color: var(--color-ink-soft);
+}
+
+/* Linhas de saldo/participantes */
+.balance-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.balance-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.balance-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.balance-paid {
+  font-size: var(--text-caption);
+  color: var(--color-ink-soft);
+}
+
+/* Despesas */
+.expense-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.expense-item {
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.expense-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.expense-desc {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.expense-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.expense-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  color: var(--color-ink-soft);
+}
+
+.expense-split {
+  font-size: var(--text-caption);
+}
+
+.expense-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-soft);
+}
+
+.expense-delete:hover,
+.expense-delete:focus-visible {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+/* Participantes */
+.participant-add {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.participant-add input {
+  flex: 1;
+  height: 44px;
+  padding-inline: var(--space-4);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  font-size: var(--text-body);
+  min-width: 0;
+}
