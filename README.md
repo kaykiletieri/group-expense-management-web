@@ -1,16 +1,27 @@
 # group-expense-management-web
 
-Interface web do Group Expense Management (organização de despesas compartilhadas em grupos).
+Interface web do **Group Expense Management** — organização de despesas compartilhadas em grupos.
+Backend (API C#/.NET) vive no repositório irmão `group-expense-management`.
 
-Será desenvolvida com **Angular** (versão mais recente). O backend (API C#/.NET) vive no repositório
-irmão `group-expense-management`.
+## Stack
 
-## Estado atual
+- Angular (standalone components + signals), SCSS com design tokens próprios, sem kit de UI.
+- Autenticação via cookie de sessão (`gem_session`) do backend; em dev, proxy `/api` para
+  `https://localhost:3000` (ver `proxy.conf.json`).
 
-Repositório criado; aplicação ainda não iniciada.
+## Documentação
 
-## Planejado
+- `AGENTS.md` — instruções para agentes/contribuidores.
+- `docs/` — produto, arquitetura, design system, spec de telas, roadmap e decisões.
+- `design/prototipos/` — protótipos aprovados (referência visual).
 
-- Telas: login/cadastro, lista de grupos, tela do grupo (participantes, despesas, saldos), formulário de despesa.
-- Autenticação por cookie de sessão (`gem_session`) do backend.
-- Diretrizes de produto: poucos toques para cada tarefa, configuração inicial mínima, confirmação apenas em ações destrutivas.
+## Desenvolvimento
+
+```bash
+npm install
+npm start        # ng serve com https + proxy para a API
+npm test         # unit tests
+npm run build    # build de produção
+```
+
+A API precisa estar rodando (`dotnet run` no repo do backend) para as telas autenticadas.
