@@ -18,6 +18,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/groups/grupos-page').then((m) => m.GruposPage),
       },
       {
+        path: 'grupos/:id',
+        loadComponent: () =>
+          import('./features/groups/grupo-detail-page').then((m) => m.GrupoDetailPage),
+      },
+      {
+        path: 'grupos/:id/despesas/nova',
+        loadComponent: () =>
+          import('./features/expenses/expense-form-page').then((m) => m.ExpenseFormPage),
+      },
+      {
+        path: 'grupos/:id/despesas/:expenseId/editar',
+        loadComponent: () =>
+          import('./features/expenses/expense-form-page').then((m) => m.ExpenseFormPage),
+      },
+      {
         path: 'ajustes',
         loadComponent: () =>
           import('./features/settings/ajustes-page').then((m) => m.AjustesPage),
