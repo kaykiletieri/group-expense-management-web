@@ -28,6 +28,15 @@
   box-shadow: var(--shadow-hard);
   text-decoration: none;
   color: var(--color-ink);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.back-btn:hover {
+  background: var(--color-surface);
+}
+
+.back-btn:active {
+  transform: translate(1px, 1px);
 }
 
 .group-name {
@@ -51,6 +60,15 @@
   background: var(--color-card);
   box-shadow: var(--shadow-hard);
   color: var(--color-ink);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.menu-btn:hover {
+  background: var(--color-surface);
+}
+
+.menu-btn:active {
+  transform: translate(1px, 1px);
 }
 
 .menu-backdrop {
@@ -90,6 +108,7 @@
   font-weight: 500;
   color: var(--color-ink);
   text-align: left;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .menu button:hover {
@@ -131,6 +150,11 @@ h2 {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  transition: background-color var(--transition-fast);
+}
+
+.balance-row:hover {
+  background: #fcfbf7;
 }
 
 .balance-info {
@@ -203,36 +227,32 @@ h2 {
   margin-left: auto;
 }
 
-.expense-edit,
-.expense-edit:hover,
-.expense-edit:focus-visible {
-  border-color: transparent;
-  color: var(--color-ink-soft);
-}
-
-.expense-edit:hover,
-.expense-edit:focus-visible {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.expense-delete {
+.expense-edit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  margin: 0;
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-ink-soft);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .expense-delete:hover,
 .expense-delete:focus-visible {
-  border-color: var(--color-error);
   color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.expense-edit:hover,
+.expense-edit:focus-visible {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* Participantes */
@@ -251,4 +271,8 @@ h2 {
   background: var(--color-card);
   font-size: var(--text-body);
   min-width: 0;
+}
+
+.participant-add input:hover:not(:focus) {
+  background: #fcfbf7;
 }

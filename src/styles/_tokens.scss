@@ -54,4 +54,10 @@
 
   // Transições
   --press-shift: 1px;
+  --transition-fast: 140ms ease;
+
+  // Anéis de foco (substituem o outline nativo do navegador)
+  --focus-ring: 0 0 0 3px rgba(37, 70, 240, 0.16);
+  --focus-ring-error: 0 0 0 3px rgba(215, 64, 43, 0.14);
+  --placeholder: #a3a29a;
 }

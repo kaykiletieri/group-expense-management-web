@@ -10,6 +10,7 @@
 
 html {
   height: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -21,6 +22,7 @@ body {
   font-size: var(--text-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1,
@@ -40,12 +42,6 @@ button {
   cursor: pointer;
 }
 
-input,
-textarea,
-select {
-  font-family: inherit;
-}
-
 a {
   color: inherit;
 }
@@ -55,12 +51,70 @@ img {
   display: block;
 }
 
-// Números monetários alinhados
+::selection {
+  background: var(--color-positive);
+  color: var(--color-ink);
+}
+
+/* ---------- Form controls ---------- */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: var(--color-ink);
+  caret-color: var(--color-primary);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Remove o outline azul padrão do navegador: o foco é expresso por
+   borda cobalta + anel suave (tokens --focus-ring). */
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+  background: var(--color-card);
+}
+
+input {
+  appearance: none;
+  touch-action: manipulation;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+/* Autofill: mantém o visual próprio (evita o azul/bege do Chrome). */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-card) inset;
+  border-color: var(--color-primary);
+}
+
+/* Números monetários alinhados */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
-// Micro-labels uppercase
+/* Micro-labels uppercase */
 .label-caps {
   font-size: var(--text-label);
   font-weight: 600;
@@ -68,20 +122,23 @@ img {
   text-transform: uppercase;
 }
 
-// Container mobile centralizado
+/* Container mobile centralizado */
 .page-container {
   max-width: var(--container-max);
   margin-inline: auto;
   padding-inline: var(--space-4);
 }
 
-// Foco visível consistente (elementos interativos)
-:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+/* ---------- Foco visível: botões e links usam outline cobalta; campos usam o
+   sistema acima. ---------- */
+
+:where(a, button, [tabindex]):focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-// Ícones Material Symbols
+/* ---------- Ícones Material Symbols ---------- */
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -95,4 +152,25 @@ img {
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
   user-select: none;
+}
+
+/* ---------- Scrollbars discretas (listas horizontais de chips) ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(32, 33, 30, 0.25) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(32, 33, 30, 0.25);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }

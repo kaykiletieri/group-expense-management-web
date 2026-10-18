@@ -61,6 +61,11 @@
   border-color: var(--color-error);
 }
 
+.field input.has-error:focus {
+  border-color: var(--color-error);
+  box-shadow: var(--focus-ring-error);
+}
+
 .amount-wrap {
   display: flex;
   align-items: center;
@@ -125,6 +130,24 @@
   color: var(--color-ink);
   white-space: nowrap;
   box-shadow: var(--shadow-hard);
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.chip-select:hover {
+  background: var(--color-surface);
+}
+
+.chip-select:active {
+  box-shadow: none;
+  transform: translate(1px, 1px);
+}
+
+.chip-select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .chip-select.is-selected {
