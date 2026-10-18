@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/auth/auth.service';
-import { getApiErrorMessage } from '../../core/api/api-error';
+import { getApiErrorList, getApiErrorMessage } from '../../core/api/api-error';
 
 const NETWORK_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 const LOCKOUT_MESSAGE = 'Muitas tentativas. Tente novamente em alguns minutos.';
@@ -94,6 +94,18 @@ export class LoginPage {
         return LOCKOUT_MESSAGE;
       }
       if (err.status === 400) {
+        if (this.mode() === 'register') {
+          // Corpo do cadastro (Identity) usa { errors: [...] }, com descrições
+          // em inglês. Elas não podem aparecer cruas: mapeamos para pt-BR.
+          const errors = getApiErrorList(err);
+          const duplicateEmail = errors?.some((message) =>
+            /is already taken/i.test(message),
+          );
+          if (duplicateEmail) {
+            return 'Já existe uma conta com este e-mail. Faça login.';
+          }
+          return 'Verifique os dados informados.';
+        }
         return getApiErrorMessage(err, 'Verifique os dados informados.');
       }
       if (err.status === 401) {

@@ -16,3 +16,21 @@ export function getApiErrorMessage(err: unknown, fallback: string): string {
   }
   return fallback;
 }
+
+// O cadastro (Identity) usa outro corpo: { "errors": ["descrição", …] }.
+// Devolve a lista de mensagens ou null quando o corpo não tem esse formato.
+export function getApiErrorList(err: unknown): string[] | null {
+  if (
+    err &&
+    typeof err === 'object' &&
+    'error' in err &&
+    err.error &&
+    typeof err.error === 'object' &&
+    'errors' in err.error &&
+    Array.isArray(err.error.errors) &&
+    err.error.errors.every((message) => typeof message === 'string')
+  ) {
+    return err.error.errors;
+  }
+  return null;
+}

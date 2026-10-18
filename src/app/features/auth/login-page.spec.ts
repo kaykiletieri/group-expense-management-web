@@ -110,4 +110,34 @@ describe('LoginPage', () => {
     expect(component.errorMessage()).toBe('E-mail ou senha incorretos.');
     expect(router.url).toBe('/');
   });
+
+  it('cadastro com e-mail já usado mostra mensagem pt-BR (não vaza o texto do Identity)', async () => {
+    const component = fixture.componentInstance;
+    component.setMode('register');
+    component.form.setValue({ email: 'duplicado@exemplo.com', password: 'senha123' });
+    component.submit();
+
+    http.expectOne('api/auth/register').flush(
+      { errors: ["Email 'duplicado@exemplo.com' is already taken.", 'UserName exists'] },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    expect(component.submitting()).toBe(false);
+    expect(component.errorMessage()).toBe('Já existe uma conta com este e-mail. Faça login.');
+  });
+
+  it('cadastro com outro erro 400 do Identity usa mensagem neutra', async () => {
+    const component = fixture.componentInstance;
+    component.setMode('register');
+    component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
+    component.submit();
+
+    http.expectOne('api/auth/register').flush(
+      { errors: ['PasswordRequiresNonAlphanumeric'] },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    expect(component.submitting()).toBe(false);
+    expect(component.errorMessage()).toBe('Verifique os dados informados.');
+  });
 });

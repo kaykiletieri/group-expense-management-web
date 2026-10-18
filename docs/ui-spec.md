@@ -25,6 +25,10 @@ Grupo criado → navegar para `/grupos/:id`. Grupo excluído → `/grupos`.
   frontend executa `POST /api/auth/login` com as mesmas credenciais antes de
   navegar** para qualquer rota autenticada (sem isso a primeira tela falha com
   401 e aparece "Não foi possível carregar seus grupos").
+- `400` no cadastro usa corpo `{ errors: [...] }` (descrições do Identity em
+  inglês). A tela mapeia para pt-BR **sem vazar o texto cru**: e-mail duplicado
+  ("is already taken" na lista) → "Já existe uma conta com este e-mail. Faça
+  login."; demais casos → "Verifique os dados informados."
 - `POST /api/auth/login` `{ email, password }` → `204` (cookie httpOnly).
 - `POST /api/auth/logout` → `204`.
 - `GET /api/auth/me` → `200` `{ id, email, name }` (`name` é o nome de exibição opcional da conta), `401` se não autenticado.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HttpErrorResponse } from '@angular/common/http';
-import { getApiErrorMessage } from './api-error';
+import { getApiErrorList, getApiErrorMessage } from './api-error';
 
 describe('getApiErrorMessage', () => {
   it('extrai a mensagem do corpo { error } do backend', () => {
@@ -14,5 +14,24 @@ describe('getApiErrorMessage', () => {
       'fallback',
     );
     expect(getApiErrorMessage(new Error('qualquer'), 'fallback')).toBe('fallback');
+  });
+});
+
+describe('getApiErrorList', () => {
+  it('extrai a lista do corpo { errors: [...] } do cadastro (Identity)', () => {
+    const err = new HttpErrorResponse({
+      status: 400,
+      error: { errors: ["Email 'a@b.c' is already taken.", 'PasswordTooShort'] },
+    });
+    expect(getApiErrorList(err)).toEqual(["Email 'a@b.c' is already taken.", 'PasswordTooShort']);
+  });
+
+  it('devolve null quando o corpo não tem lista de strings', () => {
+    expect(getApiErrorList(new HttpErrorResponse({ status: 400, error: { error: 'msg' } }))).toBeNull();
+    expect(
+      getApiErrorList(new HttpErrorResponse({ status: 400, error: { errors: ['ok', 42] } })),
+    ).toBeNull();
+    expect(getApiErrorList(new HttpErrorResponse({ status: 400 }))).toBeNull();
+    expect(getApiErrorList(new Error('x'))).toBeNull();
   });
 });
