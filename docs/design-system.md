@@ -55,6 +55,8 @@ Barra creme com borda inferior 1.5px grafite. Título Space Grotesk 600. Ação 
 
 ### Botões
 
+- **Padrão de canto (D26)**: todo botão usa **radius quadrado** (`--radius-md`, 8px) —
+  primário, secundário, danger, chip e chips de seleção; sem botões em formato pílula.
 - **Primário**: laranja `--color-cta`, texto/bn grafite, radius 8–12px, sombra dura 3px,
   altura 44–52px, fonte Space Grotesk 700 (ou 600).
 - **Secundário (outline)**: branco, borda 1.5px grafite, sombra dura; hover lêvemente elevado.
@@ -72,7 +74,9 @@ Cards de saldo: coluna esquerda avatar+nome, direita valor alinhado à direita (
   sombra dura; não-selecionado: branco com borda e texto normal.
 - **Status**: "Quitado" limão; "Deve" branco com borda; contagens pequenas são mini-chips
   de grafite invertido.
-- `pill`, padding 8–14px, fonte 12–13px, peso 700 para selecionado.
+- `pill` **reservado a chips de status estáticos e avatar**; chips que agem como
+  botão (seleção de pagador/participante) usam radius 8px (D26), padding 8–14px,
+  fonte 12–13px, peso 700 para selecionado.
 
 ### Campos de formulário
 

@@ -143,3 +143,7 @@ e atualização deste registro.
   botão "Novo grupo" na lista quando o usuário já tem 10 grupos (tooltip com o
   limite) e traduz o erro do limite para "Você pode ter no máximo 10 grupos."
   no modal de criação.
+- **D26 – Todos os botões ficam quadrados (decisão aprovada):** padronização de
+  cantos — todo botão (primário, secundário, danger, chip e chips de seleção do
+  formulário de despesa) usa radius `--radius-md` (8px). `radius-pill` fica
+  reservado a chips de status estáticos e avatar (não são botões).
