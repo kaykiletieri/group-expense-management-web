@@ -72,11 +72,18 @@ export class GrupoDetailPage implements OnInit {
     () => new Map(this.participants().map((p) => [p.id, p.name] as const)),
   );
 
-  /** Nome derivado da conta (parte local do e-mail capitalizada) para criar
-      um participante "eu" — sem vínculo User↔Participant (regra de backstage). */
+  /** Nome usado no atalho "Você": prioriza o nome de exibição salvo da conta;
+      sem nome, deriva da parte local do e-mail. Sem vínculo User↔Participant. */
   readonly yourName = computed<string | null>(() => {
-    const email = this.auth.user()?.email ?? '';
-    const local = email.split('@')[0]?.toLowerCase().trim() ?? '';
+    const user = this.auth.user();
+    if (!user) {
+      return null;
+    }
+    const savedName = user.name?.trim();
+    if (savedName) {
+      return savedName;
+    }
+    const local = user.email.split('@')[0]?.toLowerCase().trim() ?? '';
     if (!local) {
       return null;
     }

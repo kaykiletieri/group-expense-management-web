@@ -141,8 +141,8 @@ o oculto usa `display: none` e sai da árvore de acessibilidade.
 
 ## 5. Tema claro/escuro (decisão D19)
 
-Tema escuro disponível via toggle **Auto / Claro / Escuro** em Ajustes (padrão
-"auto" segue o sistema). Toda a paleta escura vive em `src/styles/_tokens.scss`
+Só **Claro / Escuro**, padrão **claro** (não há modo "auto" seguindo o sistema).
+Toda a paleta escura vive em `src/styles/_tokens.scss`
 sob `[data-theme="dark"]`:
 
 | Papel | Claro | Escuro |

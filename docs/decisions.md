@@ -66,14 +66,14 @@ e atualização deste registro.
 
 ## Tema
 
-- **D19 — Dark mode opcional:** paleta escura registrada em `_tokens.scss` sob
-  `[data-theme="dark"]` (todas as superfícies/cores derivam dos tokens; bordas e
-  sombras "hard editorial" derivam do `--color-ink`, que vira creme no escuro).
-  Preferência do usuário em `localStorage` (`gem-theme`: `auto`/`light`/`dark`),
-  gerenciada por `ThemeService` (`src/app/core/theme/`), com toggle
-  Auto/Claro/Escuro em Ajustes; padrão "auto" segue `prefers-color-scheme`
-  (inclusive ao vivo). Um script inline no `index.html` aplica o tema salvo antes
-  do bootstrap para evitar flash — ao introduzir CSP no deploy do backend, esse
+- **D19 — Tema claro/escuro:** somente **Claro ou Escuro**, padrão **claro** — sem
+  modo "auto" seguindo o sistema (removido a pedido do usuário; preferência em
+  `localStorage` `gem-theme` e toggle em Ajustes). Paleta escura em
+  `_tokens.scss` sob `[data-theme="dark"]` (superfícies/cores derivam de tokens;
+  bordas e sombras "hard editorial" derivam do `--color-ink`, quase-branco no
+  escuro). Tokens de texto sobre cores fortes: `--on-accent` (`#20211e` claro /
+  `#1a1c20` escuro) e `--on-danger` (branco). Script inline no `index.html`
+  aplica o tema salvo antes do bootstrap — ao introduzir CSP no backend, esse
   script precisa de hash/nonce.
 
 ## Usabilidade
@@ -87,8 +87,10 @@ e atualização deste registro.
   (modal "Novo grupo" e formulário de participante; o detalhe reflete o nome
   real após recarregar).
 - **D21 — Atalho "Você" no grupo:** botão que adiciona a própria pessoa como
-  participante usando nome derivado da parte local do e-mail (capitalizada),
-  escondido quando esse nome já existe no grupo (case-insensitive). Mantém a
-  regra NÃO haver vínculo `User`↔`Participant` — é apenas um atalho de
+  participante usando **o nome de exibição salvo da conta (prioridade)** e, sem
+  nome, a parte local do e-mail capitalizada; escondido quando o nome resultante
+  já existe no grupo (case-insensitive). O nome de exibição é opcional, definido
+  em Ajustes (`PUT /api/auth/name` — ver backend `business-rules.md` §1) e
+  mantém a regra NÃO haver vínculo `User`↔`Participant` — é apenas um atalho de
   preenchimento; criar participante automaticamente ao criar grupo segue
   proibido (regra do backend).

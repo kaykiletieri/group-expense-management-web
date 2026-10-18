@@ -20,10 +20,12 @@ Grupo criado → navegar para `/grupos/:id`. Grupo excluído → `/grupos`.
 
 ### Auth
 
-- `POST /api/auth/register` `{ email, password }` → `201` `{ id, email }` (já autentica, cookie setado).
-- `POST /api/auth/login` `{ email, password }` → `200` `{ id, email }` (cookie).
+- `POST /api/auth/register` `{ email, password }` → `201` `{ id, email, name }` (já autentica, cookie setado; `name` nasce `null`).
+- `POST /api/auth/login` `{ email, password }` → `200` `{ id, email, name }` (cookie).
 - `POST /api/auth/logout` → `204`.
-- `GET /api/auth/me` → `200` `{ id, email }`, `401` se não autenticado.
+- `GET /api/auth/me` → `200` `{ id, email, name }` (`name` é o nome de exibição opcional da conta), `401` se não autenticado.
+- `PUT /api/auth/name` `{ name }` → `204`; nome em branco limpa o valor; >60 chars → `400`.
+  Usado em Ajustes ("Nome de exibição") e como prioridade do atalho "Você" no grupo (D21).
 - Erros de login: credenciais inválidas ou lockout (`403` após 5 tentativas/15min) → mensagem
   única neutra: "E-mail ou senha incorretos." / para 403: "Muitas tentativas. Tente novamente em alguns minutos."
 

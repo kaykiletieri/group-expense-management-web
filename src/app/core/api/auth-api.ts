@@ -22,4 +22,9 @@ export class AuthApi {
   me(): Observable<AuthUser> {
     return this.http.get<AuthUser>('api/auth/me');
   }
+
+  /** Salva ou remove (valor em branco) o nome de exibição da conta. */
+  updateName(name: string): Observable<void> {
+    return this.http.put<void>('api/auth/name', { name });
+  }
 }

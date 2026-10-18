@@ -84,7 +84,7 @@ describe('GrupoDetailPage', () => {
 
   it('botão "Você" adiciona a própria pessoa derivando o nome do e-mail', async () => {
     const auth = TestBed.inject(AuthService);
-    auth.setAuthenticated({ id: 'u1', email: 'Kayki@exemplo.com' });
+    auth.setAuthenticated({ id: 'u1', email: 'Kayki@exemplo.com', name: null });
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -116,6 +116,38 @@ describe('GrupoDetailPage', () => {
       '[aria-label="Adicionar você como participante"]',
     );
     expect(youAfter).toBeNull();
+  });
+
+  it('botão "Você" usa o nome salvo da conta quando existir', async () => {
+    TestBed.inject(AuthService).setAuthenticated({
+      id: 'u1',
+      email: 'Kayki@exemplo.com',
+      name: 'Kayki Teste',
+    });
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const youButton = compiled.querySelector<HTMLButtonElement>(
+      '[aria-label="Adicionar você como participante"]',
+    );
+    youButton!.click();
+
+    const addRequest = http.expectOne('api/groups/g1/participants');
+    expect(addRequest.request.body).toEqual({ name: 'Kayki Teste' });
+    addRequest.flush({ id: 'p3' });
+
+    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('api/groups/g1/participants').flush([
+      { id: 'p1', name: 'Renata', createdAtUtc: '' },
+      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+      { id: 'p3', name: 'Kayki Teste', createdAtUtc: '' },
+    ]);
+    http.expectOne('api/groups/g1/expenses').flush([]);
+    http.expectOne('api/groups/g1/balances').flush([
+      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
+      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
+    ]);
+    await settle();
   });
 
   it('exibe a mensagem de 409 ao remover participante com despesas', async () => {

@@ -63,7 +63,7 @@ describe('authGuard', () => {
   });
 
   it('não consulta o backend quando já há usuário em memória', async () => {
-    TestBed.inject(AuthService).setAuthenticated({ id: '1', email: 'user@example.com' });
+    TestBed.inject(AuthService).setAuthenticated({ id: '1', email: 'user@example.com', name: null });
 
     const outcome = await TestBed.runInInjectionContext(() =>
       authGuard(routeSnapshot, stateFor('/grupos')),

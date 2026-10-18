@@ -25,7 +25,33 @@
   overflow-wrap: anywhere;
 }
 
-/* Alternância de tema (Auto/Claro/Escuro), mesmo padrão do switch do login */
+/* Campo do nome de exibição */
+.name-field {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.name-field input {
+  flex: 1;
+  height: 48px;
+  padding-inline: var(--space-4);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--text-body);
+  min-width: 0;
+}
+
+.name-field input:hover:not(:focus) {
+  background: var(--hover-tint);
+}
+
+.field-error {
+  font-size: var(--text-caption);
+  color: var(--color-error);
+}
+
+/* Alternância de tema (Claro/Escuro), mesmo padrão do switch do login */
 .theme-switch {
   display: flex;
   padding: var(--space-1);

@@ -4,6 +4,8 @@
 export interface AuthUser {
   id: string;
   email: string;
+  /** Nome de exibição opcional (definido em Ajustes); null quando não definido. */
+  name: string | null;
 }
 
 export interface GroupSummary {

@@ -11,12 +11,10 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script>
       // Aplica o tema salvo antes do Angular bootar (evita flash) — D19.
+      // Padrão é claro; sem tema "auto": só claro/escuro.
       (function () {
         try {
-          var pref = localStorage.getItem('gem-theme') || 'auto';
-          if (pref !== 'light' && pref !== 'dark') {
-            pref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          }
+          var pref = localStorage.getItem('gem-theme') === 'dark' ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', pref);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'light');
