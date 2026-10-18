@@ -53,6 +53,10 @@ Grupo criado → navegar para `/grupos/:id`. Grupo excluído → `/grupos`.
 - Nota: **não existe** `GET /api/groups/{id}` — para o header do detalhe, obtenha nome da
   listagem ou do estado de navegação; se vazio (ex.: deep-link), recarregue listagem.
 - Botão "Novo grupo" no header da lista; também aparece empty-state.
+- **Limite de 10 grupos por usuário (D25)**: ao carregar 10 grupos, o botão
+  "Novo grupo" fica desabilitado com tooltip "Você pode ter no máximo 10
+  grupos."; se um 400 de limite chegar mesmo assim, o modal traduz:
+  "Você pode ter no máximo 10 grupos."
 
 ### Detalhe do grupo (`/grupos/:id`)
 

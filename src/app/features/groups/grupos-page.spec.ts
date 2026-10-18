@@ -109,4 +109,53 @@ describe('GruposPage', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('Nenhum grupo ainda');
   });
+
+  it('desabilita "Novo grupo" quando o usuário já tem 10 grupos', async () => {
+    const tenGroups = Array.from({ length: 10 }, (_, i) => ({
+      id: `g${i + 1}`,
+      name: `Grupo ${i + 1}`,
+      createdAtUtc: '2026-10-01',
+      participantCount: 0,
+      totalPaidInCents: 0,
+    }));
+    http.expectOne('api/groups/overviews').flush(tenGroups);
+    await settle();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const newButton = compiled.querySelector<HTMLButtonElement>('.list-head .btn-chip');
+    expect(newButton).toBeTruthy();
+    expect(newButton!.disabled).toBe(true);
+    expect(fixture.componentInstance.groupLimitReached()).toBe(true);
+  });
+
+  it('traduz o erro de limite atingido para pt-BR no modal', async () => {
+    const tenGroups = Array.from({ length: 10 }, (_, i) => ({
+      id: `g${i + 1}`,
+      name: `Grupo ${i + 1}`,
+      createdAtUtc: '2026-10-01',
+      participantCount: 0,
+      totalPaidInCents: 0,
+    }));
+    http.expectOne('api/groups/overviews').flush(tenGroups);
+    await settle();
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    component.openCreation();
+    fixture.detectChanges();
+
+    component.submitCreation();
+
+    const failedRequest = http.expectOne('api/groups');
+    failedRequest.flush(
+      { error: 'A user can have at most 10 groups.' },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    await settle();
+    fixture.detectChanges();
+
+    expect(component.createError()).toBe('Você pode ter no máximo 10 grupos.');
+  });
 });

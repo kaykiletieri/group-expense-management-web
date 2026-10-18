@@ -137,3 +137,9 @@ e atualização deste registro.
   credor com valor) e cada despesa (descrição — valor — pagador — dividido por
   nomes). Texto pt-BR via helper central `copyToClipboard` (Clipboard API com
   fallback `execCommand`).
+- **D25 – Limite de 10 grupos por usuário (decisão de produto aprovada pelo
+  usuário):** o backend rejeita a 11ª criação com 400 ("A user can have at most
+  10 groups."); a contagem considera apenas grupos do criador. A UI desabilita o
+  botão "Novo grupo" na lista quando o usuário já tem 10 grupos (tooltip com o
+  limite) e traduz o erro do limite para "Você pode ter no máximo 10 grupos."
+  no modal de criação.

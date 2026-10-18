@@ -9,6 +9,14 @@ import { formatBrl } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
+const GROUP_LIMIT = 10;
+const GROUP_LIMIT_PT = `Você pode ter no máximo ${GROUP_LIMIT} grupos.`;
+
+/** Converte o 400 do limite (mensagem do backend em inglês) em pt-BR. */
+function toFriendlyError(err: unknown): string {
+  const message = getApiErrorMessage(err, GENERIC_ERROR);
+  return message.includes(`at most ${GROUP_LIMIT} groups`) ? GROUP_LIMIT_PT : message;
+}
 
 @Component({
   selector: 'app-grupos-page',
@@ -52,6 +60,12 @@ export class GruposPage implements OnInit {
       this.overviews().every((o) => o.totalPaidInCents === 0),
   );
 
+  /** Limite de grupos por usuário (backend rejeita acima de 10). */
+  readonly groupLimitReached = computed(
+    () =>
+      this.overviews().length >= GROUP_LIMIT,
+  );
+
   ngOnInit(): void {
     void this.refresh();
   }
@@ -93,7 +107,7 @@ export class GruposPage implements OnInit {
       },
       error: (err) => {
         this.creating.set(false);
-        this.createError.set(getApiErrorMessage(err, GENERIC_ERROR));
+        this.createError.set(toFriendlyError(err));
       },
     });
   }

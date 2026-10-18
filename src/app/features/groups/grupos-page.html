@@ -1,7 +1,13 @@
 <section class="page">
   <header class="list-head">
     <h1>Meus grupos</h1>
-    <button class="btn-chip" type="button" (click)="openCreation()">
+    <button
+      class="btn-chip"
+      type="button"
+      [disabled]="groupLimitReached()"
+      [title]="groupLimitReached() ? 'Você pode ter no máximo 10 grupos.' : null"
+      (click)="openCreation()"
+    >
       <span class="material-symbols-outlined">add</span>
       Novo grupo
     </button>
