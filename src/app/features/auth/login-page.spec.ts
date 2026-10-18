@@ -64,4 +64,50 @@ describe('LoginPage', () => {
     await vi.waitFor(() => expect(router.url).toBe('/grupos'));
     expect(TestBed.inject(AuthService).user()?.email).toBe('voce@exemplo.com');
   });
+
+  it('após cadastro, autentica de verdade antes de navegar (registro não cria sessão)', async () => {
+    const component = fixture.componentInstance;
+    component.setMode('register');
+    component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
+    component.submit();
+
+    const registerRequest = http.expectOne('api/auth/register');
+    expect(registerRequest.request.method).toBe('POST');
+    expect(component.submitting()).toBe(true);
+    registerRequest.flush({ id: 'u9', email: 'novo@exemplo.com', name: null });
+
+    // primeira tela autenticada não pode disparar com 401: o login deve
+    // ser completado antes da navegação para /grupos
+    const loginRequest = http.expectOne('api/auth/login');
+    expect(loginRequest.request.method).toBe('POST');
+    expect(loginRequest.request.body).toEqual({ email: 'novo@exemplo.com', password: 'senha123' });
+    loginRequest.flush(null);
+
+    await vi.waitFor(() => expect(router.url).toBe('/grupos'));
+    expect(component.submitting()).toBe(false);
+    expect(TestBed.inject(AuthService).user()?.email).toBe('novo@exemplo.com');
+  });
+
+  it('mostra o erro do backend quando o login pós-cadastro falha', async () => {
+    const component = fixture.componentInstance;
+    component.setMode('register');
+    component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
+    component.submit();
+
+    http.expectOne('api/auth/register').flush({
+      id: 'u9',
+      email: 'novo@exemplo.com',
+      name: null,
+    });
+
+    const loginRequest = http.expectOne('api/auth/login');
+    loginRequest.flush(
+      { error: 'Invalid e-mail or password.' },
+      { status: 401, statusText: 'Unauthorized' },
+    );
+
+    await vi.waitFor(() => expect(component.submitting()).toBe(false));
+    expect(component.errorMessage()).toBe('E-mail ou senha incorretos.');
+    expect(router.url).toBe('/');
+  });
 });

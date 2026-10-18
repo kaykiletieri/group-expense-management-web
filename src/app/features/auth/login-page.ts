@@ -59,8 +59,21 @@ export class LoginPage {
     request$.subscribe({
       next: (user) => {
         this.auth.setAuthenticated(user);
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/grupos';
-        void this.router.navigateByUrl(returnUrl);
+
+        // Cadastro NÃO estabelece sessão (sem cookie): autenticar de verdade
+        // antes de navegar, senão a primeira tela autenticada falha com 401.
+        if (this.mode() === 'register') {
+          this.auth.login(payload).subscribe({
+            next: () => this.navigateAfterAuth(),
+            error: (err: unknown) => {
+              this.submitting.set(false);
+              this.errorMessage.set(this.humanizeError(err));
+            },
+          });
+          return;
+        }
+
+        this.navigateAfterAuth();
       },
       error: (err: unknown) => {
         this.submitting.set(false);
@@ -69,14 +82,22 @@ export class LoginPage {
     });
   }
 
+  private navigateAfterAuth() {
+    this.submitting.set(false);
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/grupos';
+    void this.router.navigateByUrl(returnUrl);
+  }
+
   private humanizeError(err: unknown): string {
     if (err instanceof HttpErrorResponse) {
       if (err.status === 403) {
         return LOCKOUT_MESSAGE;
       }
       if (err.status === 400) {
-        const message = getApiErrorMessage(err, 'Verifique os dados informados.');
-        return message;
+        return getApiErrorMessage(err, 'Verifique os dados informados.');
+      }
+      if (err.status === 401) {
+        return 'E-mail ou senha incorretos.';
       }
     }
     return NETWORK_ERROR;
