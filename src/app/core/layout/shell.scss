@@ -74,11 +74,101 @@
   }
 }
 
-@media (min-width: 481px) {
+// Sidebar (desktop): oculta por padrão no mobile
+.shell-side {
+  display: none;
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
   .shell-nav {
     max-width: var(--container-max);
     left: 50%;
     transform: translateX(-50%);
     border-inline: var(--border-width) solid var(--border-color);
   }
+}
+
+/* ---------- Desktop (≥768px): sidebar no lugar da bottom nav ---------- */
+
+@media (min-width: 768px) {
+  .shell {
+    flex-direction: row;
+  }
+
+  .shell-header {
+    display: none;
+  }
+
+  .shell-nav {
+    display: none;
+  }
+
+  .shell-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    padding: var(--space-6) var(--space-4);
+    background: var(--color-canvas);
+    border-right: var(--border-width) solid var(--border-color);
+  }
+
+  .shell-main {
+    max-width: 680px;
+    padding-bottom: var(--space-12);
+  }
+}
+
+@media (min-width: 1120px) {
+  .shell-main {
+    max-width: 1160px;
+  }
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.side-nav a .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.side-nav a:hover:not(.is-active) {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.side-nav a.is-active {
+  background: var(--color-positive);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-hard);
+  color: var(--color-ink);
+}
+
+.side-nav a.is-active .material-symbols-outlined {
+  font-weight: 700;
 }

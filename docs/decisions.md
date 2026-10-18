@@ -52,3 +52,14 @@ e atualização deste registro.
   guard, formulário de despesa, mensagens de erro).
 - **D17 — Deploy previsto same-origin da API** (ou reverse proxy) — sem CDN cross-domain
   nesta fase, para o cookie httpOnly continuar funcionando.
+
+## Layout adaptativo
+
+- **D18 — Mobile-first com dois breakpoints de media query** (valores fixos, sem
+  sistema de grid): **≥768px** troca a bottom nav por sidebar fixa à esquerda
+  (`--sidebar-w`), esconde o header sticky e centraliza os modais (diálogo em vez de
+  bottom sheet) e põe os cards de grupo em grade; **≥1120px** amplia o container
+  (shell 1160px), divide o detalhe do grupo em duas colunas (saldos + participantes
+  à esquerda, despesas à direita), o formulário de despesa em duas colunas e apresenta
+  o login como split editorial (hero cobalto decorativo, `aria-hidden`, à esquerda).
+  Entre 481–767px a bottom nav fica centralizada no container; abaixo de 481px, full-width.

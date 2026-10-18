@@ -71,3 +71,11 @@
 .group-card-arrow {
   color: var(--color-ink-soft);
 }
+
+/* Tablet/desktop: cards de grupo em grade */
+@media (min-width: 768px) {
+  .group-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}

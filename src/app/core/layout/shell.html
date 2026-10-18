@@ -1,4 +1,29 @@
 <div class="shell">
+  <!-- Sidebar: só aparece a partir de 768px -->
+  <aside class="shell-side">
+    <span class="shell-brand">racha.</span>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a
+        routerLink="/grupos"
+        routerLinkActive="is-active"
+        #sideGruposLink="routerLinkActive"
+        [attr.aria-current]="sideGruposLink.isActive ? 'page' : null"
+      >
+        <span class="material-symbols-outlined">groups</span>
+        Grupos
+      </a>
+      <a
+        routerLink="/ajustes"
+        routerLinkActive="is-active"
+        #sideAjustesLink="routerLinkActive"
+        [attr.aria-current]="sideAjustesLink.isActive ? 'page' : null"
+      >
+        <span class="material-symbols-outlined">settings</span>
+        Ajustes
+      </a>
+    </nav>
+  </aside>
+
   <header class="shell-header">
     <span class="shell-brand">racha.</span>
   </header>

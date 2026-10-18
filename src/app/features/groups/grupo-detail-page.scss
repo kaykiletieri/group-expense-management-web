@@ -276,3 +276,18 @@ h2 {
 .participant-add input:hover:not(:focus) {
   background: #fcfbf7;
 }
+
+/* Telas largas (≥1120px): saldos + participantes à esquerda, despesas à direita.
+   Aplicado só quando a página carregada é a de grupo (possui .group-header). */
+@media (min-width: 1120px) {
+  .page:has(> .group-header) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .page:has(> .group-header) > .group-header {
+    grid-column: 1 / -1;
+  }
+}

@@ -262,6 +262,27 @@
   }
 }
 
+/* Desktop: modal como diálogo centralizado (≥768px) */
+@media (min-width: 768px) {
+  .modal {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    max-width: calc(100vw - 48px);
+    border-radius: var(--radius-card);
+    animation: modal-pop 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+}
+
+@keyframes modal-pop {
+  from {
+    transform: translate(-50%, calc(-50% + 12px));
+    opacity: 0.6;
+  }
+}
+
 .modal-title {
   font-size: var(--text-h2);
 }

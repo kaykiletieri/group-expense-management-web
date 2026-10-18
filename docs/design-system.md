@@ -120,3 +120,21 @@ nunca prometer função inexistente. Exemplos:
 - CTAs: "Criar grupo", "Adicionar", "Salvar despesa", "Excluir".
 
 "racha." no header é placeholder (D14) até a marca final.
+
+## 4. Responsividade (decisão D18)
+
+Base mobile-first com duas media queries:
+
+- **≥768px**: sidebar fixa à esquerda no lugar da bottom nav (links Grupos/Ajustes,
+  ativo com fundo verde-limão), header sticky oculto, container mais largo
+  (680px), modais como **diálogo centralizado** em vez de bottom sheet, cards de
+  grupo em grade `auto-fit`.
+- **≥1120px**: container amplo (1160px); detalhe do grupo em **duas colunas**
+  (saldos + participantes à esquerda, despesas à direita, cabeçalho atravessando
+  o topo); formulário de despesa em duas colunas (valor/descrição | pagador/rateio);
+  login como **split** — hero decorativo cobalto ("racha.", tagline em verde-limão)
+  à esquerda, card do formulário à direita (marca/tagline do card se ocultam para
+  não duplicar).
+
+O nav duplicado no DOM (sidebar e bottom nav) nunca fica visível ao mesmo tempo;
+o oculto usa `display: none` e sai da árvore de acessibilidade.
