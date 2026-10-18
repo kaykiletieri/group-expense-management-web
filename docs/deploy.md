@@ -49,5 +49,8 @@ Nginx/Caddy na frente: `/api/*` → API; demais caminhos → estáticos do front
 - [ ] Sem segredos no bundle (revisar `dist/` antes de publicar)
 - [ ] Deep links (`/grupos/x`, `/login`) resolvidos pelo fallback SPA
 - [ ] Sessão: login → recarregar página (F5) → continua autenticado (cookie same-origin)
+- [ ] Tema escuro: preferência salva persiste após F5 e não há flash na troca de página
+- [ ] CSP e security headers (backend): lembrar do hash/nonce para o script inline
+      do tema em `index.html` (D19)
 - [ ] Revisão de privacidade pendente antes do lançamento (não afirma-se compliance -
       ver AGENTS.md §7 no repo backend)

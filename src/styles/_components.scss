@@ -12,7 +12,7 @@
 }
 
 .card > * + * {
-  border-top: 1px solid rgba(32, 33, 30, 0.12);
+  border-top: 1px solid var(--divider);
 }
 
 .card.row-gap > * + * {
@@ -225,7 +225,7 @@
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(32, 33, 30, 0.5);
+  background: var(--backdrop);
   border: none;
   animation: backdrop-fade 160ms ease;
 }
@@ -320,12 +320,12 @@
 
 .skeleton-field {
   height: 72px;
-  border: var(--border-width) solid rgba(32, 33, 30, 0.12);
+  border: var(--border-width) solid var(--divider);
 }
 
 .skeleton-card {
   height: 96px;
-  border: var(--border-width) solid rgba(32, 33, 30, 0.12);
+  border: var(--border-width) solid var(--divider);
 }
 
 @keyframes pulse {

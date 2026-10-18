@@ -62,4 +62,32 @@
   --focus-ring: 0 0 0 3px rgba(37, 70, 240, 0.16);
   --focus-ring-error: 0 0 0 3px rgba(215, 64, 43, 0.14);
   --placeholder: #a3a29a;
+
+  // Extras de superfície/interação (tema dependente)
+  --divider: rgba(32, 33, 30, 0.12);
+  --hover-tint: #f2ede1;
+  --backdrop: rgba(32, 33, 30, 0.5);
+  --scrollbar-thumb: rgba(32, 33, 30, 0.25);
+}
+
+/* Tema escuro: o documento recebe data-theme="auto|light|dark" em <html> (D19).
+   Sovreama no escuro.
+   - "ink" vira creme: deriva automaticamente as bordas/sombras hard no escuro. */
+[data-theme='dark'] {
+  --color-canvas: #191a17;
+  --color-surface: #232420;
+  --color-card: #2b2c26;
+  --color-ink: #f0ecdd;
+  --color-ink-soft: #a19f92;
+  --color-primary: #7a8cff;
+  --color-error: #ef6a52;
+
+  --focus-ring: 0 0 0 3px rgba(122, 140, 255, 0.35);
+  --focus-ring-error: 0 0 0 3px rgba(239, 106, 82, 0.3);
+  --placeholder: #7b7970;
+
+  --divider: rgba(240, 236, 221, 0.14);
+  --hover-tint: #32332c;
+  --backdrop: rgba(0, 0, 0, 0.6);
+  --scrollbar-thumb: rgba(240, 236, 221, 0.28);
 }

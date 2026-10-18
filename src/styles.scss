@@ -158,7 +158,7 @@ input:-webkit-autofill:focus {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(32, 33, 30, 0.25) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -167,7 +167,7 @@ input:-webkit-autofill:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(32, 33, 30, 0.25);
+  background: var(--scrollbar-thumb);
   border-radius: var(--radius-pill);
 }
 

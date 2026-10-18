@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { ThemeService } from '../../core/theme/theme.service';
 
 @Component({
   selector: 'app-ajustes-page',
@@ -11,6 +12,7 @@ import { AuthService } from '../../core/auth/auth.service';
 export class AjustesPage {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  readonly theme = inject(ThemeService);
 
   readonly user = this.auth.user;
   readonly loggingOut = signal(false);

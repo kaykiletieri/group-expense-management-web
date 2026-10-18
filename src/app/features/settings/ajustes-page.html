@@ -6,6 +6,37 @@
     <p class="page-card-value">{{ user()?.email ?? '—' }}</p>
   </div>
 
+  <div class="page-card">
+    <span class="label-caps page-card-label">Tema</span>
+    <div class="theme-switch" role="group" aria-label="Escolher tema">
+      <button
+        type="button"
+        class="theme-option"
+        [class.is-selected]="theme.preference() === 'auto'"
+        (click)="theme.preference.set('auto')"
+      >
+        Auto
+      </button>
+      <button
+        type="button"
+        class="theme-option"
+        [class.is-selected]="theme.preference() === 'light'"
+        (click)="theme.preference.set('light')"
+      >
+        Claro
+      </button>
+      <button
+        type="button"
+        class="theme-option"
+        [class.is-selected]="theme.preference() === 'dark'"
+        (click)="theme.preference.set('dark')"
+      >
+        Escuro
+      </button>
+    </div>
+    <p class="section-note">No modo auto, o tema segue a preferência do seu aparelho.</p>
+  </div>
+
   @if (errorMessage()) {
     <p class="page-error" role="alert">{{ errorMessage() }}</p>
   }

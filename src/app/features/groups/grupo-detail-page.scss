@@ -154,7 +154,7 @@ h2 {
 }
 
 .balance-row:hover {
-  background: #fcfbf7;
+  background: var(--hover-tint);
 }
 
 .balance-info {
@@ -274,7 +274,7 @@ h2 {
 }
 
 .participant-add input:hover:not(:focus) {
-  background: #fcfbf7;
+  background: var(--hover-tint);
 }
 
 /* Telas largas (≥1120px): saldos + participantes à esquerda, despesas à direita.

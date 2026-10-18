@@ -63,3 +63,15 @@ e atualização deste registro.
   à esquerda, despesas à direita), o formulário de despesa em duas colunas e apresenta
   o login como split editorial (hero cobalto decorativo, `aria-hidden`, à esquerda).
   Entre 481–767px a bottom nav fica centralizada no container; abaixo de 481px, full-width.
+
+## Tema
+
+- **D19 — Dark mode opcional:** paleta escura registrada em `_tokens.scss` sob
+  `[data-theme="dark"]` (todas as superfícies/cores derivam dos tokens; bordas e
+  sombras "hard editorial" derivam do `--color-ink`, que vira creme no escuro).
+  Preferência do usuário em `localStorage` (`gem-theme`: `auto`/`light`/`dark`),
+  gerenciada por `ThemeService` (`src/app/core/theme/`), com toggle
+  Auto/Claro/Escuro em Ajustes; padrão "auto" segue `prefers-color-scheme`
+  (inclusive ao vivo). Um script inline no `index.html` aplica o tema salvo antes
+  do bootstrap para evitar flash — ao introduzir CSP no deploy do backend, esse
+  script precisa de hash/nonce.

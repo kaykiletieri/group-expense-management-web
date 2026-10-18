@@ -90,7 +90,7 @@
 }
 
 .login-field input:hover:not(:focus) {
-  background: #f2ede1;
+  background: var(--hover-tint);
 }
 
 .login-field input.has-error {
@@ -143,7 +143,8 @@
     justify-content: center;
     gap: var(--space-5);
     padding: var(--space-12);
-    background: var(--color-primary);
+    // Decorativo: mantém o cobalto do brand nos dois temas
+    background: #2546f0;
     color: #ffffff;
     border-right: var(--border-width) solid var(--border-color);
   }

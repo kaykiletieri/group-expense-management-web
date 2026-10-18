@@ -138,3 +138,25 @@ Base mobile-first com duas media queries:
 
 O nav duplicado no DOM (sidebar e bottom nav) nunca fica visível ao mesmo tempo;
 o oculto usa `display: none` e sai da árvore de acessibilidade.
+
+## 5. Tema claro/escuro (decisão D19)
+
+Tema escuro disponível via toggle **Auto / Claro / Escuro** em Ajustes (padrão
+"auto" segue o sistema). Toda a paleta escura vive em `src/styles/_tokens.scss`
+sob `[data-theme="dark"]`:
+
+| Papel | Claro | Escuro |
+| --- | --- | --- |
+| canvas | `#fbf9f4` | `#191a17` |
+| surface | `#f7f3ea` | `#232420` |
+| card | `#ffffff` | `#2b2c26` |
+| ink (+bordas/sombras) | `#20211e` | `#f0ecdd` (creme) |
+| primary | `#2546f0` | `#7a8cff` |
+| cta | `#ff7139` | `#ff7139` (inalterado) |
+| positive | `#d9f36a` | `#d9f36a` (inalterado) |
+| error | `#d7402b` | `#ef6a52` |
+
+Regras: **nunca** use cinzas/hex literais para superfícies, bordas, hovers,
+backdrop ou scrollbar — use os tokens (`--divider`, `--hover-tint`, `--backdrop`,
+`--scrollbar-thumb`). O hero do login é decorativo e mantém o cobalto fixo nos
+dois temas. O script inline no `index.html` evita flash de tema errado ao recarregar.

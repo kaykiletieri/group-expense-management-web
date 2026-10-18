@@ -25,6 +25,40 @@
   overflow-wrap: anywhere;
 }
 
+/* Alternância de tema (Auto/Claro/Escuro), mesmo padrão do switch do login */
+.theme-switch {
+  display: flex;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.theme-option {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-small);
+  color: var(--color-ink-soft);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.theme-option:hover:not(.is-selected) {
+  color: var(--color-ink);
+}
+
+.theme-option.is-selected {
+  background: var(--color-card);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-hard);
+}
+
 .page-error {
   padding: var(--space-3);
   border: var(--border-width) solid var(--color-error);
