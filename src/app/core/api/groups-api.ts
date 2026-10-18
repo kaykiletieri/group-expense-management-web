@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {
   CreateGroupResponse,
   GroupBalance,
+  GroupOverview,
   GroupSummary,
 } from './api-models';
 
@@ -17,6 +18,10 @@ export class GroupsApi {
 
   list(): Observable<GroupSummary[]> {
     return this.http.get<GroupSummary[]>('api/groups');
+  }
+
+  overviews(): Observable<GroupOverview[]> {
+    return this.http.get<GroupOverview[]>('api/groups/overviews');
   }
 
   balances(groupId: string): Observable<GroupBalance[]> {

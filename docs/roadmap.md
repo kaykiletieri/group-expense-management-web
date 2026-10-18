@@ -18,8 +18,9 @@ Etapa 4 do produto (o backend — etapas 1–3 — está concluído). Cada etapa
   `/ajustes` com e-mail + sair.
 
 ## E4 — Grupos
-- Lista "Meus grupos" + balanço geral (D10), criar grupo,
-  detalhe completo (saldos, despesas, participantes 409, renomear/excluir).
+- Lista "Meus grupos" (via `GET /api/groups/overviews`, D10), criar grupo,
+  detalhe completo (saldos, despesas, participantes com remoção recalculada
+  (D22), renomear/excluir).
 
 ## E5 — Despesas
 - Nova/editar despesa completa, exclusão, preview de rateio estimado,

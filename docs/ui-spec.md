@@ -31,11 +31,12 @@ Grupo criado → navegar para `/grupos/:id`. Grupo excluído → `/grupos`.
 
 ### Meus grupos (`/grupos`)
 
-- `GET /api/groups` → `[ { id, name, createdAtUtc } ]`.
-- Saldo geral (D10): para cada grupo, `GET /api/groups/{id}/balances` →
-  `[ { participantId, totalPaidInCents, totalOwedInCents, balanceInCents } ]`;
-  somar `totalPaidInCents` (ou `balanceInCents`, conforme elemento visual) no cliente:
-  banner "Ninguém deve nada por aqui." quando a soma dos saldos == 0.
+- `GET /api/groups/overviews` (uma única chamada; substitui o antigo N+1 de
+  `GET /api/groups` + `balances` por grupo, ver D10) →
+  `[ { id, name, createdAtUtc, participantCount, totalPaidInCents } ]`.
+  A lista é fonte de nome/id para navegação; `totalPaidInCents` alimenta os chips
+  "X pessoa(s)" / "R$ X em despesas" e o banner "Ninguém deve nada por aqui."
+  (quando todos os grupos estão com `totalPaidInCents === 0`).
 - Criar: `POST /api/groups` `{ name }` → `201 { id }`.
 - Renomear: `PUT /api/groups/{id}` `{ name }` → `204`.
 - Excluir: `DELETE /api/groups/{id}` → `204`, com modal de confirmação:
@@ -67,8 +68,13 @@ Renderização:
 - Participantes: listar em seção própria (nome caps chip + ações); adicionar
   `POST /api/groups/{id}/participants` `{ name }` → `201 { id }`;
   remover `DELETE /api/groups/{id}/participants/{participantId}` → `204`.
-- **409 ao remover participante com despesas** — mensagem em modal/inline:
-  "Este participante tem despesas associadas e não pode ser removido."
+- **Remoção de participante com histórico (D22)** — o backend recalcula:
+  despesas pagas por ele são excluídas e as cotas dele são redistribuídas entre os
+  restantes; despesas que ficassem sem participantes na divisão também são excluídas.
+  O modal de confirmação avisa quando o participante é referenciado por despesas:
+  "Remover X? Despesas pagas por X serão excluídas e as cotas serão recalculadas
+  entre os restantes." (mensagem simples "Remover X do grupo?" quando não referenciado).
+  Após remover, recarregar participants/expenses/balances.
 - Estados: loading (skeletons), erro 404 → tela "Grupo não encontrado" com voltar;
   sem despesas → empty state "Nenhuma despesa por aqui ainda."
 
@@ -103,7 +109,7 @@ em `POST /api/groups/{id}/expenses` (201 `{ id }`) e
 | `403` (login) | "Muitas tentativas. Tente novamente em alguns minutos." |
 | `404` | tela/estado local "não encontrado" (não revelar existência) |
 | `400` | mensagem do `error` do corpo no formulário/seção |
-| `409` | mensagem do `error` do corpo (ex. participante com despesas) |
+| `409` | mensagem do `error` do corpo (regra de domínio conflituosa) |
 | rede/0 | "Não foi possível conectar. Verifique sua internet." |
 
 ## Microcopy global

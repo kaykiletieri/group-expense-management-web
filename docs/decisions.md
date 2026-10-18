@@ -28,10 +28,11 @@ e atualização deste registro.
 
 ## Decisões de escopo e correções sobre os protótipos
 
-- **D10 — Balanço geral entre grupos é calculado no cliente** (soma de `balanceInCents`
-  e `totalPaid` por grupo via N+1 de `GET /api/groups/{id}/balances`). Custo aceitável no
-  MVP; se o número de grupos crescer muito, criar endpoint agregado no backend
-  (mudança de escopo a ser pedida na hora).
+- **D10 — Balanço geral dos grupos em uma única chamada** (substitui versões anteriores
+  que calculavam no cliente via N+1 de `GET /api/groups/{id}/balances`): existe o
+  endpoint agregado `GET /api/groups/overviews`, que devolve por grupo
+  `{ id, name, createdAtUtc, participantCount, totalPaidInCents }`. A tela "Meus
+  grupos" consome só esse endpoint; nada de somas de saldo no cliente.
 - **D11 — Avatares por iniciais** (cor derivada determinística do nome) — sem upload,
   sem campo de foto (backend não possui).
 - **D12 — Sem chip de categoria de grupo** ("Praia & Férias") e sem modos de grupo
@@ -94,3 +95,19 @@ e atualização deste registro.
   mantém a regra NÃO haver vínculo `User`↔`Participant` — é apenas um atalho de
   preenchimento; criar participante automaticamente ao criar grupo segue
   proibido (regra do backend).
+
+## Dados
+
+- **D22 — Remoção de participante recalcula saldos (decisão de produto aprovada
+  pelo usuário; substitui o bloqueio por 409):** `DELETE /api/groups/{id}/participants/{id}`
+  aceita participante com histórico:
+  - despesas **pagas** por ele são excluídas;
+  - nas demais, as cotas dele são redistribuídas igualmente entre os restantes
+    (ordem de seleção preservada, restante na 1ª cota);
+  - despesas que ficassem sem participantes na divisão são excluídas;
+  - tudo transacional no backend. A soma das cotas continua == total e a soma
+    dos saldos == 0.
+  A UI confirma com copy condicional: quando o participante é referenciado por
+  despesas (pagador ou cota, computado nas despesas já carregadas), o modal diz
+  que despesas pagas por ele serão excluídas e as cotas recalculadas; caso
+  contrário, apenas "Remover X do grupo?". Reaberto só por decisão de produto.

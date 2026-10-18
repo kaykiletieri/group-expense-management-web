@@ -116,7 +116,7 @@ Fonte: `design-spec-racha.md`. Princípios: frases curtas, tom leve mas claro,
 nunca prometer função inexistente. Exemplos:
 
 - "Ninguém deve nada por aqui." (banner verde)
-- "Este participante tem despesas associadas e não pode ser removido." (texto do 409)
+- "Despesas pagas por X serão excluídas e as cotas serão recalculadas entre os restantes." (confirm de remoção de participante com histórico, D22)
 - CTAs: "Criar grupo", "Adicionar", "Salvar despesa", "Excluir".
 
 "racha." no header é placeholder (D14) até a marca final.

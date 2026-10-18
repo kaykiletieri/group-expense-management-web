@@ -35,12 +35,12 @@
     </div>
 
     <ul class="group-list">
-      @for (overview of overviews(); track overview.group.id) {
+      @for (overview of overviews(); track overview.id) {
         <li>
-          <a class="card group-card" routerLink="/grupos/{{ overview.group.id }}">
-            <app-avatar [name]="overview.group.name" />
+          <a class="card group-card" routerLink="/grupos/{{ overview.id }}">
+            <app-avatar [name]="overview.name" />
             <div class="group-card-info">
-              <span class="group-card-name">{{ overview.group.name }}</span>
+              <span class="group-card-name">{{ overview.name }}</span>
               <div class="group-card-chips">
                 <span class="chip chip-soft">{{ overview.participantCount }} pessoa(s)</span>
                 @if (overview.totalPaidInCents === 0) {

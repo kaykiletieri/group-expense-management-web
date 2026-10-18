@@ -34,8 +34,8 @@ irmão `group-expense-management` (C#/.NET, já concluída e estável).
 - A divisão do rateio é sempre **igualitária** e feita pelo backend; o restante de centavos é
   distribuído de forma determinística. O cliente apenas exibe; não recalcule saldos.
 - Pagador pode ficar fora do rateio; nenhum participante se repete na divisão.
-- A soma dos saldos de um grupo é sempre zero; o balanço geral entre grupos é calculado no cliente
-  (ver `docs/decisions.md`, D10).
+- A soma dos saldos de um grupo é sempre zero; a visão agregada dos grupos vem do
+  endpoint `GET /api/groups/overviews` (ver `docs/decisions.md`, D10).
 - Somente o criador administra o grupo. O backend devolve **404** (não 403) para quem não tem
   acesso — não vaze a existência do grupo na UI.
 
@@ -46,8 +46,9 @@ irmão `group-expense-management` (C#/.NET, já concluída e estável).
   contratos no repositório do backend antes de alterar tipos no frontend.
 - JSON é `camelCase`. Respostas de criação retornam apenas `{ id }`.
 - Estatuto de erros padronizado: `400` = validação, `401` = não autenticado, `403` = bloqueio por
-  tentativas de login, `404` = recurso inexistente ou sem acesso, `409` = ponta conflituosa
-  (ex.: participante com despesas associadas).
+  tentativas de login, `404` = recurso inexistente ou sem acesso, `409` = regra de domínio
+  conflituosa (a remoção de participante NÃO gera mais 409 por despesas associadas —
+  o backend recalcula, ver D22).
 
 ## 5. Autenticação e rede
 

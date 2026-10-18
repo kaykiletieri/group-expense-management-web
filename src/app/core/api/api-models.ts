@@ -14,6 +14,14 @@ export interface GroupSummary {
   createdAtUtc: string;
 }
 
+export interface GroupOverview {
+  id: string;
+  name: string;
+  createdAtUtc: string;
+  participantCount: number;
+  totalPaidInCents: number;
+}
+
 export interface CreateGroupResponse {
   id: string;
 }

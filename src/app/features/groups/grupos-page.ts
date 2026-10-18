@@ -3,18 +3,12 @@ import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { GroupsApi } from '../../core/api/groups-api';
-import { GroupBalance, GroupSummary } from '../../core/api/api-models';
+import { GroupOverview } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
-
-interface GroupOverview {
-  group: GroupSummary;
-  participantCount: number;
-  totalPaidInCents: number;
-}
 
 @Component({
   selector: 'app-grupos-page',
@@ -70,20 +64,9 @@ export class GruposPage implements OnInit {
     this.loading.set(true);
     this.loadError.set(false);
     try {
-      const groups = await firstValueFrom(this.groupsApi.list());
-      const overviews = await Promise.all(
-        groups.map(async (group): Promise<GroupOverview> => {
-          const balances = await firstValueFrom(this.groupsApi.balances(group.id));
-          return {
-            group,
-            participantCount: balances.length,
-            totalPaidInCents: balances.reduce(
-              (sum: number, b: GroupBalance) => sum + b.totalPaidInCents,
-              0,
-            ),
-          };
-        }),
-      );
+      // Uma única chamada: o endpoint overviews já traz participantes e
+      // total pago de cada grupo (evita N+1 de GET /balances por grupo).
+      const overviews = await firstValueFrom(this.groupsApi.overviews());
       this.overviews.set(overviews);
     } catch {
       this.loadError.set(true);

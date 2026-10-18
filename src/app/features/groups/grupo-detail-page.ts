@@ -216,9 +216,20 @@ export class GrupoDetailPage implements OnInit {
   }
 
   confirmDeleteParticipant(participant: Participant) {
+    // O backend recalcula tudo ao remover: despesas pagas por ele são
+    // excluídas e as cotas dele são redistribuídas entre os restantes.
+    const referenced = this
+      .expenses()
+      .some(
+        (expense) =>
+          expense.payerParticipantId === participant.id ||
+          expense.shares.some((share) => share.participantId === participant.id),
+      );
     this.confirmState.set({
       title: 'Remover participante',
-      message: `Remover ${participant.name} do grupo?`,
+      message: referenced
+        ? `Remover ${participant.name}? Despesas pagas por ${participant.name} serão excluídas e as cotas serão recalculadas entre os restantes.`
+        : `Remover ${participant.name} do grupo?`,
       confirmLabel: 'Remover',
       action: async () => {
         try {

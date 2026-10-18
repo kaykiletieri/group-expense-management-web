@@ -35,31 +35,37 @@ describe('GruposPage', () => {
 
   it('renderiza os grupos com total pago por grupo', async () => {
     http
-      .expectOne('api/groups')
+      .expectOne('api/groups/overviews')
       .flush([
-        { id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '2026-10-01' },
-        { id: 'g2', name: 'Contas da casa', createdAtUtc: '2026-10-02' },
+        {
+          id: 'g1',
+          name: 'Viagem a Ubatuba',
+          createdAtUtc: '2026-10-01',
+          participantCount: 2,
+          totalPaidInCents: 10000,
+        },
+        {
+          id: 'g2',
+          name: 'Contas da casa',
+          createdAtUtc: '2026-10-02',
+          participantCount: 0,
+          totalPaidInCents: 0,
+        },
       ]);
-    await settle();
-
-    http.expectOne('api/groups/g1/balances').flush([
-      { participantId: 'p1', totalPaidInCents: 10000, totalOwedInCents: 5000, balanceInCents: 5000 },
-      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 5000, balanceInCents: -5000 },
-    ]);
-    http.expectOne('api/groups/g2/balances').flush([]);
-
     await settle();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const names = [...compiled.querySelectorAll('.group-card-name')].map((e) => e.textContent);
     expect(names).toEqual(['Viagem a Ubatuba', 'Contas da casa']);
+    expect(compiled.textContent).toContain('2 pessoa(s)');
     // Intl usa U+00A0 entre o símbolo e o valor
     expect(compiled.textContent).toContain('R$\u00a0100,00');
+    expect(compiled.textContent).toContain('Sem despesas');
   });
 
   it('cria grupo e navega para o detalhe', async () => {
-    http.expectOne('api/groups').flush([]);
+    http.expectOne('api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 
@@ -78,7 +84,7 @@ describe('GruposPage', () => {
   });
 
   it('cria grupo mesmo sem nome (backend gera "Grupo N")', async () => {
-    http.expectOne('api/groups').flush([]);
+    http.expectOne('api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 
@@ -96,7 +102,7 @@ describe('GruposPage', () => {
   });
 
   it('mostra estado vazio quando não há grupos', async () => {
-    http.expectOne('api/groups').flush([]);
+    http.expectOne('api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 

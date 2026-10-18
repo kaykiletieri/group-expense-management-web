@@ -150,13 +150,15 @@ describe('GrupoDetailPage', () => {
     await settle();
   });
 
-  it('exibe a mensagem de 409 ao remover participante com despesas', async () => {
+  it('remove participante sem despesas com mensagem simples', async () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const removeButtons = compiled.querySelectorAll<HTMLButtonElement>(
       'button[aria-label="Remover participante"]',
     );
     removeButtons[1].click();
     fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Remover Lucas do grupo?');
 
     const confirmButton = [...compiled.querySelectorAll<HTMLButtonElement>('.modal-actions button')]
       .find((b) => b.textContent?.trim() === 'Remover');
@@ -165,16 +167,65 @@ describe('GrupoDetailPage', () => {
 
     const deleteRequest = http.expectOne('api/groups/g1/participants/p2');
     expect(deleteRequest.request.method).toBe('DELETE');
-    deleteRequest.flush(
-      { error: 'Este participante tem despesas associadas e não pode ser removido.' },
-      { status: 409, statusText: 'Conflict' },
-    );
+    deleteRequest.flush(null);
 
+    await settle();
+
+    // refresh silencioso re-carrega os mesmos quatro endpoints
+    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    await settle();
+    http.expectOne('api/groups/g1/participants').flush([
+      { id: 'p1', name: 'Renata', createdAtUtc: '' },
+    ]);
+    http.expectOne('api/groups/g1/expenses').flush([]);
+    http.expectOne('api/groups/g1/balances').flush([
+      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 0, balanceInCents: 12000 },
+    ]);
     await settle();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain(
-      'Este participante tem despesas associadas e não pode ser removido.',
+    expect((fixture.nativeElement.textContent)).not.toContain('Remover participante');
+  });
+
+  it('avisa que despesas pagas serão excluídas ao remover participante referenciado', async () => {
+    const second: ComponentFixture<GrupoDetailPage> = TestBed.createComponent(GrupoDetailPage);
+    second.detectChanges();
+    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('api/groups/g1/participants').flush([
+      { id: 'p1', name: 'Renata', createdAtUtc: '' },
+      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+    ]);
+    http.expectOne('api/groups/g1/expenses').flush([
+      {
+        id: 'e1',
+        description: 'Almoço',
+        totalAmountInCents: 12000,
+        payerParticipantId: 'p2',
+        shares: [{ participantId: 'p2', amountInCents: 12000 }],
+        createdAtUtc: '2026-10-01T12:00:00Z',
+      },
+    ]);
+    http.expectOne('api/groups/g1/balances').flush([
+      { participantId: 'p2', totalPaidInCents: 12000, totalOwedInCents: 12000, balanceInCents: 0 },
+    ]);
+    await settle();
+    second.detectChanges();
+
+    const secondCompiled = second.nativeElement as HTMLElement;
+    const removeButtons = secondCompiled.querySelectorAll<HTMLButtonElement>(
+      'button[aria-label="Remover participante"]',
     );
+    removeButtons[1].click();
+    second.detectChanges();
+
+    expect(secondCompiled.textContent).toContain(
+      'Despesas pagas por Lucas serão excluídas',
+    );
+
+    const cancelButton = [...secondCompiled.querySelectorAll<HTMLButtonElement>(
+      '.modal-actions button',
+    )].find((b) => b.textContent?.trim() === 'Cancelar');
+    cancelButton!.click();
+    await settle();
   });
 });
