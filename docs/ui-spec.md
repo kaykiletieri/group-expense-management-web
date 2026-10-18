@@ -59,10 +59,16 @@ Grupo criado → navegar para `/grupos/:id`. Grupo excluído → `/grupos`.
 Carregar em paralelo:
 
 - `GET /api/groups/{id}/participants` → `[ { id, name, createdAtUtc } ]`.
-- `GET /api/groups/{id}/balances` (card "Saldos").
+- `GET /api/groups/{id}/balances` (card "Saldos") →
+  `[ { participantId, totalPaidInCents, totalOwedInCents, totalReceivedInCents,
+       totalSentInCents, balanceInCents } ]`.
 - `GET /api/groups/{id}/expenses` →
   `[ { id, description, totalAmountInCents, payerParticipantId,
        shares: [ { participantId, amountInCents } ], createdAtUtc } ]`.
+- `GET /api/groups/{id}/payments` →
+  `[ { id, payerParticipantId, receiverParticipantId, amountInCents, createdAtUtc } ]`.
+- `GET /api/groups/{id}/settlement-plan` →
+  `[ { fromParticipantId, toParticipantId, amountInCents } ]`.
 
 Renderização:
 
@@ -71,6 +77,23 @@ Renderização:
 - Card de saldos: por participante — "Pagou R$ X" (totalPaid) e saldo colorido
   (verde positivo / vermelho negativo, tabular-nums). Banner limão
   "Ninguém deve nada por aqui." quando todos os saldos são 0.
+- Botão "+ Pagamento" na seção Saldos abre o modal de acerto; ver seção Pagamentos (D23).
+- "Como acertar" (D23): quando o settlement-plan não está vazio, card com a
+  sugestão de transferências ("Devedor → Credor **R$ X**") e botão "Registrar"
+  por linha que abre o modal de pagamento pré-preenchido (pagador, receptor e
+  valor em BRL, ex. "80,00").
+- Pagamentos (D23): seção própria quando `payments.length > 0` — lista
+  "Pagador → Receptor", valor + data curta e ação de excluir
+  (`DELETE /api/groups/{id}/payments/{paymentId}` → `204`, confirm modal,
+  saldos recalculados).
+- Modal de pagamento (D23): campos "Quem pagou" e "Para quem" (selects de
+  participantes) e "Valor" (texto BRL; conversão por `parseAmountInputToCents`).
+  Envia `POST /api/groups/{id}/payments`
+  `{ payerParticipantId, receiverParticipantId, amountInCents }` → `201 { id }`;
+  em seguida silent refresh. Erros: campos vazios/iguais → mensagem local
+  ("Escolha quem paga, para quem e um valor válido." / "Quem paga e quem recebe
+  devem ser pessoas diferentes."); validação de domínio (400) usa o texto do
+  backend; ESC fecha o modal.
 - Despesas: ver item de lista em `design-system.md`. Menu por despesa: "Editar",
   "Excluir" (confirm modal; `DELETE /api/groups/{id}/expenses/{expenseId}` → `204`; sem reload
   total — remover item e recarregar balances).
@@ -78,12 +101,13 @@ Renderização:
   `POST /api/groups/{id}/participants` `{ name }` → `201 { id }`;
   remover `DELETE /api/groups/{id}/participants/{participantId}` → `204`.
 - **Remoção de participante com histórico (D22)** — o backend recalcula:
-  despesas pagas por ele são excluídas e as cotas dele são redistribuídas entre os
-  restantes; despesas que ficassem sem participantes na divisão também são excluídas.
+  despesas pagas por ele são excluídas, as cotas dele são redistribuídas entre os
+  restantes e os pagamentos que o envolvem são excluídos (D23); despesas que
+  ficassem sem participantes na divisão também são excluídas.
   O modal de confirmação avisa quando o participante é referenciado por despesas:
   "Remover X? Despesas pagas por X serão excluídas e as cotas serão recalculadas
   entre os restantes." (mensagem simples "Remover X do grupo?" quando não referenciado).
-  Após remover, recarregar participants/expenses/balances.
+  Após remover, recarregar participants/expenses/balances/payments/settlement-plan.
 - Estados: loading (skeletons), erro 404 → tela "Grupo não encontrado" com voltar;
   sem despesas → empty state "Nenhuma despesa por aqui ainda."
 

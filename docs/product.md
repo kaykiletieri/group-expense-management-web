@@ -20,11 +20,12 @@ Usa a aplicação em Poucas sessões curtas: criar grupo, lançar despesa, confe
 4. Detalhe do grupo: card de saldos por participante, lista de despesas, gestão de participantes.
 5. Nova despesa / editar despesa (valor, descrição, pagador, rateio igualitário).
 6. Excluir despesa.
-7. Menu "Ajustes" mínimo (conta logada, sair).
+7. Pagamentos (acertos): registrar pagador → receptor com valor livre, lista e exclusão; plano "Como acertar" sugerido (D23).
+8. Menu "Ajustes" mínimo (conta logada, sair).
 
 ## Fora de escopo (não antecipar)
 
-Ver seção 9 de `../AGENTS.md`: liquidação de dívidas, pagamentos, notificações, divisões
+Ver seção 9 de `../AGENTS.md`: confirmação/comprovante de transferências reais, notificações, divisões
 personalizadas, categorias de grupo, fotos/avatares de participantes, colaboração
 multiusuário, compartilhamento de grupo entre contas.
 

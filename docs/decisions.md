@@ -111,3 +111,16 @@ e atualização deste registro.
   despesas (pagador ou cota, computado nas despesas já carregadas), o modal diz
   que despesas pagas por ele serão excluídas e as cotas recalculadas; caso
   contrário, apenas "Remover X do grupo?". Reaberto só por decisão de produto.
+- **D23 – Pagamentos (acertos) e plano de quitação (decisão de produto aprovada
+  pelo usuário):** o usuário pode registrar uma transferência de dinheiro entre
+  dois participantes do grupo (**modelo "pagamento livre"**: valor em BRL livre,
+  quitação total ou parcial), lista-los na seção "Pagamentos" do detalhe e
+  excluí-los (definitivo; saldos recalculados). O backend também expõe
+  `GET /api/groups/{id}/settlement-plan` com sugestão gulosa e determinística
+  (maiores credores/devedores primeiro, empate por id, ≤ n−1 transferências)
+  exibida em "Como acertar"; cada linha tem botão "Registrar" que abre o modal
+  pré-preenchido (pagador, receptor e valor). Saldo passa a considerar
+  pagamentos: `totalPaidInCents − totalOwedInCents + totalReceivedInCents −
+  totalSentInCents` (`ParticipantBalanceResponse` atualizado, aditivo). O
+  registro é contábil — sem comprovante, edição ou confirmação de recebimento.
+  Removed "pagamentos" da lista de fora-do-escopo (backend e frontend).

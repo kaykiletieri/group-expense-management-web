@@ -6,9 +6,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GroupsApi } from '../../core/api/groups-api';
 import { ParticipantsApi } from '../../core/api/participants-api';
 import { ExpensesApi } from '../../core/api/expenses-api';
-import { Expense, GroupBalance, Participant } from '../../core/api/api-models';
+import { PaymentsApi } from '../../core/api/payments-api';
+import {
+  Expense,
+  GroupBalance,
+  Participant,
+  Payment,
+  SettlementTransfer,
+} from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
-import { formatBrl } from '../../core/money/money';
+import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -38,6 +45,7 @@ export class GrupoDetailPage implements OnInit {
   private readonly groupsApi = inject(GroupsApi);
   private readonly participantsApi = inject(ParticipantsApi);
   private readonly expensesApi = inject(ExpensesApi);
+  private readonly paymentsApi = inject(PaymentsApi);
   private readonly auth = inject(AuthService);
 
   protected readonly formatBrl = formatBrl;
@@ -52,12 +60,17 @@ export class GrupoDetailPage implements OnInit {
   readonly participants = signal<Participant[]>([]);
   readonly expenses = signal<Expense[]>([]);
   readonly balances = signal<GroupBalance[]>([]);
+  readonly payments = signal<Payment[]>([]);
+  readonly settlementPlan = signal<SettlementTransfer[]>([]);
 
   readonly menuOpen = signal(false);
   readonly confirmState = signal<ConfirmState | null>(null);
   readonly renameOpen = signal(false);
   readonly submitting = signal(false);
   readonly actionError = signal<string | null>(null);
+
+  readonly paymentOpen = signal(false);
+  readonly paymentError = signal<string | null>(null);
 
   readonly newName = new FormControl('', {
     nonNullable: true,
@@ -67,6 +80,11 @@ export class GrupoDetailPage implements OnInit {
     nonNullable: true,
     validators: [Validators.maxLength(60)],
   });
+
+  /** Formulário do modal de pagamento: quem paga → para quem → quanto. */
+  readonly payerControl = new FormControl<string>('', { nonNullable: true });
+  readonly receiverControl = new FormControl<string>('', { nonNullable: true });
+  readonly amountControl = new FormControl('', { nonNullable: true });
 
   readonly participantNames = computed(
     () => new Map(this.participants().map((p) => [p.id, p.name] as const)),
@@ -110,6 +128,9 @@ export class GrupoDetailPage implements OnInit {
     }
     if (this.renameOpen()) {
       this.renameOpen.set(false);
+    }
+    if (this.paymentOpen()) {
+      this.closePayment();
     }
     this.menuOpen.set(false);
   }
@@ -285,6 +306,66 @@ export class GrupoDetailPage implements OnInit {
     this.actionError.set(null);
   }
 
+  openPayment(prefill?: { payerId?: string; receiverId?: string; amountInCents?: number }) {
+    this.paymentError.set(null);
+    this.payerControl.setValue(prefill?.payerId ?? '');
+    this.receiverControl.setValue(prefill?.receiverId ?? '');
+    const cents = prefill?.amountInCents;
+    this.amountControl.setValue(
+      cents !== undefined ? (cents / 100).toFixed(2).replace('.', ',') : '',
+    );
+    this.paymentOpen.set(true);
+  }
+
+  closePayment() {
+    this.paymentOpen.set(false);
+    this.paymentError.set(null);
+    this.payerControl.setValue('');
+    this.receiverControl.setValue('');
+    this.amountControl.setValue('');
+  }
+
+  submitPayment() {
+    const payerId = this.payerControl.value;
+    const receiverId = this.receiverControl.value;
+    const amountInCents = parseAmountInputToCents(this.amountControl.value);
+
+    if (!payerId || !receiverId || amountInCents === null) {
+      this.paymentError.set('Escolha quem paga, para quem e um valor válido.');
+      return;
+    }
+    if (payerId === receiverId) {
+      this.paymentError.set('Quem paga e quem recebe devem ser pessoas diferentes.');
+      return;
+    }
+
+    this.submitting.set(true);
+    this.paymentsApi.create(this.groupId, { payerParticipantId: payerId, receiverParticipantId: receiverId, amountInCents }).subscribe({
+      next: async () => {
+        this.submitting.set(false);
+        this.closePayment();
+        this.actionError.set(null);
+        await this.refresh({ silent: true });
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.paymentError.set(getApiErrorMessage(err, GENERIC_ERROR));
+      },
+    });
+  }
+
+  confirmDeletePayment(payment: Payment) {
+    this.confirmState.set({
+      title: 'Excluir pagamento',
+      message: `Excluir o pagamento de ${this.participantName(payment.payerParticipantId)} para ${this.participantName(payment.receiverParticipantId)} (${formatBrl(payment.amountInCents)})? Os saldos serão recalculados.`,
+      confirmLabel: 'Excluir',
+      action: async () => {
+        await firstValueFrom(this.paymentsApi.delete(this.groupId, payment.id));
+        await this.refresh({ silent: true });
+      },
+    });
+  }
+
   async refresh({ silent = false }: { silent?: boolean } = {}): Promise<void> {
     if (!silent) {
       this.loading.set(true);
@@ -293,12 +374,15 @@ export class GrupoDetailPage implements OnInit {
     }
 
     try {
-      const [groups, participants, expenses, balances] = await Promise.all([
-        firstValueFrom(this.groupsApi.list()),
-        firstValueFrom(this.participantsApi.list(this.groupId)),
-        firstValueFrom(this.expensesApi.list(this.groupId)),
-        firstValueFrom(this.groupsApi.balances(this.groupId)),
-      ]);
+      const [groups, participants, expenses, balances, payments, settlementPlan] =
+        await Promise.all([
+          firstValueFrom(this.groupsApi.list()),
+          firstValueFrom(this.participantsApi.list(this.groupId)),
+          firstValueFrom(this.expensesApi.list(this.groupId)),
+          firstValueFrom(this.groupsApi.balances(this.groupId)),
+          firstValueFrom(this.paymentsApi.list(this.groupId)),
+          firstValueFrom(this.paymentsApi.settlementPlan(this.groupId)),
+        ]);
 
       const summary = groups.find((g) => g.id === this.groupId);
       if (!summary) {
@@ -309,6 +393,8 @@ export class GrupoDetailPage implements OnInit {
       this.participants.set(participants);
       this.expenses.set(expenses);
       this.balances.set(balances);
+      this.payments.set(payments);
+      this.settlementPlan.set(settlementPlan);
     } catch (err) {
       if (silent) {
         return;

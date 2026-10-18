@@ -30,7 +30,33 @@ export interface GroupBalance {
   participantId: string;
   totalPaidInCents: number;
   totalOwedInCents: number;
+  totalReceivedInCents: number;
+  totalSentInCents: number;
   balanceInCents: number;
+}
+
+export interface Payment {
+  id: string;
+  payerParticipantId: string;
+  receiverParticipantId: string;
+  amountInCents: number;
+  createdAtUtc: string;
+}
+
+export interface PaymentPayload {
+  payerParticipantId: string;
+  receiverParticipantId: string;
+  amountInCents: number;
+}
+
+export interface CreatePaymentResponse {
+  id: string;
+}
+
+export interface SettlementTransfer {
+  fromParticipantId: string;
+  toParticipantId: string;
+  amountInCents: number;
 }
 
 export interface Participant {

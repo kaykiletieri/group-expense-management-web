@@ -48,7 +48,10 @@
     <section>
       <div class="section-row">
         <h2>Saldos</h2>
-        <a class="btn-chip" routerLink="/grupos/{{ groupId }}/despesas/nova">+ Despesa</a>
+        <div class="section-actions">
+          <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
+          <a class="btn-chip" routerLink="/grupos/{{ groupId }}/despesas/nova">+ Despesa</a>
+        </div>
       </div>
 
       @if (nobodyOwes()) {
@@ -82,7 +85,67 @@
           <p class="section-empty">Ninguém está no grupo ainda.</p>
         }
       </div>
+
+      @if (settlementPlan().length > 0) {
+        <div class="settle-card card">
+          <h3 class="label-caps">Como acertar</h3>
+          <p class="settle-note">
+            Sugestão com o menor número de transferências antes de todo mundo
+            ficar quitado.
+          </p>
+          @for (transfer of settlementPlan(); track $index) {
+            <div class="settle-row">
+              <span class="settle-flow tabular-nums">
+                {{ participantName(transfer.fromParticipantId) }} →
+                {{ participantName(transfer.toParticipantId) }}
+                <strong>{{ formatBrl(transfer.amountInCents) }}</strong>
+              </span>
+              <button
+                class="btn-chip"
+                type="button"
+                (click)="openPayment({ payerId: transfer.fromParticipantId, receiverId: transfer.toParticipantId, amountInCents: transfer.amountInCents })"
+              >
+                Registrar
+              </button>
+            </div>
+          }
+        </div>
+      }
     </section>
+
+    @if (payments().length > 0) {
+      <section>
+        <div class="section-row">
+          <h2>Pagamentos <span class="section-count">{{ payments().length }}</span></h2>
+          <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
+        </div>
+
+        <div class="card">
+          @for (payment of payments(); track payment.id) {
+            <div class="balance-row payment-item">
+              <app-avatar [name]="participantName(payment.payerParticipantId)" />
+              <div class="balance-info">
+                <span class="balance-name tabular-nums">
+                  {{ participantName(payment.payerParticipantId) }} →
+                  {{ participantName(payment.receiverParticipantId) }}
+                </span>
+                <span class="balance-paid tabular-nums">
+                  {{ formatBrl(payment.amountInCents) }} · {{ dateShort(payment.createdAtUtc) }}
+                </span>
+              </div>
+              <button
+                class="expense-delete"
+                type="button"
+                aria-label="Excluir pagamento"
+                (click)="confirmDeletePayment(payment)"
+              >
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+          }
+        </div>
+      </section>
+    }
 
     <section>
       <div class="section-row">
@@ -200,6 +263,49 @@
         <button class="btn-secondary" type="button" (click)="closeConfirm()">Cancelar</button>
         <button class="btn-danger" type="button" [disabled]="submitting()" (click)="runConfirm()">
           {{ confirm.confirmLabel }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (paymentOpen()) {
+    <button class="modal-backdrop" type="button" (click)="closePayment()" aria-label="Cancelar"></button>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Registrar pagamento">
+      <h2 class="modal-title">Registrar pagamento</h2>
+      <label class="field-label" for="payment-payer">Quem pagou</label>
+      <select id="payment-payer" [formControl]="payerControl">
+        <option value="" disabled selected>Escolha…</option>
+        @for (participant of participants(); track participant.id) {
+          <option [value]="participant.id">{{ participant.name }}</option>
+        }
+      </select>
+
+      <label class="field-label" for="payment-receiver">Para quem</label>
+      <select id="payment-receiver" [formControl]="receiverControl">
+        <option value="" disabled selected>Escolha…</option>
+        @for (participant of participants(); track participant.id) {
+          <option [value]="participant.id">{{ participant.name }}</option>
+        }
+      </select>
+
+      <label class="field-label" for="payment-amount">Valor</label>
+      <input
+        id="payment-amount"
+        type="text"
+        inputmode="decimal"
+        placeholder="0,00"
+        [formControl]="amountControl"
+        maxlength="14"
+      />
+
+      @if (paymentError()) {
+        <p class="page-error" role="alert">{{ paymentError() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" (click)="closePayment()">Cancelar</button>
+        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitPayment()">
+          Registrar
         </button>
       </div>
     </div>

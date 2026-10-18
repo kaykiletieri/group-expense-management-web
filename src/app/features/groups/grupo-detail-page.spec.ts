@@ -43,12 +43,38 @@ describe('GrupoDetailPage', () => {
       { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
       { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
     ]);
+    http.expectOne('api/groups/g1/payments').flush([]);
+    http.expectOne('api/groups/g1/settlement-plan').flush([]);
 
     await settle();
     fixture.detectChanges();
   });
 
   afterEach(() => http.verify());
+
+  /** Consumes the six loads of the silent refresh, flushing the given data. */
+  function flushRefresh(options?: {
+    participants?: unknown[];
+    payments?: unknown[];
+    settlementPlan?: unknown[];
+  }): void {
+    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http
+      .expectOne('api/groups/g1/participants')
+      .flush(
+        options?.participants ?? [
+          { id: 'p1', name: 'Renata', createdAtUtc: '' },
+          { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+        ],
+      );
+    http.expectOne('api/groups/g1/expenses').flush([]);
+    http.expectOne('api/groups/g1/balances').flush([
+      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
+      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
+    ]);
+    http.expectOne('api/groups/g1/payments').flush(options?.payments ?? []);
+    http.expectOne('api/groups/g1/settlement-plan').flush(options?.settlementPlan ?? []);
+  }
 
   it('carrega nome, saldos e chips corretos', () => {
     const compiled = fixture.nativeElement as HTMLElement;
@@ -68,17 +94,8 @@ describe('GrupoDetailPage', () => {
     expect(addRequest.request.body).toEqual({ name: '' });
     addRequest.flush({ id: 'p3' });
 
-    // refresh silencioso re-carrega os mesmos quatro endpoints
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
-      { id: 'p1', name: 'Renata', createdAtUtc: '' },
-      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
-    ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
-      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
-      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
-    ]);
+    // refresh silencioso re-carrega os mesmos seis endpoints
+    flushRefresh();
     await settle();
   });
 
@@ -97,17 +114,13 @@ describe('GrupoDetailPage', () => {
     expect(addRequest.request.body).toEqual({ name: 'Kayki' });
     addRequest.flush({ id: 'p3' });
 
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
-      { id: 'p1', name: 'Renata', createdAtUtc: '' },
-      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
-      { id: 'p3', name: 'Kayki', createdAtUtc: '' },
-    ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
-      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
-      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
-    ]);
+    flushRefresh({
+      participants: [
+        { id: 'p1', name: 'Renata', createdAtUtc: '' },
+        { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+        { id: 'p3', name: 'Kayki', createdAtUtc: '' },
+      ],
+    });
     await settle();
     fixture.detectChanges();
 
@@ -136,17 +149,13 @@ describe('GrupoDetailPage', () => {
     expect(addRequest.request.body).toEqual({ name: 'Kayki Teste' });
     addRequest.flush({ id: 'p3' });
 
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
-      { id: 'p1', name: 'Renata', createdAtUtc: '' },
-      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
-      { id: 'p3', name: 'Kayki Teste', createdAtUtc: '' },
-    ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
-      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
-      { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
-    ]);
+    flushRefresh({
+      participants: [
+        { id: 'p1', name: 'Renata', createdAtUtc: '' },
+        { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+        { id: 'p3', name: 'Kayki Teste', createdAtUtc: '' },
+      ],
+    });
     await settle();
   });
 
@@ -171,16 +180,10 @@ describe('GrupoDetailPage', () => {
 
     await settle();
 
-    // refresh silencioso re-carrega os mesmos quatro endpoints
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    await settle();
-    http.expectOne('api/groups/g1/participants').flush([
-      { id: 'p1', name: 'Renata', createdAtUtc: '' },
-    ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
-      { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 0, balanceInCents: 12000 },
-    ]);
+    // refresh silencioso re-carrega os mesmos seis endpoints
+    flushRefresh({
+      participants: [{ id: 'p1', name: 'Renata', createdAtUtc: '' }],
+    });
     await settle();
     fixture.detectChanges();
 
@@ -208,6 +211,8 @@ describe('GrupoDetailPage', () => {
     http.expectOne('api/groups/g1/balances').flush([
       { participantId: 'p2', totalPaidInCents: 12000, totalOwedInCents: 12000, balanceInCents: 0 },
     ]);
+    http.expectOne('api/groups/g1/payments').flush([]);
+    http.expectOne('api/groups/g1/settlement-plan').flush([]);
     await settle();
     second.detectChanges();
 
@@ -228,4 +233,126 @@ describe('GrupoDetailPage', () => {
     cancelButton!.click();
     await settle();
   });
+
+  it('exibe pagamentos registrados e plano "Como acertar" com modal pré-preenchido', async () => {
+    const second: ComponentFixture<GrupoDetailPage> = TestBed.createComponent(GrupoDetailPage);
+    second.detectChanges();
+    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('api/groups/g1/participants').flush([
+      { id: 'p1', name: 'Renata', createdAtUtc: '' },
+      { id: 'p2', name: 'Lucas', createdAtUtc: '' },
+    ]);
+    http.expectOne('api/groups/g1/expenses').flush([]);
+    http.expectOne('api/groups/g1/balances').flush([
+      {
+        participantId: 'p1',
+        totalPaidInCents: 12000,
+        totalOwedInCents: 4000,
+        totalReceivedInCents: 3000,
+        totalSentInCents: 0,
+        balanceInCents: 11000,
+      },
+      {
+        participantId: 'p2',
+        totalPaidInCents: 0,
+        totalOwedInCents: 4000,
+        totalReceivedInCents: 0,
+        totalSentInCents: 3000,
+        balanceInCents: -11000,
+      },
+    ]);
+    http.expectOne('api/groups/g1/payments').flush([
+      {
+        id: 'pay1',
+        payerParticipantId: 'p2',
+        receiverParticipantId: 'p1',
+        amountInCents: 3000,
+        createdAtUtc: '2026-10-02T12:00:00Z',
+      },
+    ]);
+    http.expectOne('api/groups/g1/settlement-plan').flush([
+      { fromParticipantId: 'p2', toParticipantId: 'p1', amountInCents: 8000 },
+    ]);
+    await settle();
+    second.detectChanges();
+
+    const compiled = second.nativeElement as HTMLElement;
+
+    // Card de pagamentos lista o acerto registrado
+    expect(compiled.textContent).toContain('Lucas → Renata');
+    expect(compiled.textContent).toContain('R$\u00a030,00');
+
+    // Seção "Como acertar" sugere a transferência restante
+    expect(compiled.textContent).toContain('Como acertar');
+    expect(compiled.textContent).toContain('R$\u00a080,00');
+
+    const registerButtons = [...compiled.querySelectorAll<HTMLButtonElement>('.settle-row button')]
+      .filter((b) => b.textContent?.trim() === 'Registrar');
+    registerButtons[0].click();
+    second.detectChanges();
+
+    expect((second.componentInstance as GrupoDetailPage).paymentOpen()).toBe(true);
+    expect((second.componentInstance as GrupoDetailPage).payerControl.value).toBe('p2');
+    expect((second.componentInstance as GrupoDetailPage).receiverControl.value).toBe('p1');
+    expect((second.componentInstance as GrupoDetailPage).amountControl.value).toBe('80,00');
+
+    (second.componentInstance as GrupoDetailPage).closePayment();
+    await settle();
+  });
+
+  it('envia pagamento com valor convertido para centavos e recarrega', async () => {
+    const component = fixture.componentInstance;
+    component.openPayment({ payerId: 'p2', receiverId: 'p1', amountInCents: 5000 });
+    component.amountControl.setValue('33,34');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const submitButton = [...compiled.querySelectorAll<HTMLButtonElement>('.modal-actions button')]
+      .find((b) => b.textContent?.trim() === 'Registrar');
+    submitButton!.click();
+
+    const paymentRequest = http.expectOne('api/groups/g1/payments');
+    expect(paymentRequest.request.method).toBe('POST');
+    expect(paymentRequest.request.body).toEqual({
+      payerParticipantId: 'p2',
+      receiverParticipantId: 'p1',
+      amountInCents: 3334,
+    });
+    paymentRequest.flush({ id: 'pay1' });
+
+    flushRefresh({
+      payments: [
+        {
+          id: 'pay1',
+          payerParticipantId: 'p2',
+          receiverParticipantId: 'p1',
+          amountInCents: 3334,
+          createdAtUtc: '2026-10-03T12:00:00Z',
+        },
+      ],
+    });
+    await settle();
+    fixture.detectChanges();
+
+    // modal fechado após sucesso
+    expect(component.paymentOpen()).toBe(false);
+
+    const compiledAfter = fixture.nativeElement as HTMLElement;
+    expect(compiledAfter.textContent).toContain('Lucas → Renata');
+  });
+
+  it('bloqueia pagamento com mesma pessoa pagando e recebendo', () => {
+    const component = fixture.componentInstance;
+    component.openPayment({ payerId: 'p1', receiverId: 'p1', amountInCents: 5000 });
+    component.amountControl.setValue('50,00');
+
+    component.submitPayment();
+
+    expect(component.paymentOpen()).toBe(true);
+    expect(component.paymentError()).toBe(
+      'Quem paga e quem recebe devem ser pessoas diferentes.',
+    );
+  });
 });
+
+

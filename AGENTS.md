@@ -85,6 +85,7 @@ irmão `group-expense-management` (C#/.NET, já concluída e estável).
 
 ## 9. Escopo do MVP (não adicionar sem aprovação)
 
-Sem aprovação explícita: divisões por peso/porcentagem/itens, liquidação de dívidas e pagamentos,
+Pagamentos entre participantes já fazem parte do escopo (D20/D22/D23). Sem aprovação
+explícita: divisões por peso/porcentagem/itens, confirmação/comprovante de transferências reais,
 notificações, contas para participantes, colaboração multiusuário, categorias de grupo, upload de
 foto/avatares, e2e pesado, SSR/hibridação com Node no deploy.
