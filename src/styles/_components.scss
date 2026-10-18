@@ -50,6 +50,7 @@
   background: var(--color-positive);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
+  color: var(--on-accent);
   font-family: var(--font-display);
   font-weight: 600;
 }
@@ -72,6 +73,7 @@
 
 .chip-positive {
   background: var(--color-positive);
+  color: var(--on-accent);
 }
 
 .chip-debt {
@@ -95,7 +97,7 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--color-cta);
-  color: var(--color-ink);
+  color: var(--on-accent);
   font-family: var(--font-display);
   font-size: var(--text-body);
   font-weight: 700;
@@ -137,7 +139,7 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--color-error);
-  color: #ffffff;
+  color: var(--on-danger);
   font-family: var(--font-display);
   font-weight: 700;
   box-shadow: var(--shadow-hard);
@@ -156,7 +158,7 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-pill);
   background: var(--color-cta);
-  color: var(--color-ink);
+  color: var(--on-accent);
   font-family: var(--font-display);
   font-size: var(--text-small);
   font-weight: 700;

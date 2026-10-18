@@ -75,3 +75,20 @@ e atualização deste registro.
   (inclusive ao vivo). Um script inline no `index.html` aplica o tema salvo antes
   do bootstrap para evitar flash — ao introduzir CSP no deploy do backend, esse
   script precisa de hash/nonce.
+
+## Usabilidade
+
+- **D20 — Nomes padrão gerados no backend** (decisão de produto aprovada pelo
+  usuário): grupo criado com nome em branco vira "Grupo N" (contador **por
+  criador**, prossegue do maior sufixo existente); participante com nome em
+  branco vira "Pessoa N" (contador **por grupo**). Implementado no backend
+  (`DefaultNameGenerator` + use cases; domínio continua exigindo nome não-vazio;
+  renomear grupo não gera default). O frontend trata nome como opcional
+  (modal "Novo grupo" e formulário de participante; o detalhe reflete o nome
+  real após recarregar).
+- **D21 — Atalho "Você" no grupo:** botão que adiciona a própria pessoa como
+  participante usando nome derivado da parte local do e-mail (capitalizada),
+  escondido quando esse nome já existe no grupo (case-insensitive). Mantém a
+  regra NÃO haver vínculo `User`↔`Participant` — é apenas um atalho de
+  preenchimento; criar participante automaticamente ao criar grupo segue
+  proibido (regra do backend).

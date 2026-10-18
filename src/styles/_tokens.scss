@@ -68,26 +68,35 @@
   --hover-tint: #f2ede1;
   --backdrop: rgba(32, 33, 30, 0.5);
   --scrollbar-thumb: rgba(32, 33, 30, 0.25);
+
+  // Texto usado SOBRE cores fortes (limão, laranja, cobalto)
+  --on-accent: #20211e;
+  // Texto usado SOBRE o botão de erro (branco no claro e no escuro)
+  --on-danger: #ffffff;
 }
 
 /* Tema escuro: o documento recebe data-theme="auto|light|dark" em <html> (D19).
-   Sovreama no escuro.
-   - "ink" vira creme: deriva automaticamente as bordas/sombras hard no escuro. */
+   Paleira fria/neutra: "ink" vira quase-branco e deriva automaticamente as
+   bordas/sombras hard no escuro. Acentos (limão/laranja) ficam intactos e usam
+   texto escuro (--on-accent) para contraste. */
 [data-theme='dark'] {
-  --color-canvas: #191a17;
-  --color-surface: #232420;
-  --color-card: #2b2c26;
-  --color-ink: #f0ecdd;
-  --color-ink-soft: #a19f92;
-  --color-primary: #7a8cff;
-  --color-error: #ef6a52;
+  --color-canvas: #15171b;
+  --color-surface: #1d2025;
+  --color-card: #24272d;
+  --color-ink: #f2f4f6;
+  --color-ink-soft: #a2a8b0;
+  --color-primary: #8ea3ff;
+  --color-error: #e0503f;
 
-  --focus-ring: 0 0 0 3px rgba(122, 140, 255, 0.35);
-  --focus-ring-error: 0 0 0 3px rgba(239, 106, 82, 0.3);
-  --placeholder: #7b7970;
+  --focus-ring: 0 0 0 3px rgba(142, 163, 255, 0.35);
+  --focus-ring-error: 0 0 0 3px rgba(224, 80, 63, 0.3);
+  --placeholder: #6e747d;
 
-  --divider: rgba(240, 236, 221, 0.14);
-  --hover-tint: #32332c;
-  --backdrop: rgba(0, 0, 0, 0.6);
-  --scrollbar-thumb: rgba(240, 236, 221, 0.28);
+  --divider: rgba(255, 255, 255, 0.1);
+  --hover-tint: #2c2f36;
+  --backdrop: rgba(0, 0, 0, 0.65);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.22);
+
+  --on-accent: #1a1c20;
+  --on-danger: #f2f4f6;
 }

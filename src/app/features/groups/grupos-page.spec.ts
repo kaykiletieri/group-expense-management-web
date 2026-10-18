@@ -77,6 +77,24 @@ describe('GruposPage', () => {
     await vi.waitFor(() => expect(router.url).toBe('/grupos/novo'));
   });
 
+  it('cria grupo mesmo sem nome (backend gera "Grupo N")', async () => {
+    http.expectOne('api/groups').flush([]);
+    await settle();
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    component.openCreation();
+    fixture.detectChanges();
+
+    component.submitCreation();
+
+    const createRequest = http.expectOne('api/groups');
+    expect(createRequest.request.body).toEqual({ name: '' });
+    createRequest.flush({ id: 'novo' });
+
+    await vi.waitFor(() => expect(router.url).toBe('/grupos/novo'));
+  });
+
   it('mostra estado vazio quando não há grupos', async () => {
     http.expectOne('api/groups').flush([]);
     await settle();

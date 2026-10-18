@@ -38,9 +38,10 @@ export class GruposPage implements OnInit {
   readonly createOpen = signal(false);
   readonly creating = signal(false);
   readonly createError = signal<string | null>(null);
+  // Nome opcional: em branco, o backend gera "Grupo N" (contador por criador).
   readonly creationName = new FormControl('', {
     nonNullable: true,
-    validators: [Validators.required, Validators.maxLength(80)],
+    validators: [Validators.maxLength(80)],
   });
 
   readonly totalParticipants = computed(() =>
@@ -98,11 +99,7 @@ export class GruposPage implements OnInit {
   }
 
   submitCreation() {
-    this.creationName.markAsTouched();
     const name = this.creationName.value.trim();
-    if (!name) {
-      return;
-    }
 
     this.creating.set(true);
     this.createError.set(null);

@@ -41,12 +41,12 @@ export function avatarClassOf(name: string): string {
       user-select: none;
       flex-shrink: 0;
     }
-    .av-co { background: var(--color-primary); color: #ffffff; }
-    .av-or { background: var(--color-cta); color: var(--color-ink); }
-    .av-li { background: var(--color-positive); color: var(--color-ink); }
-    .av-ro { background: #f3c4dc; color: var(--color-ink); }
-    .av-te { background: #a8dcd9; color: var(--color-ink); }
-    .av-am { background: #f5d97b; color: var(--color-ink); }
+    .av-co { background: var(--color-primary); color: var(--on-accent); }
+    .av-or { background: var(--color-cta); color: var(--on-accent); }
+    .av-li { background: var(--color-positive); color: var(--on-accent); }
+    .av-ro { background: #f3c4dc; color: var(--on-accent); }
+    .av-te { background: #a8dcd9; color: var(--on-accent); }
+    .av-am { background: #f5d97b; color: var(--on-accent); }
   `,
 })
 export class Avatar {

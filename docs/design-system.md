@@ -147,14 +147,20 @@ sob `[data-theme="dark"]`:
 
 | Papel | Claro | Escuro |
 | --- | --- | --- |
-| canvas | `#fbf9f4` | `#191a17` |
-| surface | `#f7f3ea` | `#232420` |
-| card | `#ffffff` | `#2b2c26` |
-| ink (+bordas/sombras) | `#20211e` | `#f0ecdd` (creme) |
-| primary | `#2546f0` | `#7a8cff` |
+| canvas | `#fbf9f4` | `#15171b` (frio/neutro) |
+| surface | `#f7f3ea` | `#1d2025` |
+| card | `#ffffff` | `#24272d` |
+| ink (+bordas/sombras) | `#20211e` | `#f2f4f6` |
+| primary | `#2546f0` | `#8ea3ff` |
 | cta | `#ff7139` | `#ff7139` (inalterado) |
 | positive | `#d9f36a` | `#d9f36a` (inalterado) |
-| error | `#d7402b` | `#ef6a52` |
+| error | `#d7402b` | `#e0503f` |
+
+Tokens de texto sobre fundo forte (novo):
+
+- `--on-accent` — texto usado sobre limão/laranja/cobalto: `#20211e` no claro,
+  `#1a1c20` no escuro (evita texto creme sobre pastel).
+- `--on-danger` — texto do botão de erro: branco nos dois temas.
 
 Regras: **nunca** use cinzas/hex literais para superfícies, bordas, hovers,
 backdrop ou scrollbar — use os tokens (`--divider`, `--hover-tint`, `--backdrop`,

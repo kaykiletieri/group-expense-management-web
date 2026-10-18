@@ -10,6 +10,7 @@ import { Expense, GroupBalance, Participant } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
+import { AuthService } from '../../core/auth/auth.service';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -37,6 +38,7 @@ export class GrupoDetailPage implements OnInit {
   private readonly groupsApi = inject(GroupsApi);
   private readonly participantsApi = inject(ParticipantsApi);
   private readonly expensesApi = inject(ExpensesApi);
+  private readonly auth = inject(AuthService);
 
   protected readonly formatBrl = formatBrl;
 
@@ -63,12 +65,33 @@ export class GrupoDetailPage implements OnInit {
   });
   readonly participantNameControl = new FormControl('', {
     nonNullable: true,
-    validators: [Validators.required, Validators.maxLength(60)],
+    validators: [Validators.maxLength(60)],
   });
 
   readonly participantNames = computed(
     () => new Map(this.participants().map((p) => [p.id, p.name] as const)),
   );
+
+  /** Nome derivado da conta (parte local do e-mail capitalizada) para criar
+      um participante "eu" — sem vínculo User↔Participant (regra de backstage). */
+  readonly yourName = computed<string | null>(() => {
+    const email = this.auth.user()?.email ?? '';
+    const local = email.split('@')[0]?.toLowerCase().trim() ?? '';
+    if (!local) {
+      return null;
+    }
+    return local.charAt(0).toUpperCase() + local.slice(1);
+  });
+
+  /** Botão "Você": esconde quando não há conta válida ou nome já está no grupo. */
+  readonly youAlreadyIn = computed(() => {
+    const name = this.yourName();
+    if (!name) {
+      return true;
+    }
+    const mine = name.toLowerCase();
+    return this.participants().some((p) => p.name.trim().toLowerCase() === mine);
+  });
 
   ngOnInit(): void {
     void this.refresh();
@@ -159,17 +182,28 @@ export class GrupoDetailPage implements OnInit {
   }
 
   addParticipant() {
-    this.participantNameControl.markAsTouched();
     const name = this.participantNameControl.value.trim();
-    if (!name) {
-      return;
-    }
+
     this.participantNameControl.reset('');
     this.participantsApi.add(this.groupId, name).subscribe({
       next: () => void this.refresh({ silent: true }),
       error: (err) => {
         this.actionError.set(getApiErrorMessage(err, GENERIC_ERROR));
         this.participantNameControl.setValue(name);
+      },
+    });
+  }
+
+  /** Atalho: adiciona a própria pessoa como participante (nome derivado do e-mail). */
+  addYou() {
+    const name = this.yourName();
+    if (!name) {
+      return;
+    }
+    this.participantsApi.add(this.groupId, name).subscribe({
+      next: () => void this.refresh({ silent: true }),
+      error: (err) => {
+        this.actionError.set(getApiErrorMessage(err, GENERIC_ERROR));
       },
     });
   }

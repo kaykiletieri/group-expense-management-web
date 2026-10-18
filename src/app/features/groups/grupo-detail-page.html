@@ -142,12 +142,23 @@
       <div class="participant-add">
         <input
           type="text"
-          placeholder="Nome da pessoa…"
+          placeholder="Nome da pessoa (opcional)…"
           [formControl]="participantNameControl"
           (keyup.enter)="addParticipant()"
           maxlength="60"
         />
         <button class="btn-chip" type="button" (click)="addParticipant()">Adicionar</button>
+        @if (yourName() && !youAlreadyIn()) {
+          <button
+            class="btn-chip btn-chip-ghost"
+            type="button"
+            aria-label="Adicionar você como participante"
+            (click)="addYou()"
+          >
+            <span class="material-symbols-outlined">person_add</span>
+            Você
+          </button>
+        }
       </div>
 
       @if (actionError()) {

@@ -72,9 +72,7 @@
       (keyup.enter)="submitCreation()"
       autofocus
     />
-    @if (creationName.touched && creationName.invalid) {
-      <span class="field-error">Dê um nome ao grupo.</span>
-    }
+    <p class="section-note">Sem nome? Criamos como "Grupo N".</p>
     @if (createError()) {
       <p class="page-error" role="alert">{{ createError() }}</p>
     }

@@ -277,6 +277,16 @@ h2 {
   background: var(--hover-tint);
 }
 
+/* Atalho "Você" (adicionar a própria pessoa) — variante discreta do botão */
+.btn-chip-ghost {
+  background: var(--color-card);
+  color: var(--color-ink);
+}
+
+.btn-chip-ghost:hover:not(:disabled) {
+  background: var(--color-surface);
+}
+
 /* Telas largas (≥1120px): saldos + participantes à esquerda, despesas à direita.
    Aplicado só quando a página carregada é a de grupo (possui .group-header). */
 @media (min-width: 1120px) {
