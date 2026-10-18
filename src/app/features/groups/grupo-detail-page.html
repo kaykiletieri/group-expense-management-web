@@ -49,6 +49,14 @@
       <div class="section-row">
         <h2>Saldos</h2>
         <div class="section-actions">
+          <button
+            class="icon-copy"
+            type="button"
+            [attr.aria-label]="copied() === 'balances' ? 'Copiado' : 'Copiar saldos'"
+            (click)="copyBalances()"
+          >
+            <span class="material-symbols-outlined">{{ copied() === 'balances' ? 'check' : 'content_copy' }}</span>
+          </button>
           <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
           <a class="btn-chip" routerLink="/grupos/{{ groupId }}/despesas/nova">+ Despesa</a>
         </div>
@@ -88,10 +96,20 @@
 
       @if (settlementPlan().length > 0) {
         <div class="settle-card card">
-          <h3 class="label-caps">Como acertar</h3>
+          <div class="settle-header">
+            <h3 class="label-caps">Como acertar</h3>
+            <button
+              class="icon-copy"
+              type="button"
+              [attr.aria-label]="copied() === 'plan' ? 'Copiado' : 'Copiar como acertar'"
+              (click)="copySettlement()"
+            >
+              <span class="material-symbols-outlined">{{ copied() === 'plan' ? 'check' : 'content_copy' }}</span>
+            </button>
+          </div>
           <p class="settle-note">
             Sugestão com o menor número de transferências antes de todo mundo
-            ficar quitado.
+            ficar quitado. Tocando em "Registrar" já preenche o pagamento.
           </p>
           @for (transfer of settlementPlan(); track $index) {
             <div class="settle-row">
@@ -177,6 +195,14 @@
                 ÷ {{ expense.shares.length }} · {{ shareEstimate(expense) }} cada
               </span>
               <div class="expense-actions">
+                <button
+                  class="icon-copy"
+                  type="button"
+                  [attr.aria-label]="copied() === 'expense-' + expense.id ? 'Copiado' : 'Copiar despesa ' + expense.description"
+                  (click)="copyExpense(expense)"
+                >
+                  <span class="material-symbols-outlined">{{ copied() === 'expense-' + expense.id ? 'check' : 'content_copy' }}</span>
+                </button>
                 <a
                   class="expense-edit"
                   routerLink="/grupos/{{ groupId }}/despesas/{{ expense.id }}/editar"

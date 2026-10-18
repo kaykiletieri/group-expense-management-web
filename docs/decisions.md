@@ -124,3 +124,16 @@ e atualização deste registro.
   totalSentInCents` (`ParticipantBalanceResponse` atualizado, aditivo). O
   registro é contábil — sem comprovante, edição ou confirmação de recebimento.
   Removed "pagamentos" da lista de fora-do-escopo (backend e frontend).
+- **D24 – Ajustes de pagamentos e compartilhamento (decisões de produto aprovadas
+  pelo usuário):**
+  (a) **Correção da convenção de saldo** (backend + docs): um pagamento **quita
+  dívida** — saldo = `pagou em despesas + pagamentos enviados − cotas atribuídas
+  − pagamentos recebidos`. Registrando o valor exato, o "Como acertar" volta a
+  ficar vazio (era o inverso).
+  (b) **Pagador entra no rateio automaticamente** ao ser escolhido na despesa
+  (seguindo o comportamento real, ainda desmarcável manualmente).
+  (c) **Botões de copiar** (pequenos, ícone `content_copy` → `check` por ~2s):
+  saldos (por pessoa: recebe/deve/quitado), plano "Como acertar" (devedor →
+  credor com valor) e cada despesa (descrição — valor — pagador — dividido por
+  nomes). Texto pt-BR via helper central `copyToClipboard` (Clipboard API com
+  fallback `execCommand`).

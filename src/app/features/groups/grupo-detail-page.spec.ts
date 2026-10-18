@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { ActivatedRoute } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -351,6 +352,26 @@ describe('GrupoDetailPage', () => {
     expect(component.paymentOpen()).toBe(true);
     expect(component.paymentError()).toBe(
       'Quem paga e quem recebe devem ser pessoas diferentes.',
+    );
+  });
+
+  it('monta o texto de saldos para compartilhar e mostra confirmação ao copiar', async () => {
+    const component = fixture.componentInstance;
+
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    vi.stubGlobal('isSecureContext', true);
+
+    component.copyBalances();
+
+    await settle();
+
+    expect(component.copied()).toBe('balances');
+    expect(writeText).toHaveBeenCalledWith(
+      'Saldos — Viagem a Ubatuba\nRenata: Recebe R$\u00a080,00\nLucas: Deve R$\u00a080,00',
     );
   });
 });

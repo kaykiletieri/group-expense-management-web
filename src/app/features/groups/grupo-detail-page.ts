@@ -18,6 +18,7 @@ import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 import { AuthService } from '../../core/auth/auth.service';
+import { copyToClipboard } from '../../core/clipboard/copy-text';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -71,6 +72,11 @@ export class GrupoDetailPage implements OnInit {
 
   readonly paymentOpen = signal(false);
   readonly paymentError = signal<string | null>(null);
+
+  /** Id do bloco recém-copiado ("balances", "plan", "expense-<id>") para
+      mostrar o ícone de confirmação por alguns segundos. */
+  readonly copied = signal<string | null>(null);
+  private copiedTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly newName = new FormControl('', {
     nonNullable: true,
@@ -364,6 +370,63 @@ export class GrupoDetailPage implements OnInit {
         await this.refresh({ silent: true });
       },
     });
+  }
+
+  /** Copia texto para área de transferência e mostra ✓ no bloco copiado. */
+  private async copy(key: string, buildText: () => string): Promise<void> {
+    const ok = await copyToClipboard(buildText());
+    this.copied.set(ok ? key : null);
+    if (this.copiedTimer !== null) {
+      clearTimeout(this.copiedTimer);
+    }
+    this.copiedTimer = setTimeout(() => this.copied.set(null), 2000);
+  }
+
+  /** Texto compartilhável com os saldos atuais do grupo. */
+  balanceText(): string {
+    const header = `Saldos — ${this.groupName()}`;
+    const lines = this.balances().map((b) => {
+      const name = this.participantName(b.participantId);
+      if (b.balanceInCents > 0) {
+        return `${name}: Recebe ${formatBrl(b.balanceInCents)}`;
+      }
+      if (b.balanceInCents < 0) {
+        return `${name}: Deve ${formatBrl(-b.balanceInCents)}`;
+      }
+      return `${name}: Quitado`;
+    });
+    return [header, ...lines].join('\n');
+  }
+
+  /** Texto compartilhável com o plano sugerido de "Como acertar". */
+  settlementText(): string {
+    const header = `Como acertar — ${this.groupName()}`;
+    const lines = this.settlementPlan().map(
+      (t) =>
+        `${this.participantName(t.fromParticipantId)} → ${this.participantName(t.toParticipantId)}: ${formatBrl(t.amountInCents)}`,
+    );
+    return [header, ...lines].join('\n');
+  }
+
+  /** Texto compartilhável com os dados de uma despesa. */
+  expenseText(expense: Expense): string {
+    const payer = this.participantName(expense.payerParticipantId);
+    const names = expense.shares
+      .map((s) => this.participantName(s.participantId))
+      .join(', ');
+    return `${this.groupName()} · ${expense.description} — ${formatBrl(expense.totalAmountInCents)} · Pagou ${payer} · Dividido por ${names}`;
+  }
+
+  copyBalances() {
+    void this.copy('balances', () => this.balanceText());
+  }
+
+  copySettlement() {
+    void this.copy('plan', () => this.settlementText());
+  }
+
+  copyExpense(expense: Expense) {
+    void this.copy(`expense-${expense.id}`, () => this.expenseText(expense));
   }
 
   async refresh({ silent = false }: { silent?: boolean } = {}): Promise<void> {

@@ -78,10 +78,13 @@ Renderização:
   (verde positivo / vermelho negativo, tabular-nums). Banner limão
   "Ninguém deve nada por aqui." quando todos os saldos são 0.
 - Botão "+ Pagamento" na seção Saldos abre o modal de acerto; ver seção Pagamentos (D23).
+- Botão "copiar" na seção Saldos copia o texto pt-BR dos saldos
+  ("Saldos — Grupo\nRenata: Recebe R$ 80,00\nLucas: Deve R$ 80,00") (D24).
 - "Como acertar" (D23): quando o settlement-plan não está vazio, card com a
-  sugestão de transferências ("Devedor → Credor **R$ X**") e botão "Registrar"
+  sugestão de transferências ("Devedor → Credor **R$ X**"), botão "Registrar"
   por linha que abre o modal de pagamento pré-preenchido (pagador, receptor e
-  valor em BRL, ex. "80,00").
+  valor em BRL, ex. "80,00") e botão "copiar" que copia o plano em texto
+  ("Como acertar — Grupo\nLucas → Renata: R$ 80,00") (D24).
 - Pagamentos (D23): seção própria quando `payments.length > 0` — lista
   "Pagador → Receptor", valor + data curta e ação de excluir
   (`DELETE /api/groups/{id}/payments/{paymentId}` → `204`, confirm modal,
@@ -121,6 +124,8 @@ em `POST /api/groups/{id}/expenses` (201 `{ id }`) e
   Pagador (chips de participantes, único), estilo "Pagador Único" (D-style),
   sessão "Dividir igualmente" — chips multi-seleção dos participantes (mín. 1),
   preview "R$ total ÷ N = ~R$ k" rotulado "estimativa" (D: backend decide centavos finais).
+- **Pagador entra no rateio automaticamente (D24)**: ao escolher o pagador, ele
+  passa a estar selecionado em "Dividir igualmente" (pode ser desmarcado depois).
 - Editar pré-carrega com `GET /api/groups/{id}/expenses` e encontra o expense por id
   (não há GET unitário de despesa).
 - Validação cliente: descrição obrigatória, valor > 0, pagador obrigatório,

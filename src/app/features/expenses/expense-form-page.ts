@@ -79,7 +79,12 @@ export class ExpenseFormPage implements OnInit {
   }
 
   setPayer(participantId: string) {
+    // Automação: o pagador quase sempre divide a despesa que pagou, então
+    // passa a entrar no rateio. Continua possível desmarcar manualmente.
     this.payerId.set(participantId);
+    const next = new Set(this.splitIds());
+    next.add(participantId);
+    this.splitIds.set(next);
   }
 
   toggleSplit(participantId: string) {

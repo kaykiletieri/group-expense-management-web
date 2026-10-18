@@ -293,10 +293,43 @@ h2 {
   background: var(--color-surface);
 }
 
+/* Botão pequeno de copiar (saldos, como acertar, despesa) */
+.icon-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.icon-copy .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.icon-copy:hover,
+.icon-copy:focus-visible {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
 /* Plano "Como acertar" */
 .settle-card {
   margin-top: var(--space-3);
   padding: var(--space-4);
+}
+
+.settle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
 .settle-card h3 {
