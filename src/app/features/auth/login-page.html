@@ -17,24 +17,12 @@
     </header>
 
     <div class="login-switch" role="tablist" aria-label="Entrar ou criar conta">
-      <button
-        type="button"
-        role="tab"
-        class="login-switch-option"
-        [class.is-selected]="mode() === 'login'"
-        [attr.aria-selected]="mode() === 'login'"
-        (click)="setMode('login')"
-      >
+      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'login'"
+        [attr.aria-selected]="mode() === 'login'" (click)="setMode('login')">
         Entrar
       </button>
-      <button
-        type="button"
-        role="tab"
-        class="login-switch-option"
-        [class.is-selected]="mode() === 'register'"
-        [attr.aria-selected]="mode() === 'register'"
-        (click)="setMode('register')"
-      >
+      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'register'"
+        [attr.aria-selected]="mode() === 'register'" (click)="setMode('register')">
         Criar conta
       </button>
     </div>
@@ -42,16 +30,10 @@
     <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
       <div class="login-field">
         <label class="label-caps" for="login-email">E-mail pessoal</label>
-        <input
-          id="login-email"
-          type="email"
-          autocomplete="email"
-          placeholder="voce@exemplo.com"
-          formControlName="email"
-          [class.has-error]="showFieldError('email')"
-        />
+        <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email"
+          [class.has-error]="showFieldError('email')" />
         @if (showFieldError('email')) {
-          <span class="login-field-error">Informe um e-mail válido.</span>
+        <span class="login-field-error">Informe um e-mail válido.</span>
         }
       </div>
 
@@ -59,30 +41,25 @@
         <label class="label-caps" for="login-password">
           {{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}
         </label>
-        <input
-          id="login-password"
-          type="password"
-          [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
-          placeholder="••••••••"
-          formControlName="password"
-          [class.has-error]="showFieldError('password')"
-        />
+        <input id="login-password" type="password"
+          [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
+          formControlName="password" [class.has-error]="showFieldError('password')" />
         @if (showFieldError('password')) {
-          <span class="login-field-error">
-            {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
-          </span>
+        <span class="login-field-error">
+          {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
+        </span>
         }
       </div>
 
       @if (errorMessage()) {
-        <p class="login-error" role="alert">{{ errorMessage() }}</p>
+      <p class="login-error" role="alert">{{ errorMessage() }}</p>
       }
 
       <button class="btn-primary" type="submit" [disabled]="submitting()">
         @if (submitting()) {
-          {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}
+        {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}
         } @else {
-          {{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}
+        {{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}
         }
       </button>
     </form>
