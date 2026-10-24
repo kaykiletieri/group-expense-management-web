@@ -41,7 +41,7 @@ e atualização deste registro.
   protótipos não existe por falta de endpoint de feed; reabrir apenas com decisão de
   escopo no backend.
 - **D14 — Copy honesta:** remover prova social fictícia ("Mais de 40 mil rachas…") e
-  link de "Termos" sem página; manter "racha." apenas como placeholder de marca,
+  link de "Termos" sem página; manter "rachaae" apenas como placeholder de marca,
   sem envolver funcionalidade.
 - **D15 — Preview do rateio no formulário é rotulado "estimativa"** (divisão simples,
   arredondamento visual); a divisão definitiva (centavos exatos, resto na 1ª cota) é

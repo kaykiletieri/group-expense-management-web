@@ -9,7 +9,7 @@ Documento de especificação de design (`DESIGN.md`) consolidado para as telas d
 ---
 
 ## 1. Visão Geral e Identidade da Marca
-- **Nome do Produto:** Racha (`racha.`)
+- **Nome do Produto:** Racha (`rachaae`)
 - **Conceito:** *Bold & Playful Editorial* — Uma abordagem editorial, expressiva, jovem e descontraída, rompendo com o visual asséptico e burocrático de SaaS tradicional e apps bancários convencionais.
 - **Princípio Central:** Clareza matemática absoluta na divisão de centavos combinada com personalidade gráfica marcante, microinterações táteis e composições com forte hierarquia tipográfica.
 

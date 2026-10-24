@@ -29,4 +29,4 @@ Os protótipos aprovados estão em `../design/prototipos/`:
 - `design-spec-racha.md` — especificação full de componentes/microcopy.
 
 Estes HTML usam Tailwind CDN apenas como protótipo; a implementação real usa os tokens
-de `design-system.md` em SCSS (sem Tailwind). O nome "racha." é **provisório**.
+de `design-system.md` em SCSS (sem Tailwind). O nome "rachaae" é **provisório**.
