@@ -20,6 +20,20 @@
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+.shell-brand::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--color-positive);
+  box-shadow: 0 0 0 2px var(--color-card);
 }
 
 .shell-main {
@@ -127,6 +141,15 @@
   .shell-main {
     max-width: 1160px;
   }
+}
+
+.shell-side .shell-brand {
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.shell-side .shell-brand::after {
+  display: none;
 }
 
 .side-nav {

@@ -11,11 +11,22 @@
   </div>
 
   <div class="login-card">
+    <!-- Social proof tag (lime accent pill) -->
+    <div class="login-social-proof">
+      <span class="material-symbols-outlined">verified_user</span>
+      Mais de 50 mil rachas resolvidos
+    </div>
+
+    <!-- Editorial Hero Title Unit -->
     <header class="login-head">
-      <span class="login-brand">rachaae</span>
-      <p class="login-tagline">Rache as contas do grupo sem erro.</p>
+      <h1 class="login-title">
+        Sua galera.<br>
+        <span class="login-title-accent">Suas contas.</span>
+      </h1>
+      <p class="login-tagline">Dividir gastos sem drama, climão nem planilha improvisada.</p>
     </header>
 
+    <!-- Interactive Segmented Switch (Entrar / Criar Conta) -->
     <div class="login-switch" role="tablist" aria-label="Entrar ou criar conta">
       <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'login'"
         [attr.aria-selected]="mode() === 'login'" (click)="setMode('login')">
@@ -23,27 +34,60 @@
       </button>
       <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'register'"
         [attr.aria-selected]="mode() === 'register'" (click)="setMode('register')">
-        Criar conta
+        <span>Criar conta</span>
+        <span class="login-switch-dot" aria-hidden="true"></span>
       </button>
     </div>
 
     <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+      <!-- Email Field -->
       <div class="login-field">
         <label class="label-caps" for="login-email">E-mail pessoal</label>
-        <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email"
-          [class.has-error]="showFieldError('email')" />
+        <div class="login-input-wrapper">
+          <span class="login-input-icon material-symbols-outlined" aria-hidden="true">alternate_email</span>
+          <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email"
+            [class.has-error]="showFieldError('email')" />
+        </div>
         @if (showFieldError('email')) {
         <span class="login-field-error">Informe um e-mail válido.</span>
         }
       </div>
 
+      <!-- Password Field -->
       <div class="login-field">
-        <label class="label-caps" for="login-password">
-          {{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}
-        </label>
-        <input id="login-password" type="password"
-          [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
-          formControlName="password" [class.has-error]="showFieldError('password')" />
+        <div class="flex items-center justify-between">
+          <label class="label-caps" for="login-password">
+            {{ mode() === 'login' ? 'Senha' : 'Criar senha' }}
+          </label>
+          @if (mode() === 'register') {
+          <span class="login-pwd-hint">Mínimo 6 caracteres</span>
+          }
+        </div>
+        <div class="login-input-wrapper">
+          <span class="login-input-icon material-symbols-outlined" aria-hidden="true">lock_open</span>
+          <input id="login-password" type="password"
+            [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
+            formControlName="password" [class.has-error]="showFieldError('password')" />
+          <button type="button" class="login-toggle-btn" (click)="togglePasswordVisibility()" aria-label="Mostrar/ocultar senha">
+            <span class="material-symbols-outlined">{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+
+        <!-- Password Strength Meter (only on register) -->
+        @if (mode() === 'register') {
+        <div class="login-pwd-strength">
+          <div class="login-pwd-bars" role="progressbar" [attr.aria-valuenow]="passwordStrength()" aria-valuemin="0" aria-valuemax="4">
+            @for (i of [0,1,2,3]; track i) {
+            <span class="login-pwd-bar" [class.filled]="i < passwordStrength()"></span>
+            }
+          </div>
+          <div class="login-pwd-label">
+            <span class="login-pwd-text">Força da combinação</span>
+            <span class="login-pwd-rating" [class]="passwordStrengthClass()">{{ passwordStrengthText() }}</span>
+          </div>
+        </div>
+        }
+
         @if (showFieldError('password')) {
         <span class="login-field-error">
           {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
@@ -55,13 +99,51 @@
       <p class="login-error" role="alert">{{ errorMessage() }}</p>
       }
 
-      <button class="btn-primary" type="submit" [disabled]="submitting()">
+      <!-- Group Preview Teaser / Delight Pill -->
+      <div class="login-group-preview">
+        <div class="login-avatar-stack">
+          <span class="login-avatar" style="--avatar-bg: #2546f0; --avatar-color: #fff;">M</span>
+          <span class="login-avatar" style="--avatar-bg: #ff7139; --avatar-color: #fff;">G</span>
+          <span class="login-avatar login-avatar-more" style="--avatar-bg: #d9f36a; --avatar-color: #20211e;">+3</span>
+        </div>
+        <p class="login-preview-text">
+          Seus amigos já dividiram <span class="tabular-nums">3 contas</span> nesta semana.
+        </p>
+      </div>
+
+      <!-- Action CTA Button -->
+      <button class="btn-primary btn-primary--full" type="submit" [disabled]="submitting()">
         @if (submitting()) {
         {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}
         } @else {
-        {{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}
+        <span>{{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}</span>
+        <span class="material-symbols-outlined btn-primary__arrow">arrow_forward</span>
         }
       </button>
+
+      <!-- Terms and conditions -->
+      <p class="login-terms">
+        Ao continuar, você concorda com nossos
+        <a href="#" target="_blank" rel="noopener">Termos</a>
+        e autoriza o uso para fechamento de comandas conjuntas.
+      </p>
     </form>
+
+    <!-- Quick Settle Alternative Option -->
+    <div class="login-alt-action">
+      <div class="flex items-center gap-2">
+        <span class="login-alt-text">Já tem conta por aqui?</span>
+        <button type="button" class="login-alt-link" (click)="setMode(mode() === 'login' ? 'register' : 'login')">
+          <span>{{ mode() === 'login' ? 'Criar conta' : 'Entrar' }}</span>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Security & Trust Badge Footer -->
+    <div class="login-trust">
+      <span class="material-symbols-outlined login-trust-icon">verified_user</span>
+      <span>Acesso protegido • Seus dados em segurança</span>
+    </div>
   </div>
 </main>

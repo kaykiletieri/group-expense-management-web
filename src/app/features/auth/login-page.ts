@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,20 +29,55 @@ export class LoginPage implements OnInit {
   readonly mode = signal<'login' | 'register'>('login');
   readonly submitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly passwordVisible = signal(false);
 
   readonly form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
+  // Password strength (0-4) computed from password value
+  readonly passwordStrength = computed(() => {
+    const pwd = this.form.controls.password.value ?? '';
+    if (pwd.length === 0) return 0;
+    let score = 0;
+    if (pwd.length >= 6) score++;
+    if (pwd.length >= 10) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return Math.min(score, 4);
+  });
+
+  readonly passwordStrengthText = computed(() => {
+    const s = this.passwordStrength();
+    if (s <= 1) return 'Muito fraca';
+    if (s === 2) return 'Fraca';
+    if (s === 3) return 'Boa & protegida';
+    return 'Muito forte';
+  });
+
+  readonly passwordStrengthClass = computed(() => {
+    const s = this.passwordStrength();
+    if (s <= 1) return 'login-pwd-rating--weak';
+    if (s === 2) return 'login-pwd-rating--fair';
+    if (s === 3) return 'login-pwd-rating--good';
+    return 'login-pwd-rating--strong';
+  });
+
   setMode(mode: 'login' | 'register') {
     this.mode.set(mode);
     this.errorMessage.set(null);
+    this.passwordVisible.set(false);
     // Em cadastro a senha exige no mínimo 6 caracteres.
     this.form.controls.password.setValidators(
       mode === 'register' ? [Validators.required, Validators.minLength(6)] : [Validators.required],
     );
     this.form.controls.password.updateValueAndValidity();
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible.update(v => !v);
   }
 
   showFieldError(field: 'email' | 'password'): boolean {

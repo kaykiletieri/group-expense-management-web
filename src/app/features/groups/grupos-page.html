@@ -1,8 +1,11 @@
 <section class="page">
   <header class="list-head">
-    <h1>Meus grupos</h1>
+    <div class="list-head-content">
+      <h1>Meus grupos</h1>
+      <p class="list-subtitle">Acompanhe saldos e divida as contas da galera.</p>
+    </div>
     <button
-      class="btn-chip"
+      class="btn-primary btn-primary--add-group"
       type="button"
       [disabled]="groupLimitReached()"
       [title]="groupLimitReached() ? 'Você pode ter no máximo 10 grupos.' : null"

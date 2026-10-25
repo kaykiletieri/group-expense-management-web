@@ -10,13 +10,38 @@
 
 .list-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.list-head-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .list-head h1 {
   font-size: var(--text-h1);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.list-subtitle {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  margin: 0;
+}
+
+/* Add group button - primary style for emphasis */
+.btn-primary--add-group {
+  height: 48px;
+  padding-inline: var(--space-5);
+  font-size: var(--text-body);
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .list-summary {
@@ -77,5 +102,18 @@
   .group-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Mobile: stack header when space is tight */
+@media (max-width: 420px) {
+  .list-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary--add-group {
+    width: 100%;
+    justify-content: center;
   }
 }
