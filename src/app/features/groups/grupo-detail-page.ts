@@ -19,6 +19,7 @@ import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 import { AuthService } from '../../core/auth/auth.service';
 import { copyToClipboard } from '../../core/clipboard/copy-text';
+import { Title } from '@angular/platform-browser';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -48,6 +49,7 @@ export class GrupoDetailPage implements OnInit {
   private readonly expensesApi = inject(ExpensesApi);
   private readonly paymentsApi = inject(PaymentsApi);
   private readonly auth = inject(AuthService);
+  private readonly title = inject(Title);
 
   protected readonly formatBrl = formatBrl;
 
@@ -453,6 +455,7 @@ export class GrupoDetailPage implements OnInit {
       }
 
       this.groupName.set(summary?.name ?? '');
+      this.title.setTitle(`${summary?.name ?? 'Grupo'} - Rachaae`);
       this.participants.set(participants);
       this.expenses.set(expenses);
       this.balances.set(balances);

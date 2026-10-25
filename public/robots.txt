@@ -1,0 +1,13 @@
+# Rachaae - Group Expense Management
+# Robots.txt for SEO
+
+User-agent: *
+Allow: /
+
+# Disallow private/authenticated routes
+Disallow: /login
+Disallow: /grupos/*/despesas/
+Disallow: /ajustes
+
+# Sitemap
+Sitemap: https://kaykiletieri.github.io/group-expense-management-web/sitemap.xml

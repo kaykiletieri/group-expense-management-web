@@ -1,31 +1,47 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <title>Rachaae — despesas de grupo</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBF9F4" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A17" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <script>
-      // Aplica o tema salvo antes do Angular bootar (evita flash) — D19.
-      // Padrão é claro; sem tema "auto": só claro/escuro.
-      (function () {
-        try {
-          var pref = localStorage.getItem('gem-theme') === 'dark' ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', pref);
-        } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      })();
-    </script>
-    <link rel="manifest" href="manifest.webmanifest" />
-  </head>
 
-  <body>
-    <app-root></app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Rachaae — despesas de grupo</title>
+  <!-- Descrição que aparece no Google -->
+  <meta name="description"
+    content="O Rachaae é a melhor ferramenta gratuita para gerenciar e dividir despesas de viagens, churrascos e contas do dia a dia entre amigos de forma simples e justa.">
+
+  <!-- Palavras-chave básicas -->
+  <meta name="keywords" content="racha conta, dividir despesas, app de racha, controle de gastos em grupo, racha aí">
+
+  <!-- Open Graph (Para quando compartilharem seu link no WhatsApp, Telegram, Twitter) -->
+  <meta property="og:title" content="Rachaae - Divisão de Despesas em Grupo">
+  <meta property="og:description"
+    content="Divida contas de viagens, churrascos e rolês com os amigos de forma fácil e sem brigas.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rachaae.com">
+  <!-- <meta property="og:image" content="https://rachaae.com/assets/og-image.png"> (Crie uma imagem bonita depois para aparecer no WhatsApp) -->
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBF9F4" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A17" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script>
+    // Aplica o tema salvo antes do Angular bootar (evita flash) — D19.
+    // Padrão é claro; sem tema "auto": só claro/escuro.
+    (function () {
+      try {
+        var pref = localStorage.getItem('gem-theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', pref);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="manifest" href="manifest.webmanifest" />
+</head>
+
+<body>
+  <app-root></app-root>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
+</body>
+
 </html>
