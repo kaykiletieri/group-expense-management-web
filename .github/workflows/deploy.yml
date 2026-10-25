@@ -33,6 +33,9 @@ jobs:
       - name: Build
         run: npm run build -- --configuration production
 
+      - name: Copia index.html para 404.html
+        run: cp dist/racha-web/browser/index.html dist/racha-web/browser/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
