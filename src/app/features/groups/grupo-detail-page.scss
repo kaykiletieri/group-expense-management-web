@@ -8,12 +8,46 @@
   gap: var(--space-8);
 }
 
+.page--error {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.error-card {
+  width: 100%;
+  max-width: 360px;
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+.error-icon {
+  display: inline-flex;
+  margin-bottom: var(--space-4);
+  font-size: 48px;
+  color: var(--color-error);
+}
+
+.error-card h1 {
+  font-size: var(--text-h1);
+  margin-bottom: var(--space-2);
+}
+
+.error-card .page-note {
+  margin-bottom: var(--space-5);
+}
+
 /* Header */
 .group-header {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--divider);
+  margin-bottom: var(--space-2);
 }
 
 .back-btn {
@@ -41,7 +75,9 @@
 
 .group-name {
   flex: 1;
+  font-family: var(--font-display);
   font-size: var(--text-h1);
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
@@ -120,24 +156,32 @@
 }
 
 /* Seções */
-.section-row {
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  margin: 0;
 }
 
 .section-actions {
   display: flex;
   gap: var(--space-2);
   align-items: baseline;
-}
-
-.section-row h2,
-h2 {
-  font-size: var(--text-h2);
-  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .section-count {
@@ -171,6 +215,8 @@ h2 {
 }
 
 .balance-name {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -188,7 +234,6 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  margin-bottom: var(--space-3);
 }
 
 .expense-item {
@@ -381,6 +426,33 @@ h2 {
   background: var(--color-card);
   font-size: var(--text-body);
   color: var(--color-ink);
+}
+
+/* Cards de saldo */
+.card--balances > * + * {
+  border-top: var(--border-width) solid var(--divider);
+}
+
+/* Empty state */
+.card-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-5);
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: var(--color-ink-soft);
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  margin: 0;
 }
 
 /* Telas largas (≥1120px): saldos + participantes à esquerda, despesas à direita.

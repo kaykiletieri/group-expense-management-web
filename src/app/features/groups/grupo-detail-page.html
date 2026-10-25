@@ -1,14 +1,20 @@
 @if (notFound()) {
-  <section class="page">
-    <h1>Grupo não encontrado</h1>
-    <p class="page-note">Este grupo não existe ou não pertence a sua conta.</p>
-    <a class="btn-secondary" routerLink="/grupos">Voltar aos grupos</a>
+  <section class="page page--error">
+    <div class="error-card card">
+      <span class="error-icon material-symbols-outlined">error_outline</span>
+      <h1>Grupo não encontrado</h1>
+      <p class="page-note">Este grupo não existe ou não pertence a sua conta.</p>
+      <a class="btn-primary" routerLink="/grupos">Voltar aos grupos</a>
+    </div>
   </section>
 } @else if (loadError()) {
-  <section class="page">
-    <h1>Ops…</h1>
-    <p class="page-note">Não foi possível carregar o grupo. Tente de novo.</p>
-    <button class="btn-primary" type="button" (click)="refresh()">Tentar novamente</button>
+  <section class="page page--error">
+    <div class="error-card card">
+      <span class="error-icon material-symbols-outlined">wifi_off</span>
+      <h1>Ops…</h1>
+      <p class="page-note">Não foi possível carregar o grupo. Tente de novo.</p>
+      <button class="btn-primary" type="button" (click)="refresh()">Tentar novamente</button>
+    </div>
   </section>
 } @else if (loading()) {
   <div class="page">
@@ -45,9 +51,9 @@
       }
     </header>
 
-    <section>
-      <div class="section-row">
-        <h2>Saldos</h2>
+    <section class="section">
+      <div class="section-header">
+        <h2 class="label-caps">Saldos</h2>
         <div class="section-actions">
           <button
             class="icon-copy"
@@ -69,7 +75,7 @@
         </div>
       }
 
-      <div class="card">
+      <div class="card card--balances">
         @for (balance of balances(); track balance.participantId) {
           <div class="balance-row">
             <app-avatar [name]="participantName(balance.participantId)" />
@@ -132,9 +138,9 @@
     </section>
 
     @if (payments().length > 0) {
-      <section>
-        <div class="section-row">
-          <h2>Pagamentos <span class="section-count">{{ payments().length }}</span></h2>
+      <section class="section">
+        <div class="section-header">
+          <h2 class="label-caps">Pagamentos <span class="section-count">{{ payments().length }}</span></h2>
           <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
         </div>
 
@@ -165,15 +171,16 @@
       </section>
     }
 
-    <section>
-      <div class="section-row">
-        <h2>Despesas <span class="section-count">{{ expenses().length }}</span></h2>
+    <section class="section">
+      <div class="section-header">
+        <h2 class="label-caps">Despesas <span class="section-count">{{ expenses().length }}</span></h2>
         <span class="section-note tabular-nums">Total {{ formatBrl(totalSpent()) }}</span>
       </div>
 
       @if (expenses().length === 0) {
         <div class="card card-empty">
-          <p>Nenhuma despesa por aqui ainda.</p>
+          <span class="empty-icon material-symbols-outlined">receipt_long</span>
+          <p class="empty-title">Nenhuma despesa por aqui ainda.</p>
           <p class="section-note">A primeira despesa aparece aqui.</p>
         </div>
       }
@@ -225,8 +232,10 @@
       </ul>
     </section>
 
-    <section>
-      <h2>Participantes <span class="section-count">{{ participants().length }}</span></h2>
+    <section class="section">
+      <div class="section-header">
+        <h2 class="label-caps">Participantes <span class="section-count">{{ participants().length }}</span></h2>
+      </div>
 
       <div class="participant-add">
         <input

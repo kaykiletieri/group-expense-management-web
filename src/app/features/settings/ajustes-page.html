@@ -1,62 +1,76 @@
-<section class="page">
-  <h1>Ajustes</h1>
+<main class="page">
+  <header class="page-header">
+    <h1>Ajustes</h1>
+  </header>
 
-  <div class="page-card">
-    <span class="label-caps page-card-label">Nome</span>
-    <p class="page-card-value">{{ user()?.name || '—' }}</p>
-    <div class="name-field">
-      <input
-        type="text"
-        placeholder="Como você quer aparecer nos grupos…"
-        [formControl]="displayName"
-        maxlength="60"
-        (keyup.enter)="saveName()"
-      />
-      <button
-        class="btn-secondary"
-        type="button"
-        [disabled]="savingName() || displayName.invalid"
-        (click)="saveName()"
-      >
-        Salvar nome
-      </button>
-    </div>
-    @if (displayName.touched && displayName.invalid) {
+  <section class="settings-section">
+    <div class="card card--setting">
+      <div class="setting-row">
+        <div class="setting-label">
+          <span class="label-caps page-card-label">Nome</span>
+          <p class="page-card-value">{{ user()?.name || '—' }}</p>
+        </div>
+        <div class="setting-value">
+          <input
+            type="text"
+            placeholder="Como você quer aparecer nos grupos…"
+            [formControl]="displayName"
+            maxlength="60"
+            (keyup.enter)="saveName()"
+          />
+          <button
+            class="btn-secondary btn-secondary--sm"
+            type="button"
+            [disabled]="savingName() || displayName.invalid"
+            (click)="saveName()"
+          >
+            Salvar
+          </button>
+        </div>
+      </div>
+      @if (displayName.touched && displayName.invalid) {
       <span class="field-error">Máximo de 60 caracteres.</span>
-    }
-    @if (nameError()) {
+      }
+      @if (nameError()) {
       <p class="page-error" role="alert">{{ nameError() }}</p>
-    }
-  </div>
-
-  <div class="page-card">
-    <span class="label-caps page-card-label">Tema</span>
-    <div class="theme-switch" role="group" aria-label="Escolher tema">
-      <button
-        type="button"
-        class="theme-option"
-        [class.is-selected]="theme.preference() === 'light'"
-        (click)="theme.preference.set('light')"
-      >
-        Claro
-      </button>
-      <button
-        type="button"
-        class="theme-option"
-        [class.is-selected]="theme.preference() === 'dark'"
-        (click)="theme.preference.set('dark')"
-      >
-        Escuro
-      </button>
+      }
     </div>
-    <p class="section-note">O tema salvo continua valendo depois de fechar o app.</p>
-  </div>
+
+    <div class="card card--setting">
+      <div class="setting-row">
+        <div class="setting-label">
+          <span class="label-caps page-card-label">Tema</span>
+          <p class="section-note">O tema salvo continua valendo depois de fechar o app.</p>
+        </div>
+        <div class="setting-value">
+          <div class="theme-switch" role="group" aria-label="Escolher tema">
+            <button
+              type="button"
+              class="theme-option"
+              [class.is-selected]="theme.preference() === 'light'"
+              (click)="theme.preference.set('light')"
+            >
+              Claro
+            </button>
+            <button
+              type="button"
+              class="theme-option"
+              [class.is-selected]="theme.preference() === 'dark'"
+              (click)="theme.preference.set('dark')"
+            >
+              Escuro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   @if (errorMessage()) {
-    <p class="page-error" role="alert">{{ errorMessage() }}</p>
+  <p class="page-error" role="alert">{{ errorMessage() }}</p>
   }
 
-  <button class="btn-secondary" type="button" [disabled]="loggingOut()" (click)="logout()">
+  <button class="btn-secondary btn-secondary--full" type="button" [disabled]="loggingOut()" (click)="logout()">
     {{ loggingOut() ? 'Saindo…' : 'Sair' }}
   </button>
-</section>
+</main>
