@@ -69,14 +69,16 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "allowedHosts": [".ngrok-free.app", ".ngrok.io"]
+            "allowedHosts": [".ngrok-free.app", ".ngrok.io"],
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
               "buildTarget": "racha-web:build:production"
             },
             "development": {
-              "buildTarget": "racha-web:build:development"
+              "buildTarget": "racha-web:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
