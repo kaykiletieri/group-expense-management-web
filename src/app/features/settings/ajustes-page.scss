@@ -6,9 +6,22 @@
   padding-inline: var(--space-4);
 }
 
+/* Page header with gradient accent */
 .page-header {
   padding-bottom: var(--space-4);
-  border-bottom: var(--border-width) solid var(--divider);
+  border-bottom: 3px solid var(--color-primary);
+  position: relative;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-cta), var(--color-positive));
+  border-radius: 2px;
 }
 
 .page-header h1 {
@@ -17,6 +30,10 @@
   font-weight: 700;
   letter-spacing: -0.03em;
   margin: 0;
+  background: linear-gradient(135deg, var(--color-ink), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .settings-section {
@@ -27,6 +44,16 @@
 
 .card--setting {
   padding: var(--space-5);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--shadow-hard);
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.card--setting:hover {
+  box-shadow: var(--shadow-hard-strong);
+  border-color: var(--color-primary);
 }
 
 .setting-row {
@@ -72,7 +99,12 @@
 }
 
 .page-card-label {
-  color: var(--color-ink-soft);
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
 }
 
 .page-card-value {
@@ -81,6 +113,7 @@
   font-weight: 600;
   overflow-wrap: anywhere;
   margin: 0;
+  color: var(--color-ink);
 }
 
 /* Campo do nome de exibição */
@@ -94,13 +127,22 @@
   background: var(--color-surface);
   font-size: var(--text-body);
   min-width: 0;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
 .setting-value input:hover:not(:focus) {
   background: var(--hover-tint);
 }
 
-/* Alternância de tema (Claro/Escuro), mesmo padrão do switch do login */
+.setting-value input:focus,
+.setting-value input:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+  background: var(--color-card);
+}
+
+/* Alternância de tema (Claro/Escuro) - vibrant segmented control */
 .theme-switch {
   display: flex;
   padding: var(--space-1);
@@ -127,26 +169,56 @@
 
 .theme-option:hover:not(.is-selected) {
   color: var(--color-ink);
+  background: var(--hover-tint);
 }
 
 .theme-option.is-selected {
-  background: var(--color-card);
-  color: var(--color-ink);
+  background: var(--color-primary);
+  color: #fff;
   box-shadow: var(--shadow-hard);
+}
+
+.theme-option.is-selected:hover {
+  background: #1a35c0;
 }
 
 .field-error {
   font-size: var(--text-caption);
   color: var(--color-error);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.field-error::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-error);
 }
 
 .page-error {
   padding: var(--space-3);
   border: var(--border-width) solid var(--color-error);
   border-radius: var(--radius-md);
-  background: var(--color-card);
+  background: linear-gradient(90deg, #fff5f0, var(--color-card));
   color: var(--color-error);
   font-size: var(--text-caption);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.page-error::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-error);
+  flex-shrink: 0;
 }
 
 /* Button variants */
@@ -156,19 +228,21 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--color-card);
-  color: var(--color-ink);
+  color: var(--color-primary);
   font-family: var(--font-display);
   font-size: var(--text-small);
-  font-weight: 600;
+  font-weight: 700;
   box-shadow: var(--shadow-hard);
   transition:
     background-color var(--transition-fast),
     box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+    transform var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .btn-secondary--sm:hover:not(:disabled) {
-  background: var(--color-surface);
+  background: rgba(37, 70, 240, 0.1);
+  color: var(--color-primary);
 }
 
 .btn-secondary--sm:active:not(:disabled) {
@@ -188,7 +262,7 @@
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--color-card);
-  color: var(--color-ink);
+  color: var(--color-error);
   font-family: var(--font-display);
   font-size: var(--text-body);
   font-weight: 600;
@@ -196,11 +270,13 @@
   transition:
     background-color var(--transition-fast),
     box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+    transform var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .btn-secondary--full:hover:not(:disabled) {
-  background: var(--color-surface);
+  background: #fff5f0;
+  color: var(--color-error);
 }
 
 .btn-secondary--full:active:not(:disabled) {

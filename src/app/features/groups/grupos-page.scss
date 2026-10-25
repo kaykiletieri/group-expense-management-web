@@ -14,6 +14,21 @@
   justify-content: space-between;
   gap: var(--space-3);
   flex-wrap: wrap;
+  padding-bottom: var(--space-3);
+  border-bottom: 3px solid var(--color-primary);
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+.list-head::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-cta));
+  border-radius: 2px;
 }
 
 .list-head-content {
@@ -23,9 +38,14 @@
 }
 
 .list-head h1 {
+  font-family: var(--font-display);
   font-size: var(--text-h1);
   font-weight: 700;
-  line-height: 1.2;
+  background: linear-gradient(135deg, var(--color-ink), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
 }
 
 .list-subtitle {
@@ -34,7 +54,7 @@
   margin: 0;
 }
 
-/* Add group button - primary style for emphasis */
+/* Add group button - primary orange style */
 .btn-primary--add-group {
   height: 48px;
   padding-inline: var(--space-5);
@@ -42,10 +62,57 @@
   font-weight: 700;
   white-space: nowrap;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-cta);
+  color: var(--on-accent);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-hard);
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.btn-primary--add-group:hover:not(:disabled) {
+  background: #f26227;
+  box-shadow: 0 6px 16px rgba(255, 113, 57, 0.4);
+}
+
+.btn-primary--add-group:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(2px, 2px);
+}
+
+.btn-primary--add-group:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+  transform: none;
+  background: var(--color-cta);
+  color: var(--on-accent);
+  cursor: not-allowed;
+}
+
+.btn-primary--add-group .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform var(--transition-fast);
+}
+
+.btn-primary--add-group:hover:not(:disabled) .material-symbols-outlined {
+  transform: translateX(2px);
 }
 
 .list-summary {
-  color: var(--color-ink-soft);
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-small);
+  font-weight: 600;
+  background: rgba(37, 70, 240, 0.1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(37, 70, 240, 0.2);
 }
 
 .group-list {
@@ -64,12 +131,17 @@
   text-decoration: none;
   color: var(--color-ink);
   box-shadow: var(--shadow-hard);
-  transition: transform 80ms ease, box-shadow 80ms ease;
+  border-left: 4px solid transparent;
+  transition: transform 80ms ease, box-shadow 80ms ease, border-left-color 80ms ease;
+  background: var(--color-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
 }
 
 .group-card:hover {
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
   box-shadow: var(--shadow-hard-strong);
+  border-left-color: var(--color-cta);
 }
 
 .group-card-info {
@@ -95,6 +167,107 @@
 
 .group-card-arrow {
   color: var(--color-ink-soft);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.group-card:hover .group-card-arrow {
+  color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+/* Chips with color */
+.group-card-chips .chip {
+  font-family: var(--font-display);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.group-card-chips .chip-soft {
+  background: var(--color-surface);
+  color: var(--color-ink-soft);
+  border-color: var(--divider);
+}
+
+.group-card-chips .chip-quit {
+  background: var(--color-positive);
+  color: var(--on-accent);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-hard);
+}
+
+/* Banner zero enhanced */
+.banner-zero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-positive), #c4e058);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+  box-shadow: var(--shadow-hard);
+  margin-bottom: var(--space-2);
+}
+
+.banner-zero .material-symbols-outlined {
+  font-size: 20px;
+  animation: pulse-check 2s ease-in-out infinite;
+}
+
+@keyframes pulse-check {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Empty state with color */
+.card-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-5);
+}
+
+.empty-icon {
+  font-size: 56px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-cta), var(--color-positive));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-note {
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+}
+
+/* Card button in empty state */
+.card-empty .btn-primary {
+  height: 48px;
+  padding-inline: var(--space-6);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.card-empty .btn-primary .material-symbols-outlined {
+  font-size: 20px;
+  transition: transform var(--transition-fast);
+}
+
+.card-empty .btn-primary:hover:not(:disabled) .material-symbols-outlined {
+  transform: translateX(2px);
 }
 
 /* Tablet/desktop: cards de grupo em grade */
