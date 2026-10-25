@@ -11,19 +11,10 @@
   </div>
 
   <div class="login-card">
-    <!-- Social proof tag (lime accent pill) -->
-    <div class="login-social-proof">
-      <span class="material-symbols-outlined">verified_user</span>
-      Mais de 50 mil rachas resolvidos
-    </div>
-
-    <!-- Editorial Hero Title Unit -->
+    <!-- Mobile brand title -->
     <header class="login-head">
-      <h1 class="login-title">
-        Sua galera.<br>
-        <span class="login-title-accent">Suas contas.</span>
-      </h1>
-      <p class="login-tagline">Dividir gastos sem drama, climão nem planilha improvisada.</p>
+      <span class="login-brand">rachaae</span>
+      <p class="login-tagline">Rache as contas do grupo sem erro.</p>
     </header>
 
     <!-- Interactive Segmented Switch (Entrar / Criar Conta) -->
@@ -57,37 +48,18 @@
       <div class="login-field">
         <div class="flex items-center justify-between">
           <label class="label-caps" for="login-password">
-            {{ mode() === 'login' ? 'Senha' : 'Criar senha' }}
+            {{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}
           </label>
-          @if (mode() === 'register') {
-          <span class="login-pwd-hint">Mínimo 6 caracteres</span>
-          }
         </div>
         <div class="login-input-wrapper">
           <span class="login-input-icon material-symbols-outlined" aria-hidden="true">lock_open</span>
-          <input id="login-password" type="password"
+          <input id="login-password" [type]="passwordVisible() ? 'text' : 'password'"
             [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
             formControlName="password" [class.has-error]="showFieldError('password')" />
           <button type="button" class="login-toggle-btn" (click)="togglePasswordVisibility()" aria-label="Mostrar/ocultar senha">
             <span class="material-symbols-outlined">{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</span>
           </button>
         </div>
-
-        <!-- Password Strength Meter (only on register) -->
-        @if (mode() === 'register') {
-        <div class="login-pwd-strength">
-          <div class="login-pwd-bars" role="progressbar" [attr.aria-valuenow]="passwordStrength()" aria-valuemin="0" aria-valuemax="4">
-            @for (i of [0,1,2,3]; track i) {
-            <span class="login-pwd-bar" [class.filled]="i < passwordStrength()"></span>
-            }
-          </div>
-          <div class="login-pwd-label">
-            <span class="login-pwd-text">Força da combinação</span>
-            <span class="login-pwd-rating" [class]="passwordStrengthClass()">{{ passwordStrengthText() }}</span>
-          </div>
-        </div>
-        }
-
         @if (showFieldError('password')) {
         <span class="login-field-error">
           {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
@@ -98,18 +70,6 @@
       @if (errorMessage()) {
       <p class="login-error" role="alert">{{ errorMessage() }}</p>
       }
-
-      <!-- Group Preview Teaser / Delight Pill -->
-      <div class="login-group-preview">
-        <div class="login-avatar-stack">
-          <span class="login-avatar" style="--avatar-bg: #2546f0; --avatar-color: #fff;">M</span>
-          <span class="login-avatar" style="--avatar-bg: #ff7139; --avatar-color: #fff;">G</span>
-          <span class="login-avatar login-avatar-more" style="--avatar-bg: #d9f36a; --avatar-color: #20211e;">+3</span>
-        </div>
-        <p class="login-preview-text">
-          Seus amigos já dividiram <span class="tabular-nums">3 contas</span> nesta semana.
-        </p>
-      </div>
 
       <!-- Action CTA Button -->
       <button class="btn-primary btn-primary--full" type="submit" [disabled]="submitting()">
