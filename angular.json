@@ -49,7 +49,7 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/group-expense-management-web/"
+              "baseHref": "/"
             },
             "development": {
               "optimization": false,
