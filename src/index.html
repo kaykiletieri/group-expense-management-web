@@ -1,31 +1,31 @@
 <!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Rachaae — despesas de grupo</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBF9F4" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A17" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script>
+      // Aplica o tema salvo antes do Angular bootar (evita flash) — D19.
+      // Padrão é claro; sem tema "auto": só claro/escuro.
+      (function () {
+        try {
+          var pref = localStorage.getItem('gem-theme') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', pref);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+    <link rel="manifest" href="manifest.webmanifest" />
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <title>Rachae — despesas de grupo</title>
-  <base href="/" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FBF9F4" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A17" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <script>
-    // Aplica o tema salvo antes do Angular bootar (evita flash) — D19.
-    // Padrão é claro; sem tema "auto": só claro/escuro.
-    (function () {
-      try {
-        var pref = localStorage.getItem('gem-theme') === 'dark' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', pref);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-</head>
-
-<body>
-  <app-root></app-root>
-</body>
-
+  <body>
+    <app-root></app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+  </body>
 </html>
