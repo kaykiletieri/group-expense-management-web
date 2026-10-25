@@ -7,12 +7,12 @@ import { GroupOverview } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
+import { Title } from '@angular/platform-browser';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 const GROUP_LIMIT = 10;
 const GROUP_LIMIT_PT = `Você pode ter no máximo ${GROUP_LIMIT} grupos.`;
 
-/** Converte o 400 do limite (mensagem do backend em inglês) em pt-BR. */
 function toFriendlyError(err: unknown): string {
   const message = getApiErrorMessage(err, GENERIC_ERROR);
   return message.includes(`at most ${GROUP_LIMIT} groups`) ? GROUP_LIMIT_PT : message;
@@ -30,6 +30,7 @@ function toFriendlyError(err: unknown): string {
 export class GruposPage implements OnInit {
   private readonly router = inject(Router);
   private readonly groupsApi = inject(GroupsApi);
+  private readonly title = inject(Title);
 
   protected readonly formatBrl = formatBrl;
 
@@ -40,7 +41,6 @@ export class GruposPage implements OnInit {
   readonly createOpen = signal(false);
   readonly creating = signal(false);
   readonly createError = signal<string | null>(null);
-  // Nome opcional: em branco, o backend gera "Grupo N" (contador por criador).
   readonly creationName = new FormControl('', {
     nonNullable: true,
     validators: [Validators.maxLength(80)],
@@ -60,13 +60,12 @@ export class GruposPage implements OnInit {
       this.overviews().every((o) => o.totalPaidInCents === 0),
   );
 
-  /** Limite de grupos por usuário (backend rejeita acima de 10). */
   readonly groupLimitReached = computed(
-    () =>
-      this.overviews().length >= GROUP_LIMIT,
+    () => this.overviews().length >= GROUP_LIMIT,
   );
 
   ngOnInit(): void {
+    this.title.setTitle('Grupos - Rachaae');
     void this.refresh();
   }
 
@@ -78,8 +77,6 @@ export class GruposPage implements OnInit {
     this.loading.set(true);
     this.loadError.set(false);
     try {
-      // Uma única chamada: o endpoint overviews já traz participantes e
-      // total pago de cada grupo (evita N+1 de GET /balances por grupo).
       const overviews = await firstValueFrom(this.groupsApi.overviews());
       this.overviews.set(overviews);
     } catch {

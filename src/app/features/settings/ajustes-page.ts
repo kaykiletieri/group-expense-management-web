@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -6,6 +6,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ThemeService } from '../../core/theme/theme.service';
 import { AuthApi } from '../../core/api/auth-api';
 import { getApiErrorMessage } from '../../core/api/api-error';
+import { Title } from '@angular/platform-browser';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -15,11 +16,12 @@ const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
   templateUrl: './ajustes-page.html',
   styleUrl: './ajustes-page.scss',
 })
-export class AjustesPage {
+export class AjustesPage implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly authApi = inject(AuthApi);
   private readonly router = inject(Router);
   readonly theme = inject(ThemeService);
+  private readonly title = inject(Title);
 
   readonly user = this.auth.user;
   readonly loggingOut = signal(false);
@@ -33,6 +35,7 @@ export class AjustesPage {
   readonly nameError = signal<string | null>(null);
 
   ngOnInit() {
+    this.title.setTitle('Ajustes - Rachaae');
     this.displayName.reset(this.user()?.name ?? '');
   }
 

@@ -8,6 +8,7 @@ import { Participant } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
+import { Title } from '@angular/platform-browser';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -23,6 +24,7 @@ export class ExpenseFormPage implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly expensesApi = inject(ExpensesApi);
   private readonly participantsApi = inject(ParticipantsApi);
+  private readonly title = inject(Title);
 
   readonly groupId = this.route.snapshot.paramMap.get('id') ?? '';
   private readonly expenseId = this.route.snapshot.paramMap.get('expenseId');
@@ -45,6 +47,7 @@ export class ExpenseFormPage implements OnInit {
   });
 
   ngOnInit(): void {
+    this.title.setTitle(this.expenseId ? 'Editar despesa - Rachaae' : 'Nova despesa - Rachaae');
     void this.load();
   }
 

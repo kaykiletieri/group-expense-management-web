@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../core/auth/auth.service';
 import { getApiErrorList, getApiErrorMessage } from '../../core/api/api-error';
 
@@ -14,11 +15,16 @@ const LOCKOUT_MESSAGE = 'Muitas tentativas. Tente novamente em alguns minutos.';
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly title = inject(Title);
+
+  ngOnInit(): void {
+    this.title.setTitle('Entrar - Rachaae');
+  }
 
   readonly mode = signal<'login' | 'register'>('login');
   readonly submitting = signal(false);
