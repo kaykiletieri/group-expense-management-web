@@ -6,11 +6,16 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
 /**
- * Derruba o estado de sessão e redireciona ao login quando o backend responde 401
- * (exceto nas chamadas de própria autenticação, que tratam o 401 localmente).
+ * Adiciona credentials em todas as requisições e trata o 401 redirecionando ao login.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  return next(req).pipe(
+  // 1. CLONA a requisição injetando o withCredentials para o cookie transitar entre domínios
+  const authenticatedReq = req.clone({
+    withCredentials: true
+  });
+
+  // 2. Passa a requisição modificada adiante
+  return next(authenticatedReq).pipe(
     catchError((err: unknown) => {
       const unauthenticated = err instanceof HttpErrorResponse && err.status === 401;
       const isAuthCall =
