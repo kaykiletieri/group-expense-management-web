@@ -1,129 +1,131 @@
 <main class="page">
+  <!-- Fixed Header Context -->
   <header class="form-header">
-    <a class="back-btn" [routerLink]="backLink()" aria-label="Voltar">
+    <a class="btn-icon" [routerLink]="backLink()" aria-label="Voltar">
       <span class="material-symbols-outlined">arrow_back</span>
     </a>
-    <h1>{{ isEdit ? 'Editar despesa' : 'Nova despesa' }}</h1>
+    <div class="header-context">
+      <span class="context-chip">
+        <span class="material-symbols-outlined" aria-hidden="true">sailing</span>
+        {{ groupName() }} • {{ participantCount() }} amigos
+      </span>
+      <h1 class="form-title">{{ isEdit ? 'Editar Despesa' : 'Nova Despesa' }}</h1>
+      @if (isEdit) {
+        <span class="ritual-badge">RITUAL #{{ ritualNumber() }}</span>
+      }
+    </div>
+    <div class="header-spacer" aria-hidden="true"></div>
   </header>
 
   @if (loading()) {
-    <div class="skeleton skeleton-field"></div>
-    <div class="skeleton skeleton-field"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
   } @else if (notFound()) {
-    <div class="page page--error">
-      <div class="error-card card">
-        <span class="error-icon material-symbols-outlined">receipt_long</span>
-        <h1>Despesa não encontrada</h1>
-        <p class="page-note">Esta despesa não existe mais.</p>
-        <a class="btn-primary" [routerLink]="backLink()">Voltar ao grupo</a>
+    <div class="page page--centered">
+      <div class="card card-empty">
+        <span class="empty-icon material-symbols-outlined">receipt_long</span>
+        <p class="empty-title">Despesa não encontrada</p>
+        <p class="section-note">Esta despesa não existe mais.</p>
+        <a class="btn-primary btn-primary--full" [routerLink]="backLink()">Voltar ao grupo</a>
       </div>
     </div>
   } @else {
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="form-grid">
-        <div class="form-col">
-          <div class="field">
-            <label class="label-caps" for="expense-desc">O que foi comprado?</label>
-            <input
-              id="expense-desc"
-              type="text"
-              formControlName="description"
-              placeholder="Ex: Jantar de sábado, Pedágio…"
-              maxlength="120"
-              [class.has-error]="showError('description')"
-            />
-            @if (showError('description')) {
-            <span class="field-error">Informe a descrição.</span>
-            }
-          </div>
-
-          <div class="field">
-            <label class="label-caps" for="expense-amount">Valor total</label>
-            <div class="amount-wrap">
-              <span class="amount-prefix">R$</span>
-              <input
-                id="expense-amount"
-                class="amount tabular-nums"
-                inputmode="decimal"
-                formControlName="amount"
-                placeholder="0,00"
-                #amountInput
-                (input)="amountText.set(amountInput.value)"
-                [class.has-error]="amountInvalid() || showError('amount')"
-              />
-            </div>
-            @if (amountInvalid() || showError('amount')) {
-            <span class="field-error">Informe um valor válido maior que zero.</span>
-            }
+      <!-- Description Field -->
+      <div class="field-group">
+        <label class="label-caps" for="expense-desc">O que foi comprado?</label>
+        <div class="input-with-icon">
+          <input id="expense-desc" type="text" formControlName="description" placeholder="Ex: Jantar de sábado, Pedágio…" maxlength="120" [class.has-error]="showError('description')" />
+          <div class="input-icon-wrapper">
+            <span class="material-symbols-outlined">{{ descriptionIcon() }}</span>
           </div>
         </div>
-
-        <div class="form-col">
-          <div class="field-chips">
-            <h2 class="label-caps">Pagador único</h2>
-            <div class="chip-list chip-list-single">
-              @for (participant of participants(); track participant.id) {
-              <button
-                type="button"
-                class="chip-select"
-                [class.is-selected]="payerId() === participant.id"
-                (click)="setPayer(participant.id)"
-              >
-                <app-avatar [name]="participant.name" [size]="28" />
-                {{ participant.name }}
-              </button>
-              } @empty {
-              <span class="chip-empty">Adicione participantes no grupo primeiro.</span>
-              }
-            </div>
-            @if (payerInvalid()) {
-            <span class="field-error">Escolha quem pagou.</span>
-            }
-          </div>
-
-          <div class="field-chips">
-            <div class="field-chips-head">
-              <h2 class="label-caps">Dividir igualmente</h2>
-              <span class="section-note">Entre {{ splitIds().size }} pessoa(s)</span>
-            </div>
-            <div class="chip-list">
-              @for (participant of participants(); track participant.id) {
-              <button
-                type="button"
-                class="chip-select"
-                [class.is-selected]="splitIds().has(participant.id)"
-                (click)="toggleSplit(participant.id)"
-              >
-                <app-avatar [name]="participant.name" [size]="28" />
-                {{ participant.name }}
-              </button>
-              }
-            </div>
-            <p class="estimate tabular-nums">
-              @if (estimate()) {
-              {{ estimate()!.label }} por pessoa
-              }
-            </p>
-            @if (splitInvalid()) {
-            <span class="field-error">Selecione pelo menos uma pessoa para o rateio.</span>
-            }
-          </div>
-        </div>
+        @if (showError('description')) { <span class="field-error">Informe a descrição.</span> }
       </div>
 
-      @if (errorMessage()) {
-      <p class="page-error" role="alert">{{ errorMessage() }}</p>
-      }
+      <!-- Amount Field -->
+      <div class="field-group">
+        <label class="label-caps" for="expense-amount">Valor total</label>
+        <div class="amount-wrapper">
+          <span class="amount-prefix">R$</span>
+          <input id="expense-amount" class="amount-input tabular-nums" inputmode="decimal" formControlName="amount" placeholder="0,00" #amountInput (input)="amountText.set(amountInput.value)" [class.has-error]="amountInvalid() || showError('amount')" />
+          <span class="amount-icon material-symbols-outlined">payments</span>
+        </div>
+        @if (amountInvalid() || showError('amount')) { <span class="field-error">Informe um valor válido maior que zero.</span> }
+      </div>
+
+      <!-- Payer Selection -->
+      <div class="field-group">
+        <div class="field-header-row">
+          <h2 class="label-caps">Pagador único</h2>
+          <span class="label-caps field-sub">PAGADOR ÚNICO</span>
+        </div>
+        <div class="chip-grid chip-grid-single">
+          @for (participant of participants(); track participant.id) {
+            <button type="button" class="chip-select" [class.is-selected]="payerId() === participant.id" (click)="setPayer(participant.id)">
+              <app-avatar [name]="participant.name" [size]="28" />
+              <div class="chip-select-content">
+                <span class="chip-select-name">{{ participant.name }}</span>
+                <span class="chip-select-sub" *ngIf="isCurrentUser(participant.id)">Você bancou</span>
+                <span class="chip-select-sub" *ngIf="!isCurrentUser(participant.id)">Amigo</span>
+              </div>
+              @if (payerId() === participant.id) {
+                <span class="chip-select-badge">
+                  <span class="material-symbols-outlined">check</span>
+                </span>
+              }
+            </button>
+          } @empty {
+            <span class="chip-empty">Adicione participantes no grupo primeiro.</span>
+          }
+        </div>
+        @if (payerInvalid()) { <span class="field-error">Escolha quem pagou.</span> }
+      </div>
+
+      <!-- Split Section -->
+      <div class="field-group">
+        <div class="field-header-row">
+          <div class="field-header-left">
+            <h2 class="label-caps">Dividir igualmente</h2>
+            <span class="w-2 h-2 rounded-full bg-tertiary" aria-hidden="true"></span>
+          </div>
+          <button class="btn-ghost btn-ghost--toggle" type="button" (click)="toggleAllSplit()">
+            TODOS (<span>{{ splitIds().size }}</span>)
+          </button>
+        </div>
+        <div class="split-list">
+          @for (participant of participants(); track participant.id) {
+            <label class="split-item">
+              <input type="checkbox" class="sr-only" [checked]="splitIds().has(participant.id)" (change)="toggleSplit(participant.id)" />
+              <span class="split-checkbox" [class.checked]="splitIds().has(participant.id)">
+                <span class="material-symbols-outlined">check</span>
+              </span>
+              <div class="split-info">
+                <span class="split-name">{{ participant.name }}<span class="split-you" *ngIf="isCurrentUser(participant.id)"> (Você)</span></span>
+                <span class="split-role">{{ getSplitRole(participant.id) }}</span>
+              </div>
+              <span class="split-amount currency-md" [class.zero]="notSplit(participant.id)">
+                {{ splitIds().has(participant.id) ? (estimate()?.label || 'R$ 0,00') : 'R$ 0,00' }}
+              </span>
+            </label>
+          }
+        </div>
+<span class="split-note">
+  <span class="material-symbols-outlined" aria-hidden="true">info</span>
+  Divisão em <strong>{{ splitIds().size }} {{ splitIds().size === 1 ? 'cota individual' : 'cotas iguais' }}</strong> calculadas automaticamente em centavos exatos.
+</span>
+        @if (splitInvalid()) { <span class="field-error">Selecione pelo menos uma pessoa para o rateio.</span> }
+      </div>
+
+      @if (errorMessage()) { <p class="page-error" role="alert">{{ errorMessage() }}</p> }
 
       @if (participants().length > 0) {
-      <button class="btn-primary btn-primary--full" type="submit" [disabled]="submitting()">
-        @if (submitting()) {
-        Salvando…
-        } @else {
-        <span>Salvar despesa</span>
-        <span class="material-symbols-outlined btn-primary__arrow">arrow_forward</span>
-        }
-      </button>
+        <div class="form-actions">
+          <button class="btn-primary btn-primary--full" type="submit" [disabled]="submitting()">
+            @if (submitting()) { <span class="material-symbols-outlined animate-spin">refresh</span> Salvando… } @else { <span>Salvar despesa</span> <span class="material-symbols-outlined">check_circle</span> }
+          </button>
+          <button class="btn-secondary btn-secondary--full" type="button" (click)="goBack()">Cancelar</button>
+        </div>
       }
     </form>
   }

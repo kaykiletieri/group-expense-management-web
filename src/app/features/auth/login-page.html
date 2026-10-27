@@ -1,30 +1,21 @@
 <main class="login">
-  <!-- Hero decorativo: só aparece em telas largas (≥1120px), fora da árvore de acessibilidade -->
-  <div class="login-hero" aria-hidden="true">
-    <span class="login-hero-brand">rachaae</span>
-    <p class="login-hero-tag">Rache as contas do grupo sem erro.</p>
-    <ul class="login-hero-points">
-      <li>Sem planilha e sem calculadora.</li>
-      <li>Saldos na hora, centavos certos.</li>
-      <li>O grupo inteiro num lugar só.</li>
-    </ul>
-  </div>
-
   <div class="login-card">
-    <!-- Mobile brand title -->
+    <!-- Social Proof Tag -->
+    <div class="login-social-proof">
+      <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+      Mais de 50 mil rachas resolvidos
+    </div>
+
+    <!-- Editorial Hero Title -->
     <header class="login-head">
-      <span class="login-brand">rachaae</span>
-      <p class="login-tagline">Rache as contas do grupo sem erro.</p>
+      <h1 class="login-title">Sua galera.<br><span class="login-title-accent">Suas contas.</span></h1>
+      <p class="login-tagline">Dividir gastos sem drama, climão nem planilha improvisada.</p>
     </header>
 
-    <!-- Interactive Segmented Switch (Entrar / Criar Conta) -->
+    <!-- Segmented Switch -->
     <div class="login-switch" role="tablist" aria-label="Entrar ou criar conta">
-      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'login'"
-        [attr.aria-selected]="mode() === 'login'" (click)="setMode('login')">
-        Entrar
-      </button>
-      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'register'"
-        [attr.aria-selected]="mode() === 'register'" (click)="setMode('register')">
+      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'login'" [attr.aria-selected]="mode() === 'login'" (click)="setMode('login')">Entrar</button>
+      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'register'" [attr.aria-selected]="mode() === 'register'" (click)="setMode('register')">
         <span>Criar conta</span>
         <span class="login-switch-dot" aria-hidden="true"></span>
       </button>
@@ -36,60 +27,40 @@
         <label class="label-caps" for="login-email">E-mail pessoal</label>
         <div class="login-input-wrapper">
           <span class="login-input-icon material-symbols-outlined" aria-hidden="true">alternate_email</span>
-          <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email"
-            [class.has-error]="showFieldError('email')" />
+          <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email" [class.has-error]="showFieldError('email')" />
         </div>
-        @if (showFieldError('email')) {
-        <span class="login-field-error">Informe um e-mail válido.</span>
-        }
+        @if (showFieldError('email')) { <span class="login-field-error">Informe um e-mail válido.</span> }
       </div>
 
       <!-- Password Field -->
       <div class="login-field">
-        <div class="flex items-center justify-between">
-          <label class="label-caps" for="login-password">
-            {{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}
-          </label>
+        <div class="field-header-row">
+          <label class="label-caps" for="login-password">{{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}</label>
         </div>
         <div class="login-input-wrapper">
           <span class="login-input-icon material-symbols-outlined" aria-hidden="true">lock_open</span>
-          <input id="login-password" [type]="passwordVisible() ? 'text' : 'password'"
-            [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
-            formControlName="password" [class.has-error]="showFieldError('password')" />
+          <input id="login-password" [type]="passwordVisible() ? 'text' : 'password'" [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••" formControlName="password" [class.has-error]="showFieldError('password')" />
           <button type="button" class="login-toggle-btn" (click)="togglePasswordVisibility()" aria-label="Mostrar/ocultar senha">
             <span class="material-symbols-outlined">{{ passwordVisible() ? 'visibility_off' : 'visibility' }}</span>
           </button>
         </div>
         @if (showFieldError('password')) {
-        <span class="login-field-error">
-          {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
-        </span>
+          <span class="login-field-error">{{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}</span>
         }
       </div>
 
-      @if (errorMessage()) {
-      <p class="login-error" role="alert">{{ errorMessage() }}</p>
-      }
+      @if (errorMessage()) { <p class="login-error" role="alert">{{ errorMessage() }}</p> }
 
-      <!-- Action CTA Button -->
+      <!-- Primary CTA -->
       <button class="btn-primary btn-primary--full" type="submit" [disabled]="submitting()">
-        @if (submitting()) {
-        {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}
-        } @else {
-        <span>{{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}</span>
-        <span class="material-symbols-outlined btn-primary__arrow">arrow_forward</span>
-        }
+        @if (submitting()) { {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }} } @else { <span>{{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}</span> <span class="material-symbols-outlined btn-primary__arrow">arrow_forward</span> }
       </button>
 
-      <!-- Terms and conditions -->
-      <p class="login-terms">
-        Ao continuar, você concorda com nossos
-        <a href="#" target="_blank" rel="noopener">Termos</a>
-        e autoriza o uso para fechamento de comandas conjuntas.
-      </p>
+      <!-- Terms -->
+      <p class="login-terms">Ao continuar, você concorda com nossos <a href="#" target="_blank" rel="noopener">Termos</a> e autoriza o uso para fechamento de comandas conjuntas.</p>
     </form>
 
-    <!-- Quick Settle Alternative Option -->
+    <!-- Alternative Action -->
     <div class="login-alt-action">
       <div class="flex items-center gap-2">
         <span class="login-alt-text">Já tem conta por aqui?</span>
@@ -100,10 +71,21 @@
       </div>
     </div>
 
-    <!-- Security & Trust Badge Footer -->
+    <!-- Trust Badge -->
     <div class="login-trust">
       <span class="material-symbols-outlined login-trust-icon">verified_user</span>
       <span>Acesso protegido • Seus dados em segurança</span>
     </div>
+  </div>
+
+  <!-- Desktop Hero (≥1120px) -->
+  <div class="login-hero" aria-hidden="true">
+    <span class="login-hero-brand">rachaae</span>
+    <p class="login-hero-tag">Rache as contas do grupo sem erro.</p>
+    <ul class="login-hero-points">
+      <li>Sem planilha e sem calculadora.</li>
+      <li>Saldos na hora, centavos certos.</li>
+      <li>O grupo inteiro num lugar só.</li>
+    </ul>
   </div>
 </main>

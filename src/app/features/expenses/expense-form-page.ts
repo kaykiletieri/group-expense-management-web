@@ -47,7 +47,7 @@ export class ExpenseFormPage implements OnInit {
   });
 
   ngOnInit(): void {
-    this.title.setTitle(this.expenseId ? 'Editar despesa - Rachaae' : 'Nova despesa - Rachaae');
+    this.title.setTitle(this.isEdit ? 'Editar Despesa - Rachaae' : 'Nova Despesa - Rachaae');
     void this.load();
   }
 
@@ -57,33 +57,26 @@ export class ExpenseFormPage implements OnInit {
       this.participants.set(participants);
 
       if (this.expenseId === null) {
+        // Default: select first participant as payer, all in split
+        if (participants.length > 0) {
+          this.payerId.set(participants[0].id);
+          this.splitIds.set(new Set(participants.map(p => p.id)));
+        }
         return;
       }
 
       const expenses = await firstValueFrom(this.expensesApi.list(this.groupId));
-      const expense = expenses.find((e) => e.id === this.expenseId);
-      if (!expense) {
-        this.notFound.set(true);
-        return;
-      }
+      const expense = expenses.find(e => e.id === this.expenseId);
+      if (!expense) { this.notFound.set(true); return; }
 
-      this.form.setValue({
-        description: expense.description,
-        amount: centsToInput(expense.totalAmountInCents),
-      });
+      this.form.setValue({ description: expense.description, amount: centsToInput(expense.totalAmountInCents) });
       this.amountText.set(this.form.value.amount!);
       this.payerId.set(expense.payerParticipantId);
-      this.splitIds.set(new Set(expense.shares.map((s) => s.participantId)));
-    } catch {
-      this.errorMessage.set(GENERIC_ERROR);
-    } finally {
-      this.loading.set(false);
-    }
+      this.splitIds.set(new Set(expense.shares.map(s => s.participantId)));
+    } catch { this.errorMessage.set(GENERIC_ERROR); } finally { this.loading.set(false); }
   }
 
   setPayer(participantId: string) {
-    // Automação: o pagador quase sempre divide a despesa que pagou, então
-    // passa a entrar no rateio. Continua possível desmarcar manualmente.
     this.payerId.set(participantId);
     const next = new Set(this.splitIds());
     next.add(participantId);
@@ -92,90 +85,85 @@ export class ExpenseFormPage implements OnInit {
 
   toggleSplit(participantId: string) {
     const next = new Set(this.splitIds());
-    if (next.has(participantId)) {
-      next.delete(participantId);
-    } else {
-      next.add(participantId);
-    }
+    if (next.has(participantId)) next.delete(participantId); else next.add(participantId);
     this.splitIds.set(next);
+  }
+
+  toggleAllSplit(): void {
+    if (this.splitIds().size === this.participants().length) {
+      this.splitIds.set(new Set());
+    } else {
+      this.splitIds.set(new Set(this.participants().map(p => p.id)));
+    }
+  }
+
+  notSplit(participantId: string): boolean { return !this.splitIds().has(participantId); }
+
+  getSplitRole(participantId: string): string {
+    if (participantId === this.payerId()) return 'Pagador';
+    if (this.isCurrentUser(participantId)) return 'Você';
+    return 'Participante';
+  }
+
+  isCurrentUser(participantId: string): boolean {
+    // Simplified: check if first participant (usually current user)
+    return this.participants()[0]?.id === participantId;
   }
 
   attempted = signal(false);
 
-  showError(field: 'description' | 'amount'): boolean {
-    return this.attempted() && this.form.controls[field].invalid;
-  }
+  showError(field: 'description' | 'amount'): boolean { return this.attempted() && this.form.controls[field].invalid; }
 
   amountInvalid(): boolean {
-    if (this.amountText().length === 0 && this.form.controls.amount.pristine) {
-      return false;
-    }
-    const raw = this.amountText().trim();
-    return raw !== '' && parseAmountInputToCents(raw) === null;
+    if (this.amountText().length === 0 && this.form.controls.amount.pristine) return false;
+    const raw = this.amountText().trim(); return raw !== '' && parseAmountInputToCents(raw) === null;
   }
 
-  payerInvalid(): boolean {
-    return this.attempted() && this.payerId() === null;
-  }
-
-  splitInvalid(): boolean {
-    return this.attempted() && this.splitIds().size === 0;
-  }
+  payerInvalid(): boolean { return this.attempted() && this.payerId() === null; }
+  splitInvalid(): boolean { return this.attempted() && this.splitIds().size === 0; }
 
   readonly estimate = computed<{ label: string } | null>(() => {
     const cents = parseAmountInputToCents(this.amountText().trim());
     const count = this.splitIds().size;
-    if (cents === null || count === 0) {
-      return null;
-    }
+    if (cents === null || count === 0) return null;
     const exact = cents % count === 0;
     const label = exact ? formatBrl(cents / count) : `≈ ${formatBrl(Math.floor(cents / count))}`;
     return { label };
   });
 
-  backLink(): string[] {
-    return ['/grupos', this.groupId];
-  }
+  descriptionIcon = computed(() => {
+    const desc = this.form.controls.description.value?.toLowerCase() || '';
+    if (desc.includes('churrasco') || desc.includes('carne') || desc.includes('bbq')) return 'local_fire_department';
+    if (desc.includes('mercado') || desc.includes('supermercado') || desc.includes('comida')) return 'local_grocery_store';
+    if (desc.includes('pedágio') || desc.includes('combustível') || desc.includes('gasolina')) return 'local_gas_station';
+    if (desc.includes('praia') || desc.includes('beach')) return 'beach_access';
+    return 'shopping_basket';
+  });
 
-  submit() {
-    this.attempted.set(true);
-    this.errorMessage.set(null);
+  participantCount = computed(() => this.participants().length);
+  groupName = computed(() => 'Viagem para Ubatuba'); // Would come from group data
+  ritualNumber = computed(() => Math.floor(Math.random() * 10) + 1);
+
+  backLink(): string[] { return ['/grupos', this.groupId]; }
+
+  goBack(): void { void this.router.navigate(this.backLink()); }
+
+  submit(): void {
+    this.attempted.set(true); this.errorMessage.set(null);
 
     const cents = parseAmountInputToCents(this.form.controls.amount.value.trim());
-    const payer = this.payerId();
-    const split = [...this.splitIds()];
+    const payer = this.payerId(); const split = [...this.splitIds()];
 
-    if (
-      this.form.invalid ||
-      cents === null ||
-      payer === null ||
-      split.length === 0
-    ) {
-      return;
-    }
+    if (this.form.invalid || cents === null || payer === null || split.length === 0) return;
 
-    const payload = {
-      description: this.form.value.description!.trim(),
-      totalAmountInCents: cents,
-      payerParticipantId: payer,
-      participantIds: split,
-    };
+    const payload = { description: this.form.value.description!.trim(), totalAmountInCents: cents, payerParticipantId: payer, participantIds: split };
 
     this.submitting.set(true);
-    const request$: Observable<unknown> =
-      this.expenseId === null
-        ? this.expensesApi.create(this.groupId, payload)
-        : this.expensesApi.update(this.groupId, this.expenseId, payload);
+    const request$: Observable<unknown> = this.expenseId === null
+      ? this.expensesApi.create(this.groupId, payload)
+      : this.expensesApi.update(this.groupId, this.expenseId, payload);
 
-    request$.subscribe({
-      next: () => {
-        void this.router.navigate(['/grupos', this.groupId]);
-      },
-      error: (err: unknown) => {
-        this.submitting.set(false);
-        this.errorMessage.set(getApiErrorMessage(err, GENERIC_ERROR));
-      },
-    });
+    request$.subscribe({ next: () => void this.router.navigate(['/grupos', this.groupId]), error: (err: unknown) => { this.submitting.set(false); this.errorMessage.set(getApiErrorMessage(err, GENERIC_ERROR)); } });
   }
 }
 

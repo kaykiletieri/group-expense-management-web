@@ -27,48 +27,33 @@ export class AjustesPage implements OnInit {
   readonly loggingOut = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly displayName = new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.maxLength(60)],
-  });
+  readonly displayName = new FormControl('', { nonNullable: true, validators: [Validators.maxLength(60)] });
   readonly savingName = signal(false);
   readonly nameError = signal<string | null>(null);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.title.setTitle('Ajustes - Rachaae');
     this.displayName.reset(this.user()?.name ?? '');
   }
 
   async saveName(): Promise<void> {
-    if (this.savingName()) {
-      return;
-    }
+    if (this.savingName()) return;
     const name = this.displayName.value.trim();
-
-    this.savingName.set(true);
-    this.nameError.set(null);
+    this.savingName.set(true); this.nameError.set(null);
     try {
       await firstValueFrom(this.authApi.updateName(name));
       const current = this.user();
-      if (current) {
-        this.auth.setAuthenticated({ ...current, name: name || null });
-      }
-    } catch (err) {
-      this.nameError.set(getApiErrorMessage(err, GENERIC_ERROR));
-    } finally {
-      this.savingName.set(false);
-    }
+      if (current) this.auth.setAuthenticated({ ...current, name: name || null });
+    } catch (err) { this.nameError.set(getApiErrorMessage(err, GENERIC_ERROR)); }
+    finally { this.savingName.set(false); }
   }
 
-  logout() {
+  logout(): void {
     this.loggingOut.set(true);
     this.auth.logout().subscribe({
       next: () => this.auth.clearLocal(),
       error: () => this.auth.clearLocal(),
-      complete: () => {
-        this.loggingOut.set(false);
-        void this.router.navigateByUrl('/login', { replaceUrl: true });
-      },
+      complete: () => { this.loggingOut.set(false); void this.router.navigateByUrl('/login', { replaceUrl: true }); },
     });
   }
 }

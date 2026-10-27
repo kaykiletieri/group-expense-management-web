@@ -1,19 +1,17 @@
 @if (notFound()) {
-  <section class="page page--error">
-    <div class="error-card card">
-      <span class="error-icon material-symbols-outlined">error_outline</span>
-      <h1>Grupo não encontrado</h1>
-      <p class="page-note">Este grupo não existe ou não pertence a sua conta.</p>
-      <a class="btn-primary" routerLink="/grupos">Voltar aos grupos</a>
+  <section class="page page--centered">
+    <div class="card card-empty">
+      <p class="empty-title">Grupo não encontrado</p>
+      <p class="section-note">Este grupo não existe ou não pertence a sua conta.</p>
+      <a class="btn-primary btn-primary--full" routerLink="/grupos">Voltar aos grupos</a>
     </div>
   </section>
 } @else if (loadError()) {
-  <section class="page page--error">
-    <div class="error-card card">
-      <span class="error-icon material-symbols-outlined">wifi_off</span>
-      <h1>Ops…</h1>
-      <p class="page-note">Não foi possível carregar o grupo. Tente de novo.</p>
-      <button class="btn-primary" type="button" (click)="refresh()">Tentar novamente</button>
+  <section class="page page--centered">
+    <div class="card card-empty">
+      <p class="empty-title">Ops…</p>
+      <p class="section-note">Não foi possível carregar o grupo. Tente de novo.</p>
+      <button class="btn-primary btn-primary--full" type="button" (click)="refresh()">Tentar novamente</button>
     </div>
   </section>
 } @else if (loading()) {
@@ -24,48 +22,81 @@
   </div>
 } @else {
   <div class="page">
-    <header class="group-header">
-      <a class="back-btn" routerLink="/grupos" aria-label="Voltar">
-        <span class="material-symbols-outlined">arrow_back</span>
-      </a>
-      <h1 class="group-name" [class.is-empty]="!groupName()">{{ groupName() || 'Grupo sem nome' }}</h1>
-      <button
-        class="menu-btn"
-        type="button"
-        aria-label="Mais opções"
-        (click)="menuOpen.set(!menuOpen())"
-      >
-        <span class="material-symbols-outlined">more_horiz</span>
-      </button>
+    <!-- Top Group Poster Card -->
+    <section class="group-poster">
+      <div class="poster-header">
+        <span class="chip chip-category" [class.is-active]="true">{{ groupCategory().toUpperCase() }} & {{ groupCategory() === 'praia' ? 'FÉRIAS' : groupCategory().toUpperCase() }}</span>
+        <span class="poster-date">
+          <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+          {{ currentMonthYear() }}
+        </span>
+      </div>
+      <h2 class="poster-title">{{ groupName() }}</h2>
+      <div class="poster-meta">
+        <span class="meta-item">
+          <span class="material-symbols-outlined" aria-hidden="true">group</span>
+          <strong>{{ participants().length }} amigos</strong>
+        </span>
+        <span class="meta-divider" aria-hidden="true"></span>
+        <span class="meta-item">
+          <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+          <strong>{{ expenses().length }} despesas</strong>
+        </span>
+      </div>
 
-      @if (menuOpen()) {
-        <button class="menu-backdrop" type="button" aria-label="Fechar menu" (click)="menuOpen.set(false)"></button>
-        <div class="menu">
-          <button type="button" (click)="confirmRename()">
-            <span class="material-symbols-outlined">edit</span> Renomear grupo
-          </button>
-          <button type="button" class="menu-danger" (click)="confirmDeleteGroup()">
-            <span class="material-symbols-outlined">delete</span> Excluir grupo
-          </button>
+      <!-- Financial Ledger Block -->
+      <div class="ledger-block card">
+        <div class="ledger-grid">
+          <!-- Total Gastos -->
+          <div class="ledger-item">
+            <span class="label-caps">Gasto Coletivo</span>
+            <div class="currency-md">
+              <span class="currency-symbol">R$</span>
+              {{ formatBrl(totalPaid()) }}
+            </div>
+          </div>
+          <!-- Individual Position Ticket -->
+          <div class="position-ticket" [class.positive]="userBalance() >= 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
+            <span class="label-caps position-label">Seu Saldo Atual</span>
+            <div class="position-value" [class.positive]="userBalance() > 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
+              <span class="position-sign" *ngIf="userBalance() > 0">+ R$</span>
+              <span class="position-sign" *ngIf="userBalance() < 0">- R$</span>
+              <span class="position-sign" *ngIf="userBalance() === 0">R$</span>
+              {{ formatBrl(abs(userBalance())) }}
+            </div>
+            <span class="position-badge" [class.positive]="userBalance() > 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
+              {{ userBalance() > 0 ? 'VOCÊ RECEBE' : (userBalance() < 0 ? 'VOCÊ PAGA' : 'QUITADO') }}
+            </span>
+          </div>
         </div>
-      }
-    </header>
+      </div>
 
-    <section class="section">
+      <!-- Primary CTA -->
+      <div class="poster-actions">
+        <button class="btn-primary btn-primary--full" type="button" (click)="openExpenseForm()">
+          <span class="material-symbols-outlined">add_circle</span>
+          + Nova despesa
+        </button>
+      </div>
+    </section>
+
+    <!-- Inline Add Participant Section -->
+    <section class="add-participant-section">
+      <div class="card add-participant-card">
+        <span class="material-symbols-outlined add-icon">person_add</span>
+        <input type="text" placeholder="Adicionar amigo ao grupo…" [formControl]="participantNameControl" (keyup.enter)="addParticipant()" maxlength="60" />
+        <button class="btn-primary btn-primary--sm" type="button" (click)="addParticipant()">Adicionar</button>
+      </div>
+    </section>
+
+    <!-- Group Balance: Saldos da Galera -->
+    <section class="balances-section">
       <div class="section-header">
-        <h2 class="label-caps">Saldos</h2>
-        <div class="section-actions">
-          <button
-            class="icon-copy"
-            type="button"
-            [attr.aria-label]="copied() === 'balances' ? 'Copiado' : 'Copiar saldos'"
-            (click)="copyBalances()"
-          >
-            <span class="material-symbols-outlined">{{ copied() === 'balances' ? 'check' : 'content_copy' }}</span>
-          </button>
-          <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
-          <a class="btn-chip" routerLink="/grupos/{{ groupId }}/despesas/nova">+ Despesa</a>
+        <div class="section-title-row">
+          <span class="section-dot" aria-hidden="true"></span>
+          <h3 class="headline-sm">Saldos da Galera</h3>
         </div>
+        <span class="label-caps section-badge">Acerto Justo</span>
       </div>
 
       @if (nobodyOwes()) {
@@ -75,94 +106,79 @@
         </div>
       }
 
-      <div class="card card--balances">
+      <div class="balance-list">
         @for (balance of balances(); track balance.participantId) {
-          <div class="balance-row">
-            <app-avatar [name]="participantName(balance.participantId)" />
-            <div class="balance-info">
-              <span class="balance-name">{{ participantName(balance.participantId) }}</span>
-              <span class="balance-paid tabular-nums">Pagou {{ formatBrl(balance.totalPaidInCents) }}</span>
+          <div class="balance-card">
+            <div class="balance-left">
+              <app-avatar [name]="participantName(balance.participantId)" [size]="40" />
+              <div class="balance-info">
+                <div class="balance-name-row">
+                  <span class="balance-name">{{ participantName(balance.participantId) }}</span>
+                  @if (isCurrentUser(balance.participantId)) {
+                    <span class="chip chip-positive chip-sm">VOCÊ</span>
+                  }
+                </div>
+                <span class="balance-detail">Pagou {{ formatBrl(balance.totalPaidInCents) }} • Gastou {{ formatBrl(balance.totalPaidInCents - balance.balanceInCents) }}</span>
+              </div>
             </div>
-            @if (balance.balanceInCents > 0) {
-              <span class="chip chip-positive tabular-nums">
-                Recebe {{ formatBrl(balance.balanceInCents) }}
-              </span>
-            } @else if (balance.balanceInCents < 0) {
-              <span class="chip chip-debt tabular-nums">
-                Deve {{ formatBrl(-balance.balanceInCents) }}
-              </span>
-            } @else {
-              <span class="chip chip-quit">Quitado</span>
-            }
+            <div class="balance-right" [class.positive]="balance.balanceInCents > 0" [class.negative]="balance.balanceInCents < 0" [class.zero]="balance.balanceInCents === 0">
+              <span class="balance-amount currency-md">{{ formatBrl(abs(balance.balanceInCents)) }}</span>
+              <span class="balance-label" *ngIf="balance.balanceInCents > 0">a receber</span>
+              <span class="balance-label" *ngIf="balance.balanceInCents < 0">a pagar</span>
+              <span class="balance-label" *ngIf="balance.balanceInCents === 0">quitado</span>
+            </div>
           </div>
         } @empty {
           <p class="section-empty">Ninguém está no grupo ainda.</p>
         }
       </div>
+    </section>
 
-      @if (settlementPlan().length > 0) {
-        <div class="settle-card card">
-          <div class="settle-header">
-            <h3 class="label-caps">Como acertar</h3>
-            <button
-              class="icon-copy"
-              type="button"
-              [attr.aria-label]="copied() === 'plan' ? 'Copiado' : 'Copiar como acertar'"
-              (click)="copySettlement()"
-            >
-              <span class="material-symbols-outlined">{{ copied() === 'plan' ? 'check' : 'content_copy' }}</span>
-            </button>
+    <!-- Settlement Plan (Como acertar) -->
+    @if (settlementPlan().length > 0) {
+      <section class="settle-section">
+        <div class="section-header">
+          <div class="section-title-row">
+            <span class="section-dot" style="background: var(--color-cta);" aria-hidden="true"></span>
+            <h3 class="headline-sm">Como acertar</h3>
           </div>
-          <p class="settle-note">
-            Sugestão com o menor número de transferências antes de todo mundo
-            ficar quitado. Tocando em "Registrar" já preenche o pagamento.
-          </p>
+          <button class="icon-copy" type="button" [attr.aria-label]="copied() === 'plan' ? 'Copiado' : 'Copiar como acertar'" (click)="copySettlement()">
+            <span class="material-symbols-outlined">{{ copied() === 'plan' ? 'check' : 'content_copy' }}</span>
+          </button>
+        </div>
+        <p class="settle-note">Sugestão com o menor número de transferências antes de todo mundo ficar quitado. Tocando em "Registrar" já preenche o pagamento.</p>
+        <div class="card settle-card">
           @for (transfer of settlementPlan(); track $index) {
             <div class="settle-row">
-              <span class="settle-flow tabular-nums">
-                {{ participantName(transfer.fromParticipantId) }} →
-                {{ participantName(transfer.toParticipantId) }}
-                <strong>{{ formatBrl(transfer.amountInCents) }}</strong>
+              <span class="settle-flow">
+                {{ participantName(transfer.fromParticipantId) }} → {{ participantName(transfer.toParticipantId) }}
+                <strong class="currency-md">{{ formatBrl(transfer.amountInCents) }}</strong>
               </span>
-              <button
-                class="btn-chip"
-                type="button"
-                (click)="openPayment({ payerId: transfer.fromParticipantId, receiverId: transfer.toParticipantId, amountInCents: transfer.amountInCents })"
-              >
+              <button class="btn-chip" type="button" (click)="openPayment({ payerId: transfer.fromParticipantId, receiverId: transfer.toParticipantId, amountInCents: transfer.amountInCents })">
                 Registrar
               </button>
             </div>
           }
         </div>
-      }
-    </section>
+      </section>
+    }
 
+    <!-- Payments Section -->
     @if (payments().length > 0) {
-      <section class="section">
+      <section class="payments-section">
         <div class="section-header">
-          <h2 class="label-caps">Pagamentos <span class="section-count">{{ payments().length }}</span></h2>
+          <h3 class="headline-sm">Pagamentos <span class="section-count">{{ payments().length }}</span></h3>
           <button class="btn-chip" type="button" (click)="openPayment()">+ Pagamento</button>
         </div>
-
         <div class="card">
           @for (payment of payments(); track payment.id) {
-            <div class="balance-row payment-item">
-              <app-avatar [name]="participantName(payment.payerParticipantId)" />
+            <div class="payment-row balance-row">
+              <app-avatar [name]="participantName(payment.payerParticipantId)" [size]="32" />
               <div class="balance-info">
-                <span class="balance-name tabular-nums">
-                  {{ participantName(payment.payerParticipantId) }} →
-                  {{ participantName(payment.receiverParticipantId) }}
-                </span>
-                <span class="balance-paid tabular-nums">
-                  {{ formatBrl(payment.amountInCents) }} · {{ dateShort(payment.createdAtUtc) }}
-                </span>
+                <span class="balance-name currency-md">{{ participantName(payment.payerParticipantId) }} → {{ participantName(payment.receiverParticipantId) }}</span>
+                <span class="balance-paid currency-md">{{ formatBrl(payment.amountInCents) }} · {{ dateShort(payment.createdAtUtc) }}</span>
               </div>
-              <button
-                class="expense-delete"
-                type="button"
-                aria-label="Excluir pagamento"
-                (click)="confirmDeletePayment(payment)"
-              >
+              <button class="expense-delete" type="button" aria-label="Excluir pagamento" (click)="confirmDeletePayment(payment)">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -171,10 +187,11 @@
       </section>
     }
 
-    <section class="section">
+    <!-- Expenses Section -->
+    <section class="expenses-section">
       <div class="section-header">
-        <h2 class="label-caps">Despesas <span class="section-count">{{ expenses().length }}</span></h2>
-        <span class="section-note tabular-nums">Total {{ formatBrl(totalSpent()) }}</span>
+        <h3 class="headline-sm">Despesas <span class="section-count">{{ expenses().length }}</span></h3>
+        <span class="section-total currency-md">Total {{ formatBrl(totalSpent()) }}</span>
       </div>
 
       @if (expenses().length === 0) {
@@ -188,42 +205,34 @@
       <ul class="expense-list">
         @for (expense of expenses(); track expense.id) {
           <li class="card expense-item">
-            <div class="expense-main">
-              <span class="expense-desc">{{ expense.description }}</span>
-              <span class="expense-value tabular-nums">
-                {{ formatBrl(expense.totalAmountInCents) }}
-              </span>
+            <div class="expense-header">
+              <div class="expense-icon" [style.background]="getExpenseCategoryBg(expense.id)">
+                <span class="material-symbols-outlined">{{ getExpenseCategoryIcon(expense.id) }}</span>
+              </div>
+              <div class="expense-main">
+                <h4 class="expense-desc">{{ expense.description }}</h4>
+                <div class="expense-meta">
+                  <span>Pago por <strong>{{ participantName(expense.payerParticipantId) }}</strong></span>
+                  <span>•</span>
+                  <span class="meta-split">
+                    <span class="material-symbols-outlined" aria-hidden="true">group</span>
+                    {{ expense.shares.length }}
+                  </span>
+                </div>
+              </div>
+              <div class="expense-value currency-md">{{ formatBrl(expense.totalAmountInCents) }}</div>
             </div>
-            <div class="expense-meta">
-              <span class="label-caps">
-                {{ dateShort(expense.createdAtUtc) }} · Pagou {{ participantName(expense.payerParticipantId) }}
-              </span>
-              <span class="expense-split tabular-nums">
-                ÷ {{ expense.shares.length }} · {{ shareEstimate(expense) }} cada
-              </span>
+            <div class="expense-footer">
+              <span class="per-share label-caps">{{ formatBrl(perShareAmount(expense)) }} / pessoa</span>
               <div class="expense-actions">
-                <button
-                  class="icon-copy"
-                  type="button"
-                  [attr.aria-label]="copied() === 'expense-' + expense.id ? 'Copiado' : 'Copiar despesa ' + expense.description"
-                  (click)="copyExpense(expense)"
-                >
+                <button class="icon-copy" type="button" [attr.aria-label]="copied() === 'expense-' + expense.id ? 'Copiado' : 'Copiar despesa ' + expense.description" (click)="copyExpense(expense)">
                   <span class="material-symbols-outlined">{{ copied() === 'expense-' + expense.id ? 'check' : 'content_copy' }}</span>
                 </button>
-                <a
-                  class="expense-edit"
-                  routerLink="/grupos/{{ groupId }}/despesas/{{ expense.id }}/editar"
-                  aria-label="Editar despesa"
-                >
-                  <span class="material-symbols-outlined">edit</span>
+                <a class="expense-edit" routerLink="/grupos/{{ groupId }}/despesas/{{ expense.id }}/editar" aria-label="Editar despesa">
+                  <span class="material-symbols-outlined">edit</span> EDITAR
                 </a>
-                <button
-                  class="expense-delete"
-                  type="button"
-                  aria-label="Excluir despesa"
-                  (click)="confirmDeleteExpense(expense)"
-                >
-                  <span class="material-symbols-outlined">delete</span>
+                <button class="expense-delete" type="button" aria-label="Excluir despesa" (click)="confirmDeleteExpense(expense)">
+                  <span class="material-symbols-outlined">delete</span> EXCLUIR
                 </button>
               </div>
             </div>
@@ -232,73 +241,52 @@
       </ul>
     </section>
 
-    <section class="section">
+    <!-- Participants Section -->
+    <section class="participants-section">
       <div class="section-header">
-        <h2 class="label-caps">Participantes <span class="section-count">{{ participants().length }}</span></h2>
+        <h3 class="headline-sm">Participantes <span class="section-count">{{ participants().length }}</span></h3>
       </div>
 
       <div class="participant-add">
-        <input
-          type="text"
-          placeholder="Nome da pessoa (opcional)…"
-          [formControl]="participantNameControl"
-          (keyup.enter)="addParticipant()"
-          maxlength="60"
-        />
+        <input type="text" placeholder="Nome da pessoa (opcional)…" [formControl]="participantNameControl" (keyup.enter)="addParticipant()" maxlength="60" />
         <button class="btn-chip" type="button" (click)="addParticipant()">Adicionar</button>
         @if (yourName() && !youAlreadyIn()) {
-          <button
-            class="btn-chip btn-chip-ghost"
-            type="button"
-            aria-label="Adicionar você como participante"
-            (click)="addYou()"
-          >
+          <button class="btn-chip btn-chip-ghost" type="button" aria-label="Adicionar você como participante" (click)="addYou()">
             <span class="material-symbols-outlined">person_add</span>
             Você
           </button>
         }
       </div>
 
-      @if (actionError()) {
-        <p class="page-error" role="alert">{{ actionError() }}</p>
-      }
+      @if (actionError()) { <p class="page-error" role="alert">{{ actionError() }}</p> }
 
       <div class="card">
         @for (participant of participants(); track participant.id) {
-          <div class="balance-row">
-            <app-avatar [name]="participant.name" />
+          <div class="balance-row participant-row">
+            <app-avatar [name]="participant.name" [size]="36" />
             <div class="balance-info">
               <span class="balance-name">{{ participant.name }}</span>
+              @if (isCurrentUserParticipant(participant.id)) { <span class="chip chip-positive chip-sm">VOCÊ</span> }
             </div>
-            <button
-              class="expense-delete"
-              type="button"
-              aria-label="Remover participante"
-              (click)="confirmDeleteParticipant(participant)"
-            >
+            <button class="expense-delete" type="button" aria-label="Remover participante" (click)="confirmDeleteParticipant(participant)">
               <span class="material-symbols-outlined">close</span>
             </button>
           </div>
-        } @empty {
-          <p class="section-empty">É só você por enquanto.</p>
-        }
+        } @empty { <p class="section-empty">É só você por enquanto.</p> }
       </div>
     </section>
   </div>
 
+  <!-- Modals -->
   @if (confirmState(); as confirm) {
     <button class="modal-backdrop" type="button" (click)="closeConfirm()" aria-label="Cancelar"></button>
     <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="confirm.title">
       <h2 class="modal-title">{{ confirm.title }}</h2>
       <p class="modal-message">{{ confirm.message }}</p>
-      @if (actionError()) {
-        <p class="page-error" role="alert">{{ actionError() }}</p>
-      }
+      @if (actionError()) { <p class="page-error" role="alert">{{ actionError() }}</p> }
       <div class="modal-actions">
         <button class="btn-secondary" type="button" (click)="closeConfirm()">Cancelar</button>
-        <button class="btn-danger" type="button" [disabled]="submitting()" (click)="runConfirm()">
-          {{ confirm.confirmLabel }}
-        </button>
+        <button class="btn-danger" type="button" [disabled]="submitting()" (click)="runConfirm()">{{ confirm.confirmLabel }}</button>
       </div>
     </div>
   }
@@ -307,41 +295,28 @@
     <button class="modal-backdrop" type="button" (click)="closePayment()" aria-label="Cancelar"></button>
     <div class="modal" role="dialog" aria-modal="true" aria-label="Registrar pagamento">
       <h2 class="modal-title">Registrar pagamento</h2>
-      <label class="field-label" for="payment-payer">Quem pagou</label>
-      <select id="payment-payer" [formControl]="payerControl">
-        <option value="" disabled selected>Escolha…</option>
-        @for (participant of participants(); track participant.id) {
-          <option [value]="participant.id">{{ participant.name }}</option>
-        }
-      </select>
-
-      <label class="field-label" for="payment-receiver">Para quem</label>
-      <select id="payment-receiver" [formControl]="receiverControl">
-        <option value="" disabled selected>Escolha…</option>
-        @for (participant of participants(); track participant.id) {
-          <option [value]="participant.id">{{ participant.name }}</option>
-        }
-      </select>
-
-      <label class="field-label" for="payment-amount">Valor</label>
-      <input
-        id="payment-amount"
-        type="text"
-        inputmode="decimal"
-        placeholder="0,00"
-        [formControl]="amountControl"
-        maxlength="14"
-      />
-
-      @if (paymentError()) {
-        <p class="page-error" role="alert">{{ paymentError() }}</p>
-      }
-
+      <div class="modal-field">
+        <label class="label-caps" for="payment-payer">Quem pagou</label>
+        <select id="payment-payer" [formControl]="payerControl">
+          <option value="" disabled selected>Escolha…</option>
+          @for (p of participants(); track p.id) { <option [value]="p.id">{{ p.name }}</option> }
+        </select>
+      </div>
+      <div class="modal-field">
+        <label class="label-caps" for="payment-receiver">Para quem</label>
+        <select id="payment-receiver" [formControl]="receiverControl">
+          <option value="" disabled selected>Escolha…</option>
+          @for (p of participants(); track p.id) { <option [value]="p.id">{{ p.name }}</option> }
+        </select>
+      </div>
+      <div class="modal-field">
+        <label class="label-caps" for="payment-amount">Valor</label>
+        <input id="payment-amount" type="text" inputmode="decimal" placeholder="0,00" [formControl]="amountControl" maxlength="14" />
+      </div>
+      @if (paymentError()) { <p class="page-error" role="alert">{{ paymentError() }}</p> }
       <div class="modal-actions">
         <button class="btn-secondary" type="button" (click)="closePayment()">Cancelar</button>
-        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitPayment()">
-          Registrar
-        </button>
+        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitPayment()">Registrar</button>
       </div>
     </div>
   }
@@ -350,20 +325,11 @@
     <button class="modal-backdrop" type="button" (click)="renameOpen.set(false)" aria-label="Cancelar"></button>
     <div class="modal" role="dialog" aria-modal="true" aria-label="Renomear grupo">
       <h2 class="modal-title">Renomear grupo</h2>
-      <input
-        type="text"
-        [formControl]="newName"
-        maxlength="80"
-        (keyup.enter)="submitRename()"
-      />
-      @if (actionError()) {
-        <p class="page-error" role="alert">{{ actionError() }}</p>
-      }
+      <input type="text" [formControl]="newName" maxlength="80" (keyup.enter)="submitRename()" />
+      @if (actionError()) { <p class="page-error" role="alert">{{ actionError() }}</p> }
       <div class="modal-actions">
         <button class="btn-secondary" type="button" (click)="renameOpen.set(false)">Cancelar</button>
-        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitRename()">
-          Salvar
-        </button>
+        <button class="btn-primary" type="button" [disabled]="submitting()" (click)="submitRename()">Salvar</button>
       </div>
     </div>
   }

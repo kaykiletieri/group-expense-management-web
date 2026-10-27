@@ -1,102 +1,186 @@
-// Design tokens — "Bold & Playful Editorial" (ver docs/design-system.md)
+// Design tokens — "Bold & Playful Editorial" (from Stitch prototypes)
 
 :root {
-  // Cores
-  --color-canvas: #fbf9f4;
-  --color-surface: #f7f3ea;
-  --color-card: #ffffff;
-  --color-ink: #20211e;
-  --color-ink-soft: #6b6a61;
-  --color-primary: #2546f0;
-  --color-cta: #ff7139;
-  --color-positive: #d9f36a;
-  --color-positive-text: #3e7c2b;
-  --color-error: #d7402b;
-
-  // Bordas e sombras "hard editorial"
+  // === CORES ===
+  // Base surfaces
+  --color-canvas: #fbf9f4;           // background principal (cream)
+  --color-surface: #f7f3ea;          // seções/listas (cream dim)
+  --color-surface-low: #f5f4ee;      // wells/recessed
+  --color-surface-high: #e9e8e3;     // dividers/borders
+  --color-card: #ffffff;             // cards (pure white)
+  
+  // Texto
+  --color-ink: #1b1c19;              // grafite profundo (não preto puro)
+  --color-ink-soft: #6b6963;         // texto secundário/muted
+  --color-on-surface: var(--color-ink);
+  --color-on-surface-variant: #444656;
+  
+  // Brand colors
+  --color-primary: #2546f0;          // Azul-Cobalto (primary actions, selected)
+  --color-primary-container: #2546f0;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #d0d5ff;
+  
+  --color-cta: #fd7038;              // Laranja Vibrante (primary CTAs)
+  --color-cta-dim: #ff7139;
+  --color-on-cta: #ffffff;
+  
+  --color-positive: #d9f36a;         // Verde-Limão (positive, success, selected chips)
+  --color-positive-container: #d4ee66;
+  --color-on-positive: #1b1c19;      // texto sobre lime (grafite)
+  --color-on-positive-container: #181e00;
+  
+  --color-error: #ba1a1a;            // Vermelho (debt, destructive)
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+  
+  // Secondary (orange) for "you owe" states
+  --color-secondary: #a93800;
+  --color-secondary-container: #fd7038;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #601c00;
+  --color-secondary-fixed: #ffdbcf;
+  --color-secondary-fixed-dim: #ffb59b;
+  
+  // === BORDAS E SOMBRAS "HARD EDITORIAL" ===
   --border-width: 1.5px;
   --border-color: var(--color-ink);
+  --border-color-soft: rgba(27, 28, 25, 0.12);  // hairline dividers
+  
+  // Hard shadow (no blur) - "Poster Drop"
   --shadow-hard: 3px 3px 0 var(--color-ink);
   --shadow-hard-strong: 4px 4px 0 var(--color-ink);
-
-  // Raio
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-card: 14px;
-  --radius-pill: 999px;
-
-  // Tipografia
+  --shadow-card: 0 1px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  // === RAIO ===
+  --radius-sm: 4px;       // badges, checkboxes, small avatars
+  --radius-md: 8px;       // cards, modules
+  --radius-xl: 12px;      // action triggers, primary buttons
+  --radius-xxl: 16px;     // modals, bottom sheets
+  --radius-pill: 9999px;  // status chips, avatar circles
+  
+  // === TIPOGRAFIA ===
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Manrope', sans-serif;
-  --text-display: 2rem;   // 32px
-  --text-h1: 1.625rem;    // 26px
-  --text-h2: 1.25rem;     // 20px
-  --text-body: 1rem;      // 16px
-  --text-small: 0.875rem; // 14px
-  --text-caption: 0.8125rem; // 13px
-  --text-label: 0.6875rem;   // 11px
-
-  // Espaçamento
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-12: 48px;
-
+  
+  // Escala tipográfica (mobile-first)
+  --text-display-hero: 38px;      // display-hero-mobile
+  --text-display-hero-desktop: 48px;
+  --text-headline-lg: 26px;       // headline-lg-mobile
+  --text-headline-md: 22px;       // headline-md
+  --text-headline-sm: 18px;       // headline-sm
+  --text-label-md: 13px;          // label-md
+  --text-label-caps: 11px;        // label-caps (uppercase, tracking 0.08em)
+  --text-body-lg: 16px;           // body-lg
+  --text-body-md: 14px;           // body-md
+  --text-body-sm: 12px;           // body-sm
+  --text-currency-display: 40px;  // currency-display
+  --text-currency-md: 20px;       // currency-md
+  
+  // Line heights tight
+  --lh-tight: 1.1;
+  --lh-normal: 1.4;
+  --lh-relaxed: 1.5;
+  
+  // === ESPAÇAMENTO (8pt base) ===
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  
   // Layout
   --container-max: 480px;
-  // Alturas do shell (usadas nas páginas via calc)
-  --header-h: 60px;
-  --bottom-nav-h: 64px;
-  // Largura da sidebar (desktop, ≥768px)
+  --margin-mobile: 16px;
+  --margin-tablet: 32px;
+  --gutter: 16px;
+  --gutter-sm: 12px;
+  
+  // Shell heights
+  --header-h: 64px;
+  --bottom-nav-h: 72px;
   --sidebar-w: 240px;
-
+  
   // Transições
-  --press-shift: 1px;
+  --press-shift: 2px;
   --transition-fast: 140ms ease;
-
-  // Anéis de foco (substituem o outline nativo do navegador)
-  --focus-ring: 0 0 0 3px rgba(37, 70, 240, 0.16);
-  --focus-ring-error: 0 0 0 3px rgba(215, 64, 43, 0.14);
+  --transition-normal: 200ms ease;
+  
+  // Focus rings (hard editorial)
+  --focus-ring: 0 0 0 2px var(--color-primary);
+  --focus-ring-error: 0 0 0 2px var(--color-error);
   --placeholder: #a3a29a;
-
-  // Extras de superfície/interação (tema dependente)
-  --divider: rgba(32, 33, 30, 0.12);
-  --hover-tint: #f2ede1;
-  --backdrop: rgba(32, 33, 30, 0.5);
-  --scrollbar-thumb: rgba(32, 33, 30, 0.25);
-
-  // Texto usado SOBRE cores fortes (limão, laranja, cobalto)
-  --on-accent: #20211e;
-  // Texto usado SOBRE o botão de erro (branco no claro e no escuro)
+  
+  // Extras
+  --divider: var(--border-color-soft);
+  --hover-tint: #efe9dc;
+  --backdrop: rgba(27, 28, 25, 0.5);
+  --scrollbar-thumb: rgba(27, 28, 25, 0.25);
+  
+  // Texto SOBRE cores fortes
+  --on-accent: var(--color-ink);
   --on-danger: #ffffff;
 }
 
-/* Tema escuro: o documento recebe data-theme="auto|light|dark" em <html> (D19).
-   Paleira fria/neutra: "ink" vira quase-branco e deriva automaticamente as
-   bordas/sombras hard no escuro. Acentos (limão/laranja) ficam intactos e usam
-   texto escuro (--on-accent) para contraste. */
+/* Tema escuro */
 [data-theme='dark'] {
   --color-canvas: #15171b;
   --color-surface: #1d2025;
-  --color-card: #24272d;
+  --color-surface-low: #24272d;
+  --color-surface-high: #2c2f36;
+  --color-card: #1f2228;
+  
   --color-ink: #f2f4f6;
   --color-ink-soft: #a2a8b0;
+  --color-on-surface: var(--color-ink);
+  --color-on-surface-variant: #b5bcc7;
+  
   --color-primary: #8ea3ff;
+  --color-primary-container: #8ea3ff;
+  --color-on-primary: #1b1c19;
+  --color-on-primary-container: #000f5d;
+  
+  --color-cta: #fd7038;
+  --color-cta-dim: #ff7139;
+  --color-on-cta: #1b1c19;
+  
+  --color-positive: #d4ee66;
+  --color-positive-container: #d4ee66;
+  --color-on-positive: #1b1c19;
+  --color-on-positive-container: #181e00;
+  
   --color-error: #e0503f;
-
-  --focus-ring: 0 0 0 3px rgba(142, 163, 255, 0.35);
-  --focus-ring-error: 0 0 0 3px rgba(224, 80, 63, 0.3);
+  --color-error-container: #ffdad6;
+  --color-on-error: #1b1c19;
+  --color-on-error-container: #93000a;
+  
+  --color-secondary-container: #fd7038;
+  --color-on-secondary-container: #380d00;
+  --color-secondary-fixed: #ffdbcf;
+  --color-secondary-fixed-dim: #ffb59b;
+  
+  --border-color: var(--color-ink);
+  --border-color-soft: rgba(242, 244, 246, 0.1);
+  
+  --shadow-hard: 3px 3px 0 var(--color-ink);
+  --shadow-hard-strong: 4px 4px 0 var(--color-ink);
+  --shadow-card: 0 1px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  
+  --focus-ring: 0 0 0 2px var(--color-primary);
+  --focus-ring-error: 0 0 0 2px var(--color-error);
   --placeholder: #6e747d;
-
-  --divider: rgba(255, 255, 255, 0.1);
+  
+  --divider: var(--border-color-soft);
   --hover-tint: #2c2f36;
   --backdrop: rgba(0, 0, 0, 0.65);
-  --scrollbar-thumb: rgba(255, 255, 255, 0.22);
-
+  --scrollbar-thumb: rgba(242, 244, 246, 0.22);
+  
   --on-accent: #1a1c20;
   --on-danger: #f2f4f6;
 }

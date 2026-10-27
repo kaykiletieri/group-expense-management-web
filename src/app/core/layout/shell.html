@@ -1,55 +1,71 @@
 <div class="shell">
-  <!-- Sidebar: só aparece a partir de 768px -->
-  <aside class="shell-side">
-    <span class="shell-brand">rachaae</span>
-    <nav class="side-nav" aria-label="Navegação principal">
-      <a
-        routerLink="/grupos"
-        routerLinkActive="is-active"
-        #sideGruposLink="routerLinkActive"
-        [attr.aria-current]="sideGruposLink.isActive ? 'page' : null"
-      >
+  <!-- Sidebar (Desktop ≥768px) -->
+  <aside class="sidebar" aria-label="Navegação principal">
+    <div class="sidebar-brand">racha<span class="text-primary">.</span></div>
+    <nav class="sidebar-nav">
+      <a routerLink="/grupos" routerLinkActive="is-active" #sideGruposLink="routerLinkActive" [attr.aria-current]="sideGruposLink.isActive ? 'page' : null">
         <span class="material-symbols-outlined">groups</span>
         Grupos
       </a>
-      <a
-        routerLink="/ajustes"
-        routerLinkActive="is-active"
-        #sideAjustesLink="routerLinkActive"
-        [attr.aria-current]="sideAjustesLink.isActive ? 'page' : null"
-      >
+      <a routerLink="/atividade" routerLinkActive="is-active" #sideAtividadeLink="routerLinkActive" [attr.aria-current]="sideAtividadeLink.isActive ? 'page' : null">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Atividade
+      </a>
+      <a routerLink="/ajustes" routerLinkActive="is-active" #sideAjustesLink="routerLinkActive" [attr.aria-current]="sideAjustesLink.isActive ? 'page' : null">
         <span class="material-symbols-outlined">settings</span>
         Ajustes
       </a>
     </nav>
   </aside>
 
-  <header class="shell-header">
-    <span class="shell-brand">rachaae</span>
+  <!-- Fixed Header -->
+  <header class="shell-header" role="banner">
+    <div class="header-left">
+      <a *ngIf="showBack()" routerLink="/grupos" class="btn-icon" aria-label="Voltar">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </a>
+      <h1 class="header-title">{{ headerTitle() }}</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-icon" (click)="toggleMenu()" aria-label="Mais opções" *ngIf="showMenu()">
+        <span class="material-symbols-outlined">more_vert</span>
+      </button>
+      <div class="avatar avatar-sm" style="--avatar-bg: var(--color-primary); --avatar-color: var(--on-primary);">
+        <span class="material-symbols-outlined">person</span>
+      </div>
+    </div>
+
+    <!-- Mobile menu dropdown -->
+    @if (menuOpen() && !isDesktop()) {
+      <div class="mobile-menu-backdrop" (click)="menuOpen.set(false)" aria-hidden="true"></div>
+      <div class="mobile-menu">
+        <button type="button" (click)="onMenuAction('rename')">
+          <span class="material-symbols-outlined">edit</span> Renomear grupo
+        </button>
+        <button type="button" class="menu-danger" (click)="onMenuAction('delete')">
+          <span class="material-symbols-outlined">delete</span> Excluir grupo
+        </button>
+      </div>
+    }
   </header>
 
-  <main class="shell-main">
+  <main class="shell-main" [class.with-bottom-nav]="!isDesktop()">
     <router-outlet />
   </main>
 
-  <nav class="shell-nav" aria-label="Navegação principal">
-    <a
-      routerLink="/grupos"
-      routerLinkActive="is-active"
-      #gruposLink="routerLinkActive"
-      [attr.aria-current]="gruposLink.isActive ? 'page' : null"
-    >
+  <!-- Bottom Navigation (Mobile <768px) -->
+  <nav class="bottom-nav" aria-label="Navegação principal" *ngIf="isMobile()">
+    <a routerLink="/grupos" routerLinkActive="is-active" #gruposLink="routerLinkActive" [attr.aria-current]="gruposLink.isActive ? 'page' : null">
       <span class="material-symbols-outlined">groups</span>
-      <span class="shell-nav-label label-caps">Grupos</span>
+      <span class="label">Grupos</span>
     </a>
-    <a
-      routerLink="/ajustes"
-      routerLinkActive="is-active"
-      #ajustesLink="routerLinkActive"
-      [attr.aria-current]="ajustesLink.isActive ? 'page' : null"
-    >
+    <a routerLink="/atividade" routerLinkActive="is-active" #atividadeLink="routerLinkActive" [attr.aria-current]="atividadeLink.isActive ? 'page' : null">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="label">Atividade</span>
+    </a>
+    <a routerLink="/ajustes" routerLinkActive="is-active" #ajustesLink="routerLinkActive" [attr.aria-current]="ajustesLink.isActive ? 'page' : null">
       <span class="material-symbols-outlined">settings</span>
-      <span class="shell-nav-label label-caps">Ajustes</span>
+      <span class="label">Ajustes</span>
     </a>
   </nav>
 </div>

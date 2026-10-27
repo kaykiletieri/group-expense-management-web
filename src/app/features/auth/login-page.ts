@@ -22,9 +22,7 @@ export class LoginPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly title = inject(Title);
 
-  ngOnInit(): void {
-    this.title.setTitle('Entrar - Rachaae');
-  }
+  ngOnInit(): void { this.title.setTitle('Entrar - Rachaae'); }
 
   readonly mode = signal<'login' | 'register'>('login');
   readonly submitting = signal(false);
@@ -37,21 +35,13 @@ export class LoginPage implements OnInit {
   });
 
   setMode(mode: 'login' | 'register') {
-    this.mode.set(mode);
-    this.errorMessage.set(null);
-    this.passwordVisible.set(false);
-    // Em cadastro a senha exige no mínimo 6 caracteres.
-    this.form.controls.password.setValidators(
-      mode === 'register' ? [Validators.required, Validators.minLength(6)] : [Validators.required],
-    );
+    this.mode.set(mode); this.errorMessage.set(null); this.passwordVisible.set(false);
+    this.form.controls.password.setValidators(mode === 'register' ? [Validators.required, Validators.minLength(6)] : [Validators.required]);
     this.form.controls.password.updateValueAndValidity();
   }
 
-  togglePasswordVisibility() {
-    this.passwordVisible.update(v => !v);
-  }
+  togglePasswordVisibility() { this.passwordVisible.update(v => !v); }
 
-  // Validação só aparece após o campo perder foco (blur) — não enquanto digita
   showFieldError(field: 'email' | 'password'): boolean {
     const control = this.form.controls[field];
     return control.invalid && control.touched;
@@ -59,39 +49,23 @@ export class LoginPage implements OnInit {
 
   submit() {
     this.errorMessage.set(null);
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.submitting.set(true);
     const payload = { email: this.form.value.email!, password: this.form.value.password! };
     const request$ = this.mode() === 'login' ? this.auth.login(payload) : this.auth.register(payload);
-
     request$.subscribe({
       next: (user) => {
         this.auth.setAuthenticated(user);
-
-        // Cadastro NÃO estabelece sessão (sem cookie): autenticar de verdade
-        // antes de navegar, senão a primeira tela autenticada falha com 401.
         if (this.mode() === 'register') {
           this.auth.login(payload).subscribe({
             next: () => this.navigateAfterAuth(),
-            error: (err: unknown) => {
-              this.submitting.set(false);
-              this.errorMessage.set(this.humanizeError(err));
-            },
+            error: (err: unknown) => { this.submitting.set(false); this.errorMessage.set(this.humanizeError(err)); },
           });
           return;
         }
-
         this.navigateAfterAuth();
       },
-      error: (err: unknown) => {
-        this.submitting.set(false);
-        this.errorMessage.set(this.humanizeError(err));
-      },
+      error: (err: unknown) => { this.submitting.set(false); this.errorMessage.set(this.humanizeError(err)); },
     });
   }
 
@@ -103,27 +77,17 @@ export class LoginPage implements OnInit {
 
   private humanizeError(err: unknown): string {
     if (err instanceof HttpErrorResponse) {
-      if (err.status === 403) {
-        return LOCKOUT_MESSAGE;
-      }
+      if (err.status === 403) return LOCKOUT_MESSAGE;
       if (err.status === 400) {
         if (this.mode() === 'register') {
-          // Corpo do cadastro (Identity) usa { errors: [...] }, com descrições
-          // em inglês. Elas não podem aparecer cruas: mapeamos para pt-BR.
           const errors = getApiErrorList(err);
-          const duplicateEmail = errors?.some((message) =>
-            /is already taken/i.test(message),
-          );
-          if (duplicateEmail) {
-            return 'Já existe uma conta com este e-mail. Faça login.';
-          }
+          const duplicateEmail = errors?.some(m => /is already taken/i.test(m));
+          if (duplicateEmail) return 'Já existe uma conta com este e-mail. Faça login.';
           return 'Verifique os dados informados.';
         }
         return getApiErrorMessage(err, 'Verifique os dados informados.');
       }
-      if (err.status === 401) {
-        return 'E-mail ou senha incorretos.';
-      }
+      if (err.status === 401) return 'E-mail ou senha incorretos.';
     }
     return NETWORK_ERROR;
   }
