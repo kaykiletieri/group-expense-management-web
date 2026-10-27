@@ -21,15 +21,19 @@
   <!-- Fixed Header -->
   <header class="shell-header" role="banner">
     <div class="header-left">
-      <a *ngIf="showBack()" routerLink="/grupos" class="btn-icon" aria-label="Voltar">
-        <span class="material-symbols-outlined">arrow_back</span>
-      </a>
+      @if (showBack()) {
+        <a routerLink="/grupos" class="btn-icon" aria-label="Voltar">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+      }
       <h1 class="header-title">{{ headerTitle() }}</h1>
     </div>
     <div class="header-right">
-      <button class="btn-icon" (click)="toggleMenu()" aria-label="Mais opções" *ngIf="showMenu()">
-        <span class="material-symbols-outlined">more_vert</span>
-      </button>
+      @if (showMenu()) {
+        <button class="btn-icon" (click)="toggleMenu()" aria-label="Mais opções">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+      }
       <div class="avatar avatar-sm" style="--avatar-bg: var(--color-primary); --avatar-color: var(--on-primary);">
         <span class="material-symbols-outlined">person</span>
       </div>
@@ -54,18 +58,20 @@
   </main>
 
   <!-- Bottom Navigation (Mobile <768px) -->
-  <nav class="bottom-nav" aria-label="Navegação principal" *ngIf="isMobile()">
-    <a routerLink="/grupos" routerLinkActive="is-active" #gruposLink="routerLinkActive" [attr.aria-current]="gruposLink.isActive ? 'page' : null">
-      <span class="material-symbols-outlined">groups</span>
-      <span class="label">Grupos</span>
-    </a>
-    <a routerLink="/atividade" routerLinkActive="is-active" #atividadeLink="routerLinkActive" [attr.aria-current]="atividadeLink.isActive ? 'page' : null">
-      <span class="material-symbols-outlined">receipt_long</span>
-      <span class="label">Atividade</span>
-    </a>
-    <a routerLink="/ajustes" routerLinkActive="is-active" #ajustesLink="routerLinkActive" [attr.aria-current]="ajustesLink.isActive ? 'page' : null">
-      <span class="material-symbols-outlined">settings</span>
-      <span class="label">Ajustes</span>
-    </a>
-  </nav>
+  @if (isMobile()) {
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <a routerLink="/grupos" routerLinkActive="is-active" #gruposLink="routerLinkActive" [attr.aria-current]="gruposLink.isActive ? 'page' : null">
+        <span class="material-symbols-outlined">groups</span>
+        <span class="label">Grupos</span>
+      </a>
+      <a routerLink="/atividade" routerLinkActive="is-active" #atividadeLink="routerLinkActive" [attr.aria-current]="atividadeLink.isActive ? 'page' : null">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span class="label">Atividade</span>
+      </a>
+      <a routerLink="/ajustes" routerLinkActive="is-active" #ajustesLink="routerLinkActive" [attr.aria-current]="ajustesLink.isActive ? 'page' : null">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="label">Ajustes</span>
+      </a>
+    </nav>
+  }
 </div>

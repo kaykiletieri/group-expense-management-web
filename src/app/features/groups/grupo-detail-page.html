@@ -59,9 +59,9 @@
           <div class="position-ticket" [class.positive]="userBalance() >= 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
             <span class="label-caps position-label">Seu Saldo Atual</span>
             <div class="position-value" [class.positive]="userBalance() > 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
-              <span class="position-sign" *ngIf="userBalance() > 0">+ R$</span>
-              <span class="position-sign" *ngIf="userBalance() < 0">- R$</span>
-              <span class="position-sign" *ngIf="userBalance() === 0">R$</span>
+              @if (userBalance() > 0) { <span class="position-sign">+ R$</span> }
+              @if (userBalance() < 0) { <span class="position-sign">- R$</span> }
+              @if (userBalance() === 0) { <span class="position-sign">R$</span> }
               {{ formatBrl(abs(userBalance())) }}
             </div>
             <span class="position-badge" [class.positive]="userBalance() > 0" [class.negative]="userBalance() < 0" [class.zero]="userBalance() === 0">
@@ -123,9 +123,9 @@
             </div>
             <div class="balance-right" [class.positive]="balance.balanceInCents > 0" [class.negative]="balance.balanceInCents < 0" [class.zero]="balance.balanceInCents === 0">
               <span class="balance-amount currency-md">{{ formatBrl(abs(balance.balanceInCents)) }}</span>
-              <span class="balance-label" *ngIf="balance.balanceInCents > 0">a receber</span>
-              <span class="balance-label" *ngIf="balance.balanceInCents < 0">a pagar</span>
-              <span class="balance-label" *ngIf="balance.balanceInCents === 0">quitado</span>
+              @if (balance.balanceInCents > 0) { <span class="balance-label">a receber</span> }
+              @if (balance.balanceInCents < 0) { <span class="balance-label">a pagar</span> }
+              @if (balance.balanceInCents === 0) { <span class="balance-label">quitado</span> }
             </div>
           </div>
         } @empty {

@@ -75,7 +75,9 @@
                 <span class="material-symbols-outlined">{{ getCatIcon(overview) }}</span>
               </div>
               <div class="group-info">
-                <span class="group-category chip chip-soft" *ngIf="overview.category">{{ (overview.category || '').toUpperCase() }}</span>
+                @if (overview.category) {
+                <span class="group-category chip chip-soft">{{ (overview.category || '').toUpperCase() }}</span>
+              }
                 <h3 class="group-name">{{ overview.name }}</h3>
                 <span class="group-meta">{{ overview.participantCount }} amigos • {{ getExpenseCount(overview) }} despesas</span>
 <div class="group-balance" [class.positive]="getUserBalance(overview) >= 0" [class.negative]="getUserBalance(overview) < 0" [class.zero]="getUserBalance(overview) === 0">

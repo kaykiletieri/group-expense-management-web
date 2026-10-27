@@ -142,7 +142,7 @@
 }
 
 .chip-select-content { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.chip-select-name { font-weight: 600; truncate; }
+.chip-select-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chip-select-sub { font-size: var(--text-body-sm); color: var(--color-on-surface-variant); }
 .chip-select.is-selected .chip-select-sub { color: rgba(255,255,255,0.8); }
 
@@ -187,7 +187,7 @@
 .split-checkbox .material-symbols-outlined { font-size: 16px; font-weight: 700; }
 
 .split-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.split-name { font-weight: 600; truncate; }
+.split-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .split-you { font-size: var(--text-body-sm); color: var(--color-primary); font-weight: 600; }
 .split-role { font-size: var(--text-body-sm); color: var(--color-on-surface-variant); }
 

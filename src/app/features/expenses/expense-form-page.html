@@ -66,8 +66,11 @@
               <app-avatar [name]="participant.name" [size]="28" />
               <div class="chip-select-content">
                 <span class="chip-select-name">{{ participant.name }}</span>
-                <span class="chip-select-sub" *ngIf="isCurrentUser(participant.id)">Você bancou</span>
-                <span class="chip-select-sub" *ngIf="!isCurrentUser(participant.id)">Amigo</span>
+                @if (isCurrentUser(participant.id)) {
+                <span class="chip-select-sub">Você bancou</span>
+              } @else {
+                <span class="chip-select-sub">Amigo</span>
+              }
               </div>
               @if (payerId() === participant.id) {
                 <span class="chip-select-badge">
@@ -101,7 +104,7 @@
                 <span class="material-symbols-outlined">check</span>
               </span>
               <div class="split-info">
-                <span class="split-name">{{ participant.name }}<span class="split-you" *ngIf="isCurrentUser(participant.id)"> (Você)</span></span>
+                <span class="split-name">{{ participant.name }}@if (isCurrentUser(participant.id)) { <span class="split-you"> (Você)</span> }</span>
                 <span class="split-role">{{ getSplitRole(participant.id) }}</span>
               </div>
               <span class="split-amount currency-md" [class.zero]="notSplit(participant.id)">

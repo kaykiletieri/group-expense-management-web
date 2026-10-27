@@ -109,7 +109,7 @@
 
 .group-category { font-size: var(--text-label-caps); padding: 2px var(--space-xs); white-space: nowrap; }
 
-.group-name { font-size: var(--text-headline-sm); font-weight: 700; truncate; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-name { font-size: var(--text-headline-sm); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .group-meta { font-size: var(--text-body-sm); color: var(--color-on-surface-variant); }
 
