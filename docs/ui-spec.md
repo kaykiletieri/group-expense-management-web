@@ -140,8 +140,16 @@ em `POST /api/groups/{id}/expenses` (201 `{ id }`) e
 
 ### Ajustes
 
-- Mostrar e-mail (de `/api/auth/me`), botão "Sair" (`POST /api/auth/logout` → `/login`),
-  e apontar "Termos" para nada/esta etapa omitida (D14 — sem inventar página).
+Mesma linguagem visual do app (D27): greeting editorial ("SUA CONTA • {mês}"
++ headline), seções com header dot global e cards elevados.
+
+- **Seu perfil:** card com avatar de iniciais, nome real, e-mail (`/api/auth/me`)
+  e controle de "Nome de exibição" com salvar (`PUT /api/auth/name`).
+- **Aparência:** card com controle segmentado Claro/Escuro (D19) e nota de
+  persistência do tema.
+- **Conta:** card com e-mail e botão "Sair da conta" (`POST /api/auth/logout`
+  → `/login`), estilo `btn-danger`.
+- Desktop ≥1120px: perfil à esquerda, aparência/conta empilhadas à direita (D18).
 
 ## Matriz de mensagens central (interceptor)
 

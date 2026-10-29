@@ -147,3 +147,56 @@ e atualização deste registro.
   cantos — todo botão (primário, secundário, danger, chip e chips de seleção do
   formulário de despesa) usa radius `--radius-md` (8px). `radius-pill` fica
   reservado a chips de status estáticos e avatar (não são botões).
+- **D27 – Reforma de layout: nav na Shell, utilitários de composição e
+  responsividade D18 implementada (2026-10-28):** os templates portados dos
+  protótipos usavam classes utilitárias de composição (flex/gap/tamanhos) que não
+  existiam no SCSS — ícones e blocos saíam do lugar. Mudanças:
+  (a) nova camada `src/styles/_utilities.scss` com os utilitários usados (`flex`,
+  `items-*`, `gap-space-*`, tamanhos fixos, `bare-input` etc.), todos mapeando para
+  tokens; nada de valores mágicos;
+  (b) a navegação (bottom nav mobile + sidebar ≥768px) vive só na **Shell**; as
+  páginas não replicam `<nav>`; a nav aparece em todas as telas autenticadas
+  (inclusive detalhe e formulário) por consistência;
+  (c) item "Atividade" removido da nav (rota não existe no MVP — D13 prevê 2 itens);
+  (d) avatar real da conta logada (`shared/ui/avatar`, iniciais + cor derivada do
+  nome) nos headers, substituindo o círculo decorativo "person"; o avatar
+  compartilhado usava `--radius-pill`, que não existia (corrigido para
+  `--radius-full`);
+  (e) emenda ao D18: o header permanece visível no desktop, deslocado pela largura
+  da sidebar, para conservar "voltar" e menu nos detalhes/formulários;
+  (f) detalhe do grupo em duas colunas via grid por seção (o antigo seletor `:has`
+  não casava com a estrutura real); formulário de despesa em duas colunas
+  (valor/descrição | pagador/rateio); `--container-max` regula para 680px/1160px
+  (D18);
+  (g) espaçamento entre seções do detalhe é o gap do `.page` (margens duplicadas
+  removidas); header de grupos exibe nome do usuário, mês corrente e contagem real
+  de grupos (antes: "OLÁ, MARINA • ABRIL 2025 / 4 ativos" fixos do protótipo);
+  (h) `html, body` usam `width: 100%` (antes `100vw`, que inclui a largura da
+  barra de rolagem vertical e provocava scroll horizontal de ~10px no desktop e
+  no device emulation), corrigido em 2026-10-29;
+  (i) bottom sheet mobile não pode ser cortado: `.modal` ganhou
+  `max-height: calc(100dvh - 24px)` + `overflow-y: auto` + `padding-bottom` com
+  safe-area, e modal/backdrop sobem para z-index 60 — acima da bottom nav
+  (z-50), que fica bloqueada pelo backdrop enquanto o modal está aberto;
+  (j) card "Adicionar amigo" do detalhe quebra linha no mobile
+  (`.participant-add > .flex` com `flex-wrap: wrap`): input + dois chips
+  somavam acima da largura do viewport (393px) e empurravam a página para
+  415px, criando scroll horizontal; e os textos de saldo removem o prefixo
+  "R$" manual no template (com "R$ R$ X") porque `formatBrl` já devolve o
+  símbolo — também corrigido em 2026-10-29.
+
+- **D28 — Marca final "rachaae" (2026-10-29):** o nome "rachaae" era provisório
+  (D14). O usuário decidiu a marca: **rachaae** passa a ser o nome definitivo,
+  aplicado na sidebar, no header de grupos ("rachaa`e`" com a última letra em
+  destaque), na dica da home e no botão do login; `index.html` já usava "Rachaae".
+  O nome interno do projeto (`racha-web`) permanece como codename técnico.
+
+- **D29 — Resumo agregado honesto (emenda ao D10, 2026-10-29):** o contrato
+  `GroupOverviewResponse` não traz saldo por usuário, então a home remove os
+  elementos decorativos fake ("Seu Balanço Geral" com "A receber/Você deve" em
+  R$ 0,00, badge "Atualizado agora" e chip fixo "Tudo quitado"). Agora o card
+  "Resumo Geral" exibe só o que o contrato entrega: total pago entre os grupos
+  e participantes somados; o chip do card do grupo mostra "Sem despesas"
+  (total = 0) ou o total pago real do grupo. Quando o backend incluir saldo por
+  usuário no overview, este card pode voltar a exibir saldos — não recalcular
+  no cliente (regra central de rateio).
