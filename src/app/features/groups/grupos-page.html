@@ -1,92 +1,168 @@
-<section class="page">
-  <header class="list-head">
-    <h1>Meus grupos</h1>
-    <button
-      class="btn-chip"
-      type="button"
-      [disabled]="groupLimitReached()"
-      [title]="groupLimitReached() ? 'Você pode ter no máximo 10 grupos.' : null"
-      (click)="openCreation()"
-    >
-      <span class="material-symbols-outlined">add</span>
-      Novo grupo
-    </button>
+<div class="grupos-page">
+  <!-- Fixed Header -->
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="flex items-center gap-space-xs">
+        <span class="headline-lg-mobile headline-brand">rachaa<span class="text-primary-container">e</span></span>
+      </div>
+      <div class="flex items-center gap-space-sm">
+        <app-avatar class="header-avatar" [name]="userName()" [size]="32" />
+      </div>
+    </div>
   </header>
 
-  @if (loading()) {
-    <div class="skeleton skeleton-card"></div>
-    <div class="skeleton skeleton-card"></div>
-  } @else if (loadError()) {
-    <div class="card card-empty">
-      <p>Não foi possível carregar seus grupos.</p>
-      <button class="btn-secondary" type="button" (click)="refresh()">Tentar novamente</button>
-    </div>
-  } @else if (overviews().length === 0) {
-    <div class="card card-empty">
-      <p class="empty-title">Nenhum grupo ainda.</p>
-      <p class="section-note">Crie o primeiro para começar a rachar as contas.</p>
-      <button class="btn-primary" type="button" (click)="openCreation()">Criar grupo</button>
-    </div>
-  } @else {
-    @if (nothingOwedAnywhere()) {
-      <div class="banner-zero">
-        <span class="material-symbols-outlined">task_alt</span>
-        Ninguém deve nada por aqui.
+  <main class="page" style="padding-top: calc(var(--header-h) + var(--space-lg)); padding-bottom: calc(var(--bottom-nav-h) + var(--space-xl));">
+    <!-- Section 1: Greeting & Editorial Headline -->
+    <section class="greeting-section">
+      <div class="greeting-header">
+        <span class="label-caps">OLÁ{{ userName() ? ', ' + userName().toUpperCase() : '' }} • {{ monthLabel }}</span>
+        @if (activeCountLabel()) {
+          <span class="badge badge-tertiary">{{ activeCountLabel() }}</span>
+        }
       </div>
-    }
+      <div class="greeting-content">
+        <h1 class="headline-lg-mobile">
+          Seus grupos,<br/>suas contas.
+        </h1>
+        <p class="body-md" style="color: var(--color-on-surface-variant);">
+          Divisão transparente e descomplicada entre amigos.
+        </p>
+      </div>
+    </section>
 
-    <div class="list-summary label-caps">
-      {{ overviews().length }} grupo(s) · {{ totalParticipants() }} pessoa(s) ·
-      {{ formatBrl(totalMovement()) }} movimentados
-    </div>
+    <!-- Section 2: Primary Call-to-Action -->
+    <button class="btn-primary w-full" type="button" [disabled]="creating() || groupLimitReached()" (click)="openCreation()">
+      <span class="material-symbols-outlined btn-icon">group_add</span>
+      <span>Criar novo grupo</span>
+    </button>
 
-    <ul class="group-list">
-      @for (overview of overviews(); track overview.id) {
-        <li>
-          <a class="card group-card" routerLink="/grupos/{{ overview.id }}">
-            <app-avatar [name]="overview.name" />
-            <div class="group-card-info">
-              <span class="group-card-name">{{ overview.name }}</span>
-              <div class="group-card-chips">
-                <span class="chip chip-soft">{{ overview.participantCount }} pessoa(s)</span>
-                @if (overview.totalPaidInCents === 0) {
-                  <span class="chip chip-quit">Sem despesas</span>
-                } @else {
-                  <span class="chip chip-soft tabular-nums">
-                    {{ formatBrl(overview.totalPaidInCents) }} em despesas
+    <!-- Section 3: Real Summary Card (contrato D10: overview não traz saldo por usuário) -->
+    <section class="balance-summary card">
+      <div class="balance-summary-header">
+        <span class="label-caps">Resumo Geral</span>
+      </div>
+      <div class="balance-metrics">
+        <div class="balance-metric">
+          <span class="label-caps" style="display: flex; align-items: center; gap: var(--space-xs); color: var(--color-tertiary);">
+            <span class="material-symbols-outlined" style="font-size: 14px;">payments</span>
+            Pago nos grupos
+          </span>
+          <span class="currency-md">{{ formatBrl(totalMovement()) }}</span>
+        </div>
+        <div class="balance-metric balance-metric-payable">
+          <span class="label-caps" style="display: flex; align-items: center; gap: var(--space-xs); color: var(--color-secondary);">
+            <span class="material-symbols-outlined" style="font-size: 14px;">group</span>
+            Participantes
+          </span>
+          <span class="currency-md" style="color: var(--color-secondary);">{{ totalParticipants() }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Groups List -->
+    <section class="groups-section">
+      <div class="section-header">
+        <h2 class="headline-sm">Grupos em andamento</h2>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      } @else if (loadError()) {
+        <div class="card card-empty empty-state">
+          <p class="empty-title">Erro ao carregar</p>
+          <p class="empty-note">Não foi possível carregar seus grupos.</p>
+          <button class="btn-secondary" type="button" (click)="refresh()">Tentar novamente</button>
+        </div>
+      } @else if (overviews().length === 0) {
+        <div class="card card-empty empty-state">
+          <p class="empty-title">Nenhum grupo ainda.</p>
+          <p class="empty-note">Crie o primeiro para começar a rachar as contas.</p>
+          <button class="btn-primary" type="button" (click)="openCreation()">Criar grupo</button>
+        </div>
+      } @else {
+        @if (nothingOwedAnywhere()) {
+          <div class="banner-zero">
+            <span class="material-symbols-outlined">task_alt</span>
+            Ninguém deve nada por aqui.
+          </div>
+        }
+
+        <ul class="group-list">
+          @for (overview of overviews(); track overview.id) {
+            <li>
+              <a class="group-card card" [routerLink]="['/grupos', overview.id]">
+                <div class="group-card-avatar">
+                  <div class="avatar avatar-lg" [style.background]="'var(--color-' + getGroupIconColor(overview.name) + ')'" [style.color]="'var(--color-' + getGroupIconTextColor(overview.name) + ')'">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">{{ getGroupIcon(overview.name) }}</span>
+                  </div>
+                </div>
+                <div class="group-card-info">
+                  <div class="group-card-category">
+                    <span class="chip chip-sm" [style.background]="'var(--color-' + getGroupCategoryColor(overview.name) + ')'" [style.color]="'var(--color-' + getGroupCategoryTextColor(overview.name) + ')'">
+                      {{ getGroupCategory(overview.name) }}
+                    </span>
+                  </div>
+                  <h3 class="headline-sm group-card-name">{{ overview.name }}</h3>
+                  <span class="body-sm" style="color: var(--color-on-surface-variant);">
+                    {{ overview.participantCount }} amigos
                   </span>
-                }
-              </div>
-            </div>
-            <span class="material-symbols-outlined group-card-arrow">chevron_right</span>
-          </a>
-        </li>
+                  <div class="group-card-balance">
+                    <span class="badge badge-sm badge-surface">
+                      <span class="material-symbols-outlined badge-dot" style="font-size: 10px;">
+                        {{ overview.totalPaidInCents === 0 ? 'check' : 'receipt_long' }}
+                      </span>
+                      {{ overview.totalPaidInCents === 0 ? 'Sem despesas' : formatBrl(overview.totalPaidInCents) + ' pagos' }}
+                    </span>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined group-card-arrow" style="color: var(--color-on-surface-variant);">chevron_right</span>
+              </a>
+            </li>
+          }
+        </ul>
       }
-    </ul>
-  }
-</section>
+    </section>
 
-@if (createOpen()) {
-  <button class="modal-backdrop" type="button" (click)="closeCreation()" aria-label="Cancelar"></button>
-  <div class="modal" role="dialog" aria-modal="true" aria-label="Novo grupo">
-    <h2 class="modal-title">Novo grupo</h2>
-    <input
-      type="text"
-      placeholder="Nome do grupo (ex: Viagem a Ubatuba)…"
-      [formControl]="creationName"
-      maxlength="80"
-      (keyup.enter)="submitCreation()"
-      autofocus
-    />
-    <p class="section-note">Sem nome? Criamos como "Grupo N".</p>
-    @if (createError()) {
-      <p class="page-error" role="alert">{{ createError() }}</p>
-    }
-    <div class="modal-actions">
-      <button class="btn-secondary" type="button" (click)="closeCreation()">Cancelar</button>
-      <button class="btn-primary" type="button" [disabled]="creating()" (click)="submitCreation()">
-        {{ creating() ? 'Criando…' : 'Criar grupo' }}
-      </button>
+    <!-- Section 5: Playful Editorial Context Tip -->
+    <aside class="editorial-tip card card-filled">
+      <div class="flex items-start gap-space-sm">
+        <div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0" style="margin-top: 2px;">
+          <span class="material-symbols-outlined" style="font-size: 16px;">tips_and_updates</span>
+        </div>
+        <div class="flex flex-col gap-space-2xs">
+          <span class="label-caps" style="color: var(--color-on-surface);">Dica rachaae.</span>
+          <p class="body-sm" style="color: var(--color-on-surface-variant);">
+            Crie grupos para viagens, presentes coletivos ou apê. O <span style="font-weight: 700; color: var(--color-on-surface);">rachaae</span> calcula os acertos sem drama.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Create Group Modal -->
+  @if (createOpen()) {
+    <button class="modal-backdrop" type="button" (click)="closeCreation()" aria-label="Cancelar"></button>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Novo grupo">
+      <h2 class="modal-title">Novo grupo</h2>
+      <input
+        type="text"
+        placeholder="Nome do grupo (ex: Viagem a Ubatuba)…"
+        [formControl]="creationName"
+        maxlength="80"
+        (keyup.enter)="submitCreation()"
+        autofocus
+      />
+      <p class="section-note">Sem nome? Criamos como "Grupo N".</p>
+      @if (createError()) {
+        <p class="page-error" role="alert">{{ createError() }}</p>
+      }
+      <div class="modal-actions">
+        <button class="btn-tertiary" type="button" (click)="closeCreation()">Cancelar</button>
+        <button class="btn-primary" type="button" [disabled]="creating()" (click)="submitCreation()">
+          {{ creating() ? 'Criando…' : 'Criar grupo' }}
+        </button>
+      </div>
     </div>
-  </div>
-}
+  }

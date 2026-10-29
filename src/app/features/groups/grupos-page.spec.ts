@@ -35,7 +35,7 @@ describe('GruposPage', () => {
 
   it('renderiza os grupos com total pago por grupo', async () => {
     http
-      .expectOne('api/groups/overviews')
+      .expectOne('/api/groups/overviews')
       .flush([
         {
           id: 'g1',
@@ -58,14 +58,15 @@ describe('GruposPage', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const names = [...compiled.querySelectorAll('.group-card-name')].map((e) => e.textContent);
     expect(names).toEqual(['Viagem a Ubatuba', 'Contas da casa']);
-    expect(compiled.textContent).toContain('2 pessoa(s)');
-    // Intl usa U+00A0 entre o símbolo e o valor
-    expect(compiled.textContent).toContain('R$\u00a0100,00');
+    expect(compiled.textContent).toContain('2 amigos');
+    // chips homonestos derivados do overview: total pago real
+    expect(compiled.textContent).toContain('R$\u00a0100,00 pagos');
     expect(compiled.textContent).toContain('Sem despesas');
+    expect(compiled.textContent).toContain('Resumo Geral');
   });
 
   it('cria grupo e navega para o detalhe', async () => {
-    http.expectOne('api/groups/overviews').flush([]);
+    http.expectOne('/api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 
@@ -76,7 +77,7 @@ describe('GruposPage', () => {
     component.creationName.setValue('Novo racha');
     component.submitCreation();
 
-    const createRequest = http.expectOne('api/groups');
+    const createRequest = http.expectOne('/api/groups');
     expect(createRequest.request.body).toEqual({ name: 'Novo racha' });
     createRequest.flush({ id: 'novo' });
 
@@ -84,7 +85,7 @@ describe('GruposPage', () => {
   });
 
   it('cria grupo mesmo sem nome (backend gera "Grupo N")', async () => {
-    http.expectOne('api/groups/overviews').flush([]);
+    http.expectOne('/api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 
@@ -94,7 +95,7 @@ describe('GruposPage', () => {
 
     component.submitCreation();
 
-    const createRequest = http.expectOne('api/groups');
+    const createRequest = http.expectOne('/api/groups');
     expect(createRequest.request.body).toEqual({ name: '' });
     createRequest.flush({ id: 'novo' });
 
@@ -102,7 +103,7 @@ describe('GruposPage', () => {
   });
 
   it('mostra estado vazio quando não há grupos', async () => {
-    http.expectOne('api/groups/overviews').flush([]);
+    http.expectOne('/api/groups/overviews').flush([]);
     await settle();
     fixture.detectChanges();
 
@@ -118,12 +119,14 @@ describe('GruposPage', () => {
       participantCount: 0,
       totalPaidInCents: 0,
     }));
-    http.expectOne('api/groups/overviews').flush(tenGroups);
+    http.expectOne('/api/groups/overviews').flush(tenGroups);
     await settle();
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const newButton = compiled.querySelector<HTMLButtonElement>('.list-head .btn-chip');
+    const newButton = compiled.querySelector<HTMLButtonElement>(
+      'button.btn-primary[type="button"]',
+    );
     expect(newButton).toBeTruthy();
     expect(newButton!.disabled).toBe(true);
     expect(fixture.componentInstance.groupLimitReached()).toBe(true);
@@ -137,7 +140,7 @@ describe('GruposPage', () => {
       participantCount: 0,
       totalPaidInCents: 0,
     }));
-    http.expectOne('api/groups/overviews').flush(tenGroups);
+    http.expectOne('/api/groups/overviews').flush(tenGroups);
     await settle();
     fixture.detectChanges();
 
@@ -147,7 +150,7 @@ describe('GruposPage', () => {
 
     component.submitCreation();
 
-    const failedRequest = http.expectOne('api/groups');
+    const failedRequest = http.expectOne('/api/groups');
     failedRequest.flush(
       { error: 'A user can have at most 10 groups.' },
       { status: 400, statusText: 'Bad Request' },

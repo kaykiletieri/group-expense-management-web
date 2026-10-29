@@ -2,11 +2,12 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { Avatar } from '../../shared/ui/avatar';
 import { GroupsApi } from '../../core/api/groups-api';
+import { AuthService } from '../../core/auth/auth.service';
 import { GroupOverview } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl } from '../../core/money/money';
-import { Avatar } from '../../shared/ui/avatar';
 import { Title } from '@angular/platform-browser';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
@@ -31,8 +32,15 @@ export class GruposPage implements OnInit {
   private readonly router = inject(Router);
   private readonly groupsApi = inject(GroupsApi);
   private readonly title = inject(Title);
+  private readonly auth = inject(AuthService);
 
   protected readonly formatBrl = formatBrl;
+
+  readonly userName = computed(() => {
+    const user = this.auth.user();
+    if (!user) return '?';
+    return user.name?.trim() || user.email.split('@')[0] || '?';
+  });
 
   readonly loading = signal(true);
   readonly loadError = signal(false);
@@ -63,6 +71,20 @@ export class GruposPage implements OnInit {
   readonly groupLimitReached = computed(
     () => this.overviews().length >= GROUP_LIMIT,
   );
+
+  readonly activeCountLabel = computed(() => {
+    const count = this.overviews().length;
+    if (this.loading()) return '';
+    return `${count} ${count === 1 ? 'ativo' : 'ativos'}`;
+  });
+
+  readonly monthLabel = new Intl.DateTimeFormat('pt-BR', {
+    month: 'short',
+    year: 'numeric',
+  })
+    .format(new Date())
+    .replace(' de ', ' ')
+    .toUpperCase();
 
   ngOnInit(): void {
     this.title.setTitle('Grupos - Rachaae');
@@ -111,5 +133,54 @@ export class GruposPage implements OnInit {
 
   closeCreation() {
     this.createOpen.set(false);
+  }
+
+  getGroupIcon(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'surfing';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'local_fire_department';
+    if (lower.includes('apê') || lower.includes('ape') || lower.includes('casa') || lower.includes('apto') || lower.includes('moradia')) return 'apartment';
+    if (lower.includes('serra') || lower.includes('montanha') || lower.includes('natureza')) return 'terrain';
+    return 'group';
+  }
+
+  getGroupIconColor(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'primary-fixed';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'secondary-fixed';
+    if (lower.includes('apê') || lower.includes('ape') || lower.includes('casa') || lower.includes('apto') || lower.includes('moradia')) return 'surface-container-high';
+    if (lower.includes('serra') || lower.includes('montanha') || lower.includes('natureza')) return 'surface-container-high';
+    return 'primary-fixed';
+  }
+
+  getGroupIconTextColor(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'on-primary-fixed';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'on-secondary-fixed';
+    return 'on-surface';
+  }
+
+  getGroupCategory(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'Praia & Férias';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'Final de semana';
+    if (lower.includes('apê') || lower.includes('ape') || lower.includes('casa') || lower.includes('apto') || lower.includes('moradia')) return 'Despesas fixas';
+    if (lower.includes('serra') || lower.includes('montanha') || lower.includes('natureza')) return 'Em planejamento';
+    return 'Grupo';
+  }
+
+  getGroupCategoryColor(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'tertiary-fixed';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'secondary-fixed';
+    if (lower.includes('apê') || lower.includes('ape') || lower.includes('casa') || lower.includes('apto') || lower.includes('moradia')) return 'surface-container-high';
+    return 'surface-container-high';
+  }
+
+  getGroupCategoryTextColor(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) return 'on-tertiary-fixed';
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne')) return 'on-secondary-fixed';
+    return 'on-surface-variant';
   }
 }
