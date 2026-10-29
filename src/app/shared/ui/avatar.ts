@@ -34,7 +34,7 @@ export function avatarClassOf(name: string): string {
       align-items: center;
       justify-content: center;
       border: var(--border-width) solid var(--border-color);
-      border-radius: var(--radius-pill);
+      border-radius: var(--radius-full);
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 13px;

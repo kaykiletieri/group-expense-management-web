@@ -40,7 +40,7 @@ describe('authGuard', () => {
       authGuard(routeSnapshot, stateFor('/grupos')),
     );
 
-    const request = http.expectOne('api/auth/me');
+    const request = http.expectOne('/api/auth/me');
     expect(request.request.method).toBe('GET');
     request.error(new ErrorEvent('unauthorized'), { status: 401 });
 
@@ -54,7 +54,7 @@ describe('authGuard', () => {
       authGuard(routeSnapshot, stateFor('/grupos')),
     );
 
-    const request = http.expectOne('api/auth/me');
+    const request = http.expectOne('/api/auth/me');
     request.flush({ id: '1', email: 'user@example.com' });
 
     const outcome = await result;
@@ -69,7 +69,7 @@ describe('authGuard', () => {
       authGuard(routeSnapshot, stateFor('/grupos')),
     );
     expect(outcome).toBe(true);
-    http.expectNone('api/auth/me');
+    http.expectNone('/api/auth/me');
     expect(router.url).toBe('/');
   });
 });
