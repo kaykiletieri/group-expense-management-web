@@ -1,299 +1,414 @@
-:host {
-  display: block;
+.grupo-detail-page {
+  min-height: 100dvh;
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
 }
 
 .page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-/* Header */
-.group-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  box-shadow: var(--shadow-hard);
-  text-decoration: none;
-  color: var(--color-ink);
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.back-btn:hover {
-  background: var(--color-surface);
-}
-
-.back-btn:active {
-  transform: translate(1px, 1px);
-}
-
-.group-name {
   flex: 1;
-  font-size: var(--text-h1);
-  overflow-wrap: anywhere;
-}
-
-.group-name.is-empty {
-  color: var(--color-ink-soft);
-}
-
-.menu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  box-shadow: var(--shadow-hard);
-  color: var(--color-ink);
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.menu-btn:hover {
-  background: var(--color-surface);
-}
-
-.menu-btn:active {
-  transform: translate(1px, 1px);
-}
-
-.menu-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  background: transparent;
-  border: none;
-  cursor: default;
-}
-
-.menu {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + var(--space-2));
-  right: 0;
   display: flex;
   flex-direction: column;
-  min-width: 220px;
-  padding: var(--space-2);
-  background: var(--color-card);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-hard-strong);
+  gap: var(--space-lg);
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--margin-mobile);
 }
 
-.menu button {
+/* Group Poster Card */
+.group-poster {
+  padding: var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.poster-header {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  font-family: var(--font-body);
-  font-size: var(--text-small);
-  font-weight: 500;
-  color: var(--color-ink);
-  text-align: left;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  justify-content: space-between;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
-.menu button:hover {
-  background: var(--color-surface);
+.poster-date {
+  font-family: var(--font-display);
+  font-size: var(--text-label-caps);
+  line-height: var(--text-label-caps-line);
+  letter-spacing: var(--text-label-caps-track);
+  font-weight: var(--text-label-caps-weight);
 }
 
-.menu-danger {
-  color: var(--color-error) !important;
+.poster-title-section {
+  margin-bottom: var(--space-md);
 }
 
-/* Seções */
-.section-row {
+.poster-title-section h2 {
+  color: var(--color-on-surface);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.poster-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-2xs);
+  flex-wrap: wrap;
+}
+
+.poster-meta .w-1 {
+  width: 4px;
+  height: 4px;
+}
+
+/* Financial Ledger */
+.financial-ledger {
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.ledger-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.ledger-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.ledger-balance {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+}
+
+.ledger-balance.positive {
+  background: var(--color-tertiary-fixed);
+  color: var(--color-on-tertiary-fixed);
+}
+
+.ledger-balance.negative {
+  background: var(--color-error-container);
+  color: var(--color-on-error-container);
+}
+
+.ledger-balance.neutral {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+}
+
+.ledger-balance .headline-sm {
+  font-family: var(--font-display);
+  font-size: var(--text-headline-sm);
+  line-height: var(--text-headline-sm-line);
+  letter-spacing: var(--text-headline-sm-track);
+  font-weight: var(--text-headline-sm-weight);
+}
+
+/* Add Friend Section */
+.add-friend-section {
+  margin-top: var(--space-md);
+}
+
+.add-friend-section .card {
+  padding: var(--space-sm);
+}
+
+/* Sections — o espaçamento entre seções vem do gap do .page;
+   margin-top zerado para não dobrar respiro. */
+.balances-section,
+.settlement-section,
+.payments-section,
+.expenses-section,
+.participants-section {
+  margin-top: 0;
+}
+
+.section-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
 }
 
-.section-actions {
+.section-title {
   display: flex;
-  gap: var(--space-2);
-  align-items: baseline;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
-.section-row h2,
-h2 {
-  font-size: var(--text-h2);
-  font-weight: 700;
+.section-title-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+
+.section-title-dot.primary { background: var(--color-primary); }
+.section-title-dot.secondary { background: var(--color-secondary-container); }
+.section-title-dot.tertiary { background: var(--color-tertiary-fixed-dim); }
+
+.section-title h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-headline-sm);
+  line-height: var(--text-headline-sm-line);
+  letter-spacing: var(--text-headline-sm-track);
+  font-weight: var(--text-headline-sm-weight);
+  text-transform: uppercase;
+  margin: 0;
 }
 
 .section-count {
-  font-size: var(--text-small);
-  color: var(--color-ink-soft);
+  font-size: var(--text-body-sm);
+  color: var(--color-on-surface-variant);
   font-weight: 500;
+  margin-left: var(--space-xs);
 }
 
-.page-note {
-  color: var(--color-ink-soft);
+.settle-note {
+  margin-top: var(--space-xs);
+  line-height: 1.5;
 }
 
-/* Linhas de saldo/participantes */
+/* Balance List */
+.balance-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
 .balance-row {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  transition: background-color var(--transition-fast);
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .balance-row:hover {
-  background: var(--hover-tint);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard);
 }
 
-.balance-info {
+.balance-row .balance-info {
   display: flex;
   flex-direction: column;
+  gap: var(--space-2xs);
   min-width: 0;
   flex: 1;
 }
 
-.balance-name {
-  font-weight: 600;
+.balance-row .balance-name {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 700;
   overflow-wrap: anywhere;
+  color: var(--color-on-surface);
 }
 
-.balance-paid {
-  font-size: var(--text-caption);
-  color: var(--color-ink-soft);
+.balance-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2xs);
+  text-align: right;
 }
 
-/* Despesas */
+.balance-amount .chip {
+  font-size: 15px;
+  padding: var(--space-xs) var(--space-xs);
+}
+
+.balance-label {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: var(--text-label-caps-track);
+  font-weight: var(--text-label-caps-weight);
+  text-transform: uppercase;
+}
+
+/* Settlement List */
+.settlement-list {
+  padding: var(--space-md);
+}
+
+.settle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-top: var(--border-width) solid var(--divider);
+}
+
+.settle-row.first {
+  border-top: none;
+  padding-top: var(--space-sm);
+}
+
+.settle-flow {
+  font-family: var(--font-display);
+  font-size: var(--text-currency-md);
+  line-height: var(--text-currency-md-line);
+  font-weight: var(--text-currency-md-weight);
+}
+
+.settle-flow strong {
+  margin-left: var(--space-sm);
+}
+
+/* Payments List */
+.payments-list {
+  padding: var(--space-md);
+}
+
+.payment-item {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--transition-fast);
+}
+
+.payment-item:hover {
+  background: var(--color-surface-container-high);
+}
+
+/* Expense List */
 .expense-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  gap: var(--space-sm);
 }
 
 .expense-item {
-  gap: var(--space-2);
-  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.expense-item:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-hard);
 }
 
 .expense-main {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-sm);
 }
 
-.expense-desc {
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-.expense-value {
-  font-family: var(--font-display);
-  font-weight: 700;
+.expense-item .currency-md {
   white-space: nowrap;
 }
 
-.expense-meta {
+.expense-footer {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  color: var(--color-ink-soft);
+  justify-content: space-between;
+  margin: var(--space-sm) calc(var(--space-md) * -1) calc(var(--space-md) * -1);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-container-low);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
-.expense-split {
-  font-size: var(--text-caption);
+.expense-per-person {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: var(--text-label-caps-weight);
+  letter-spacing: var(--text-label-caps-track);
+  text-transform: uppercase;
+  color: var(--color-tertiary-container);
 }
 
 .expense-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  margin-left: auto;
+  gap: var(--space-md);
 }
 
-.expense-edit {
+.expense-action {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: var(--border-width) solid transparent;
-  border-radius: var(--radius-sm);
+  gap: var(--space-xs);
+  padding: 0;
   background: transparent;
-  color: var(--color-ink-soft);
+  border: none;
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-display);
+  font-size: var(--text-label-caps);
+  font-weight: var(--text-label-caps-weight);
+  text-transform: uppercase;
   text-decoration: none;
-  transition:
-    color var(--transition-fast),
-    border-color var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
-.expense-delete:hover,
-.expense-delete:focus-visible {
-  color: var(--color-error);
-  border-color: var(--color-error);
+button.expense-action {
+  cursor: pointer;
 }
 
-.expense-edit:hover,
-.expense-edit:focus-visible {
+.expense-action:hover {
   color: var(--color-primary);
-  border-color: var(--color-primary);
 }
 
-/* Participantes */
+.expense-action.danger:hover {
+  color: var(--color-error);
+}
+
+.expense-action .material-symbols-outlined {
+  font-size: 14px;
+}
+
+/* Participants Section */
 .participant-add {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
+  padding: var(--space-sm);
+}
+
+/* Deixa o card de adicionar participantes quebrar linha (mobile): sem wrap,
+   os chips somam com o input e estouram a largura do viewport. */
+.participant-add > .flex {
+  flex-wrap: wrap;
 }
 
 .participant-add input {
   flex: 1;
-  height: 44px;
-  padding-inline: var(--space-4);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  font-size: var(--text-body);
   min-width: 0;
 }
 
-.participant-add input:hover:not(:focus) {
+.participants-list {
+  padding: var(--space-md);
+}
+
+/* Botão de ícone fantasma (ações de linha: excluir pagamento/participante) */
+.btn-icon-ghost {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--color-on-surface-variant);
+}
+
+.btn-icon-ghost:hover:not(:disabled) {
   background: var(--hover-tint);
+  color: var(--color-error);
 }
 
-/* Atalho "Você" (adicionar a própria pessoa) — variante discreta do botão */
-.btn-chip-ghost {
-  background: var(--color-card);
-  color: var(--color-ink);
-}
-
-.btn-chip-ghost:hover:not(:disabled) {
-  background: var(--color-surface);
-}
-
-/* Botão pequeno de copiar (saldos, como acertar, despesa) */
+/* Icon Copy Button */
 .icon-copy {
   display: inline-flex;
   align-items: center;
@@ -302,9 +417,9 @@ h2 {
   height: 32px;
   padding: 0;
   border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  color: var(--color-ink-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
   cursor: pointer;
   transition: color var(--transition-fast), border-color var(--transition-fast);
 }
@@ -319,81 +434,56 @@ h2 {
   border-color: var(--color-primary);
 }
 
-/* Plano "Como acertar" */
-.settle-card {
-  margin-top: var(--space-3);
-  padding: var(--space-4);
-}
+/* Dropdown e modal usam os componentes de styles/_components.scss. */
 
-.settle-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.settle-card h3 {
-  font-size: var(--text-small);
-  letter-spacing: 0.06em;
-}
-
-.settle-note {
-  color: var(--color-ink-soft);
-  font-size: var(--text-small);
-  margin-top: var(--space-1);
-}
-
-.settle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-top: var(--border-width) solid var(--border-color);
-}
-
-.settle-row:first-of-type {
-  margin-top: var(--space-3);
-}
-
-.settle-flow strong {
-  margin-left: var(--space-2);
-}
-
-/* Modal de pagamento */
-.field-label {
-  display: block;
-  font-size: var(--text-small);
-  color: var(--color-ink-soft);
-  margin: var(--space-3) 0 var(--space-1);
-}
-
-.field-label:first-of-type {
-  margin-top: 0;
-}
-
-.modal select {
-  width: 100%;
-  height: 44px;
-  padding-inline: var(--space-3);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--color-card);
-  font-size: var(--text-body);
-  color: var(--color-ink);
-}
-
-/* Telas largas (≥1120px): saldos + participantes à esquerda, despesas à direita.
-   Aplicado só quando a página carregada é a de grupo (possui .group-header). */
+/* Desktop ≥1120px: duas colunas (D18) — cabecalho de grupo atravessa o topo,
+   saldos/participantes ficam à esquerda e despesas à direita. */
 @media (min-width: 1120px) {
-  .page:has(> .group-header) {
+  .page.detail-main {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: var(--space-8);
+    column-gap: var(--space-xl);
+    row-gap: var(--space-lg);
     align-items: start;
   }
 
-  .page:has(> .group-header) > .group-header {
+  .page.detail-main > * {
+    margin-top: 0;
+  }
+
+  /* Cabeçalho do grupo atravessa as duas colunas. */
+  .page.detail-main > .group-poster {
     grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  /* Coluna esquerda */
+  .page.detail-main > .add-friend-section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .page.detail-main > .balances-section {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .page.detail-main > .settlement-section {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .page.detail-main > .payments-section {
+    grid-column: 1;
+  }
+
+  .page.detail-main > .participants-section {
+    grid-column: 1;
+  }
+
+  /* Coluna direita: despesas, alinhadas ao topo da primeira seção. */
+  .page.detail-main > .expenses-section {
+    grid-column: 2;
+    grid-row: 2 / span 5;
   }
 }

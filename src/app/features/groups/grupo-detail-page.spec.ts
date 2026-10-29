@@ -34,18 +34,18 @@ describe('GrupoDetailPage', () => {
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(GrupoDetailPage);
     fixture.detectChanges();
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
+    http.expectOne('/api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('/api/groups/g1/participants').flush([
       { id: 'p1', name: 'Renata', createdAtUtc: '' },
       { id: 'p2', name: 'Lucas', createdAtUtc: '' },
     ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
+    http.expectOne('/api/groups/g1/expenses').flush([]);
+    http.expectOne('/api/groups/g1/balances').flush([
       { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
       { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
     ]);
-    http.expectOne('api/groups/g1/payments').flush([]);
-    http.expectOne('api/groups/g1/settlement-plan').flush([]);
+    http.expectOne('/api/groups/g1/payments').flush([]);
+    http.expectOne('/api/groups/g1/settlement-plan').flush([]);
 
     await settle();
     fixture.detectChanges();
@@ -59,30 +59,30 @@ describe('GrupoDetailPage', () => {
     payments?: unknown[];
     settlementPlan?: unknown[];
   }): void {
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('/api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
     http
-      .expectOne('api/groups/g1/participants')
+      .expectOne('/api/groups/g1/participants')
       .flush(
         options?.participants ?? [
           { id: 'p1', name: 'Renata', createdAtUtc: '' },
           { id: 'p2', name: 'Lucas', createdAtUtc: '' },
         ],
       );
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
+    http.expectOne('/api/groups/g1/expenses').flush([]);
+    http.expectOne('/api/groups/g1/balances').flush([
       { participantId: 'p1', totalPaidInCents: 12000, totalOwedInCents: 4000, balanceInCents: 8000 },
       { participantId: 'p2', totalPaidInCents: 0, totalOwedInCents: 4000, balanceInCents: -8000 },
     ]);
-    http.expectOne('api/groups/g1/payments').flush(options?.payments ?? []);
-    http.expectOne('api/groups/g1/settlement-plan').flush(options?.settlementPlan ?? []);
+    http.expectOne('/api/groups/g1/payments').flush(options?.payments ?? []);
+    http.expectOne('/api/groups/g1/settlement-plan').flush(options?.settlementPlan ?? []);
   }
 
   it('carrega nome, saldos e chips corretos', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('Viagem a Ubatuba');
     expect(compiled.textContent).toContain('Pagou R$\u00a0120,00');
-    expect(compiled.textContent).toContain('Recebe R$\u00a080,00');
-    expect(compiled.textContent).toContain('Deve R$\u00a080,00');
+    expect(compiled.textContent).toContain('R$\u00a080,00 a receber');
+    expect(compiled.textContent).toContain('R$\u00a080,00 a pagar');
   });
 
   it('envia nome em branco ao adicionar participante (backend gera "Pessoa N")', async () => {
@@ -90,7 +90,7 @@ describe('GrupoDetailPage', () => {
 
     component.addParticipant();
 
-    const addRequest = http.expectOne('api/groups/g1/participants');
+    const addRequest = http.expectOne('/api/groups/g1/participants');
     expect(addRequest.request.method).toBe('POST');
     expect(addRequest.request.body).toEqual({ name: '' });
     addRequest.flush({ id: 'p3' });
@@ -106,11 +106,12 @@ describe('GrupoDetailPage', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const youButton = compiled.querySelector<HTMLButtonElement>('[aria-label="Adicionar você como participante"]');
+    const youButton = [...compiled.querySelectorAll<HTMLButtonElement>('button')]
+      .find((b) => b.textContent?.includes('Você'));
     expect(youButton).toBeTruthy();
     youButton!.click();
 
-    const addRequest = http.expectOne('api/groups/g1/participants');
+    const addRequest = http.expectOne('/api/groups/g1/participants');
     expect(addRequest.request.method).toBe('POST');
     expect(addRequest.request.body).toEqual({ name: 'Kayki' });
     addRequest.flush({ id: 'p3' });
@@ -125,11 +126,9 @@ describe('GrupoDetailPage', () => {
     await settle();
     fixture.detectChanges();
 
-    // já presente no grupo: botão some
-    const youAfter = (fixture.nativeElement as HTMLElement).querySelector(
-      '[aria-label="Adicionar você como participante"]',
-    );
-    expect(youAfter).toBeNull();
+    const youAfter = [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')]
+      .some((b) => b.textContent?.includes('Você'));
+    expect(youAfter).toBe(false);
   });
 
   it('botão "Você" usa o nome salvo da conta quando existir', async () => {
@@ -141,12 +140,11 @@ describe('GrupoDetailPage', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const youButton = compiled.querySelector<HTMLButtonElement>(
-      '[aria-label="Adicionar você como participante"]',
-    );
+    const youButton = [...compiled.querySelectorAll<HTMLButtonElement>('button')]
+      .find((b) => b.textContent?.includes('Você'));
     youButton!.click();
 
-    const addRequest = http.expectOne('api/groups/g1/participants');
+    const addRequest = http.expectOne('/api/groups/g1/participants');
     expect(addRequest.request.body).toEqual({ name: 'Kayki Teste' });
     addRequest.flush({ id: 'p3' });
 
@@ -175,7 +173,7 @@ describe('GrupoDetailPage', () => {
     expect(confirmButton).toBeTruthy();
     confirmButton!.click();
 
-    const deleteRequest = http.expectOne('api/groups/g1/participants/p2');
+    const deleteRequest = http.expectOne('/api/groups/g1/participants/p2');
     expect(deleteRequest.request.method).toBe('DELETE');
     deleteRequest.flush(null);
 
@@ -194,12 +192,12 @@ describe('GrupoDetailPage', () => {
   it('avisa que despesas pagas serão excluídas ao remover participante referenciado', async () => {
     const second: ComponentFixture<GrupoDetailPage> = TestBed.createComponent(GrupoDetailPage);
     second.detectChanges();
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
+    http.expectOne('/api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('/api/groups/g1/participants').flush([
       { id: 'p1', name: 'Renata', createdAtUtc: '' },
       { id: 'p2', name: 'Lucas', createdAtUtc: '' },
     ]);
-    http.expectOne('api/groups/g1/expenses').flush([
+    http.expectOne('/api/groups/g1/expenses').flush([
       {
         id: 'e1',
         description: 'Almoço',
@@ -209,11 +207,11 @@ describe('GrupoDetailPage', () => {
         createdAtUtc: '2026-10-01T12:00:00Z',
       },
     ]);
-    http.expectOne('api/groups/g1/balances').flush([
+    http.expectOne('/api/groups/g1/balances').flush([
       { participantId: 'p2', totalPaidInCents: 12000, totalOwedInCents: 12000, balanceInCents: 0 },
     ]);
-    http.expectOne('api/groups/g1/payments').flush([]);
-    http.expectOne('api/groups/g1/settlement-plan').flush([]);
+    http.expectOne('/api/groups/g1/payments').flush([]);
+    http.expectOne('/api/groups/g1/settlement-plan').flush([]);
     await settle();
     second.detectChanges();
 
@@ -238,13 +236,13 @@ describe('GrupoDetailPage', () => {
   it('exibe pagamentos registrados e plano "Como acertar" com modal pré-preenchido', async () => {
     const second: ComponentFixture<GrupoDetailPage> = TestBed.createComponent(GrupoDetailPage);
     second.detectChanges();
-    http.expectOne('api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
-    http.expectOne('api/groups/g1/participants').flush([
+    http.expectOne('/api/groups').flush([{ id: 'g1', name: 'Viagem a Ubatuba', createdAtUtc: '' }]);
+    http.expectOne('/api/groups/g1/participants').flush([
       { id: 'p1', name: 'Renata', createdAtUtc: '' },
       { id: 'p2', name: 'Lucas', createdAtUtc: '' },
     ]);
-    http.expectOne('api/groups/g1/expenses').flush([]);
-    http.expectOne('api/groups/g1/balances').flush([
+    http.expectOne('/api/groups/g1/expenses').flush([]);
+    http.expectOne('/api/groups/g1/balances').flush([
       {
         participantId: 'p1',
         totalPaidInCents: 12000,
@@ -262,7 +260,7 @@ describe('GrupoDetailPage', () => {
         balanceInCents: -11000,
       },
     ]);
-    http.expectOne('api/groups/g1/payments').flush([
+    http.expectOne('/api/groups/g1/payments').flush([
       {
         id: 'pay1',
         payerParticipantId: 'p2',
@@ -271,7 +269,7 @@ describe('GrupoDetailPage', () => {
         createdAtUtc: '2026-10-02T12:00:00Z',
       },
     ]);
-    http.expectOne('api/groups/g1/settlement-plan').flush([
+    http.expectOne('/api/groups/g1/settlement-plan').flush([
       { fromParticipantId: 'p2', toParticipantId: 'p1', amountInCents: 8000 },
     ]);
     await settle();
@@ -284,7 +282,7 @@ describe('GrupoDetailPage', () => {
     expect(compiled.textContent).toContain('R$\u00a030,00');
 
     // Seção "Como acertar" sugere a transferência restante
-    expect(compiled.textContent).toContain('Como acertar');
+    expect(compiled.textContent).toContain('Como Acertar');
     expect(compiled.textContent).toContain('R$\u00a080,00');
 
     const registerButtons = [...compiled.querySelectorAll<HTMLButtonElement>('.settle-row button')]
@@ -312,7 +310,7 @@ describe('GrupoDetailPage', () => {
       .find((b) => b.textContent?.trim() === 'Registrar');
     submitButton!.click();
 
-    const paymentRequest = http.expectOne('api/groups/g1/payments');
+    const paymentRequest = http.expectOne('/api/groups/g1/payments');
     expect(paymentRequest.request.method).toBe('POST');
     expect(paymentRequest.request.body).toEqual({
       payerParticipantId: 'p2',
