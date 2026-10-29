@@ -1,67 +1,152 @@
-<main class="login">
-  <!-- Hero decorativo: só aparece em telas largas (≥1120px), fora da árvore de acessibilidade -->
-  <div class="login-hero" aria-hidden="true">
-    <span class="login-hero-brand">rachaae</span>
-    <p class="login-hero-tag">Rache as contas do grupo sem erro.</p>
-    <ul class="login-hero-points">
-      <li>Sem planilha e sem calculadora.</li>
-      <li>Saldos na hora, centavos certos.</li>
-      <li>O grupo inteiro num lugar só.</li>
-    </ul>
-  </div>
+<main class="login-page">
+  <header class="hero-banner" aria-hidden="true">
+    <div class="hero-brand">
+      <span class="display-hero-mobile">rachaae</span>
+      <span class="hero-brand-dot"></span>
+    </div>
+    <p class="hero-tagline label-caps">Divisão Descomplicada</p>
+  </header>
 
-  <div class="login-card">
-    <header class="login-head">
-      <span class="login-brand">rachaae</span>
-      <p class="login-tagline">Rache as contas do grupo sem erro.</p>
-    </header>
+  <div class="login-card card-elevated">
+    <!-- Editorial Hero Title -->
+    <div class="hero-title">
+      <h1 class="headline-lg-mobile">
+        Sua galera.<br />
+        <span class="text-primary-container">Suas contas.</span>
+      </h1>
+      <p class="body-md"
+        style="color: var(--color-on-surface-variant); max-width: 280px; margin: var(--space-xs) auto 0;">
+        Dividir gastos sem drama, climão nem planilha improvisada.
+      </p>
+    </div>
 
-    <div class="login-switch" role="tablist" aria-label="Entrar ou criar conta">
-      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'login'"
+    <!-- Segmented Switch (Entrar / Criar Conta) -->
+    <div class="segmented" role="tablist" aria-label="Entrar ou criar conta">
+      <button type="button" role="tab" class="segmented-btn" [class.active]="mode() === 'login'"
         [attr.aria-selected]="mode() === 'login'" (click)="setMode('login')">
         Entrar
       </button>
-      <button type="button" role="tab" class="login-switch-option" [class.is-selected]="mode() === 'register'"
+      <button type="button" role="tab" class="segmented-btn" [class.active]="mode() === 'register'"
         [attr.aria-selected]="mode() === 'register'" (click)="setMode('register')">
-        Criar conta
+        <span>Criar conta</span>
+        <span class="material-symbols-outlined" style="font-size: 18px;">check_circle</span>
       </button>
     </div>
 
+    <!-- Main Card Form Module -->
     <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
-      <div class="login-field">
-        <label class="label-caps" for="login-email">E-mail pessoal</label>
-        <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com" formControlName="email"
-          [class.has-error]="showFieldError('email')" />
+      <!-- Email Field -->
+      <div class="form-field">
+        <div class="field-header">
+          <label class="label-caps" for="login-email">E-mail pessoal</label>
+          @if (mode() === 'register' && form.controls.email.valid && form.controls.email.value) {
+          <span class="chip chip-tertiary chip-sm">
+            <span class="material-symbols-outlined chip-icon" style="font-size: 13px;">check_circle</span>
+            E-mail válido ✓
+          </span>
+          }
+        </div>
+        <div class="input-with-icon">
+          <span class="input-icon material-symbols-outlined">alternate_email</span>
+          <input id="login-email" type="email" autocomplete="email" placeholder="voce@exemplo.com"
+            formControlName="email" class="form-input" [class.has-error]="showFieldError('email')" />
+        </div>
         @if (showFieldError('email')) {
-        <span class="login-field-error">Informe um e-mail válido.</span>
+        <span class="field-error">Informe um e-mail válido.</span>
         }
       </div>
 
-      <div class="login-field">
-        <label class="label-caps" for="login-password">
-          {{ mode() === 'login' ? 'Senha' : 'Criar senha (mín. 6)' }}
-        </label>
-        <input id="login-password" type="password"
-          [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
-          formControlName="password" [class.has-error]="showFieldError('password')" />
+      <!-- Password Field -->
+      <div class="form-field">
+        <div class="field-header">
+          <label class="label-caps" for="login-password">
+            {{ mode() === 'login' ? 'Senha' : 'Criar senha' }}
+          </label>
+          @if (mode() === 'register') {
+          <span class="body-sm" style="color: var(--color-on-surface-variant);">Mínimo 6 caracteres</span>
+          }
+        </div>
+        <div class="input-with-icon input-with-suffix">
+          <span class="input-icon material-symbols-outlined">lock_open</span>
+          <input id="login-password" [type]="showPassword() ? 'text' : 'password'"
+            [autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" placeholder="••••••••"
+            formControlName="password" class="form-input" [class.has-error]="showFieldError('password')"
+            (input)="onPasswordInput($event)" />
+          <button type="button" class="input-suffix-btn" (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'">
+            <span class="material-symbols-outlined">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
         @if (showFieldError('password')) {
-        <span class="login-field-error">
+        <span class="field-error">
           {{ mode() === 'login' ? 'Informe a senha.' : 'A senha precisa ter pelo menos 6 caracteres.' }}
         </span>
+        }
+
+        <!-- Password Strength Meter (apenas no cadastro) -->
+        @if (mode() === 'register' && form.controls.password.value && form.controls.password.value.length > 0) {
+        <div class="password-strength">
+          <div class="password-strength-bars">
+            @for (active of getPasswordStrengthBars(); track $index) {
+            <div class="password-strength-bar" [class.active-1]="$index === 0 && active"
+              [class.active-2]="$index === 1 && active" [class.active-3]="$index === 2 && active"
+              [class.active-4]="$index === 3 && active"></div>
+            } @for (inactive of [0,1,2,3]; track $index) {
+            @if (!getPasswordStrengthBars()[$index]) {
+            <div class="password-strength-bar"></div>
+            }
+            }
+          </div>
+          <div class="password-strength-label">
+            <span>Força da combinação</span>
+            <span class="strength-text"
+              [style.color]="getPasswordStrengthLabel().color === 'tertiary' ? 'var(--color-tertiary-container)' : 'var(--color-error)'">
+              {{ getPasswordStrengthLabel().label }}
+            </span>
+          </div>
+        </div>
         }
       </div>
 
       @if (errorMessage()) {
-      <p class="login-error" role="alert">{{ errorMessage() }}</p>
+      <p class="page-error" role="alert">
+        <span class="material-symbols-outlined">error</span>
+        {{ errorMessage() }}
+      </p>
       }
 
+
+      <!-- Action CTA Button -->
       <button class="btn-primary" type="submit" [disabled]="submitting()">
         @if (submitting()) {
-        {{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}
+        <span>{{ mode() === 'login' ? 'Entrando…' : 'Criando conta…' }}</span>
         } @else {
-        {{ mode() === 'login' ? 'Entrar' : 'Criar conta' }}
+        <span>{{ mode() === 'login' ? 'Acessar rachaae' : 'Criar conta' }}</span>
         }
       </button>
+
+      <!-- Terms and conditions -->
+      <p class="terms-text body-sm" style="color: var(--color-on-surface-variant); text-align: center;">
+        Ao continuar, você concorda com nossos
+        <a class="underline" href="#" style="color: var(--color-on-surface); font-weight: 600;">Termos</a>
+        e autoriza o uso para fechamento de comandas conjuntas.
+      </p>
     </form>
+
+    <!-- Quick Settle Alternative Option -->
+    <div class="quick-enter">
+      <div class="quick-enter-content">
+        <span class="body-md" style="color: var(--color-on-surface-variant);">Já tem conta por aqui?</span>
+        <button class="btn-ghost" type="button" (click)="setMode(mode() === 'login' ? 'register' : 'login')">
+          {{ mode() === 'login' ? 'Criar conta' : 'Entrar' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Security & Trust Badge Footer -->
+    <div class="trust-badge">
+      <span class="material-symbols-outlined">verified_user</span>
+      <span>Acesso protegido • Seus dados em segurança</span>
+    </div>
   </div>
 </main>

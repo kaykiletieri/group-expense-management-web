@@ -40,7 +40,7 @@ describe('LoginPage', () => {
     const component = fixture.componentInstance;
     component.submit();
     expect(component.submitting()).toBe(false);
-    http.expectNone('api/auth/login');
+    http.expectNone('/api/auth/login');
   });
 
   it('exige 6 caracteres na senha ao cadastrar', () => {
@@ -58,7 +58,7 @@ describe('LoginPage', () => {
     component.form.setValue({ email: 'voce@exemplo.com', password: 'senha123' });
     component.submit();
 
-    const request = http.expectOne('api/auth/login');
+    const request = http.expectOne('/api/auth/login');
     request.flush({ id: '1', email: 'voce@exemplo.com' });
 
     await vi.waitFor(() => expect(router.url).toBe('/grupos'));
@@ -71,14 +71,14 @@ describe('LoginPage', () => {
     component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
     component.submit();
 
-    const registerRequest = http.expectOne('api/auth/register');
+    const registerRequest = http.expectOne('/api/auth/register');
     expect(registerRequest.request.method).toBe('POST');
     expect(component.submitting()).toBe(true);
     registerRequest.flush({ id: 'u9', email: 'novo@exemplo.com', name: null });
 
     // primeira tela autenticada não pode disparar com 401: o login deve
     // ser completado antes da navegação para /grupos
-    const loginRequest = http.expectOne('api/auth/login');
+    const loginRequest = http.expectOne('/api/auth/login');
     expect(loginRequest.request.method).toBe('POST');
     expect(loginRequest.request.body).toEqual({ email: 'novo@exemplo.com', password: 'senha123' });
     loginRequest.flush(null);
@@ -94,13 +94,13 @@ describe('LoginPage', () => {
     component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
     component.submit();
 
-    http.expectOne('api/auth/register').flush({
+    http.expectOne('/api/auth/register').flush({
       id: 'u9',
       email: 'novo@exemplo.com',
       name: null,
     });
 
-    const loginRequest = http.expectOne('api/auth/login');
+    const loginRequest = http.expectOne('/api/auth/login');
     loginRequest.flush(
       { error: 'Invalid e-mail or password.' },
       { status: 401, statusText: 'Unauthorized' },
@@ -117,7 +117,7 @@ describe('LoginPage', () => {
     component.form.setValue({ email: 'duplicado@exemplo.com', password: 'senha123' });
     component.submit();
 
-    http.expectOne('api/auth/register').flush(
+    http.expectOne('/api/auth/register').flush(
       { errors: ["Email 'duplicado@exemplo.com' is already taken.", 'UserName exists'] },
       { status: 400, statusText: 'Bad Request' },
     );
@@ -132,7 +132,7 @@ describe('LoginPage', () => {
     component.form.setValue({ email: 'novo@exemplo.com', password: 'senha123' });
     component.submit();
 
-    http.expectOne('api/auth/register').flush(
+    http.expectOne('/api/auth/register').flush(
       { errors: ['PasswordRequiresNonAlphanumeric'] },
       { status: 400, statusText: 'Bad Request' },
     );

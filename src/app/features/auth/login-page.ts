@@ -29,6 +29,8 @@ export class LoginPage implements OnInit {
   readonly mode = signal<'login' | 'register'>('login');
   readonly submitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly showPassword = signal(false);
+  readonly passwordStrength = signal(0);
 
   readonly form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -38,6 +40,7 @@ export class LoginPage implements OnInit {
   setMode(mode: 'login' | 'register') {
     this.mode.set(mode);
     this.errorMessage.set(null);
+    this.showPassword.set(false);
     // Em cadastro a senha exige no mínimo 6 caracteres.
     this.form.controls.password.setValidators(
       mode === 'register' ? [Validators.required, Validators.minLength(6)] : [Validators.required],
@@ -48,6 +51,26 @@ export class LoginPage implements OnInit {
   showFieldError(field: 'email' | 'password'): boolean {
     const control = this.form.controls[field];
     return control.invalid && (control.touched || control.dirty);
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword.update(v => !v);
+  }
+
+  onPasswordInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.updatePasswordStrength(value);
+  }
+
+  private updatePasswordStrength(password: string) {
+    let strength = 0;
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    this.passwordStrength.set(Math.min(strength, 4));
   }
 
   submit() {
@@ -119,5 +142,19 @@ export class LoginPage implements OnInit {
       }
     }
     return NETWORK_ERROR;
+  }
+
+  getPasswordStrengthBars() {
+    const strength = this.passwordStrength();
+    return Array.from({ length: 4 }, (_, i) => i < strength);
+  }
+
+  getPasswordStrengthLabel() {
+    const strength = this.passwordStrength();
+    if (strength === 0) return { label: 'Muito fraca', color: 'error' };
+    if (strength === 1) return { label: 'Fraca', color: 'error' };
+    if (strength === 2) return { label: 'Regular', color: 'warning' };
+    if (strength === 3) return { label: 'Boa', color: 'tertiary' };
+    return { label: 'Forte & protegida', color: 'tertiary' };
   }
 }
