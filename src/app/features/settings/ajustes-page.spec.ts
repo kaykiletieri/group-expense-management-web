@@ -1,4 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AjustesPage } from './ajustes-page';
@@ -15,7 +16,12 @@ describe('AjustesPage', () => {
     TestBed.resetTestingModule();
     localStorage.removeItem('gem-theme');
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        // o template usa routerLink, que injeta ActivatedRoute
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     http = TestBed.inject(HttpTestingController);
@@ -37,7 +43,7 @@ describe('AjustesPage', () => {
     const theme = TestBed.inject(ThemeService);
     const compiled = fixture.nativeElement as HTMLElement;
 
-    const darkButton = [...compiled.querySelectorAll<HTMLButtonElement>('.theme-option')].find(
+    const darkButton = [...compiled.querySelectorAll<HTMLButtonElement>('.segmented-btn')].find(
       (b) => b.textContent?.trim() === 'Escuro',
     );
     darkButton!.click();
@@ -50,7 +56,7 @@ describe('AjustesPage', () => {
 
   it('só existem as opções Claro e Escuro (sem auto), padrão claro', async () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    const options = [...compiled.querySelectorAll<HTMLButtonElement>('.theme-option')].map(
+    const options = [...compiled.querySelectorAll<HTMLButtonElement>('.segmented-btn')].map(
       (b) => b.textContent?.trim() ?? '',
     );
     expect(options).toEqual(['Claro', 'Escuro']);
@@ -62,7 +68,7 @@ describe('AjustesPage', () => {
     component.displayName.setValue('  Novo Nome  ');
     const saving = component.saveName();
 
-    const putRequest = http.expectOne('api/auth/name');
+    const putRequest = http.expectOne('/api/auth/name');
     expect(putRequest.request.method).toBe('PUT');
     // o frontend já envia o valor aparado; o backend persiste e ecoa no /me
     expect(putRequest.request.body).toEqual({ name: 'Novo Nome' });
@@ -78,7 +84,7 @@ describe('AjustesPage', () => {
     component.displayName.setValue('   ');
     const saving = component.saveName();
 
-    const putRequest = http.expectOne('api/auth/name');
+    const putRequest = http.expectOne('/api/auth/name');
     expect(putRequest.request.body).toEqual({ name: '' });
     putRequest.flush(null);
 

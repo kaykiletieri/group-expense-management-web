@@ -1,62 +1,133 @@
-<section class="page">
-  <h1>Ajustes</h1>
-
-  <div class="page-card">
-    <span class="label-caps page-card-label">Nome</span>
-    <p class="page-card-value">{{ user()?.name || '—' }}</p>
-    <div class="name-field">
-      <input
-        type="text"
-        placeholder="Como você quer aparecer nos grupos…"
-        [formControl]="displayName"
-        maxlength="60"
-        (keyup.enter)="saveName()"
-      />
-      <button
-        class="btn-secondary"
-        type="button"
-        [disabled]="savingName() || displayName.invalid"
-        (click)="saveName()"
-      >
-        Salvar nome
-      </button>
+<div class="ajustes-page">
+  <!-- Fixed Header -->
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="flex items-center gap-space-sm">
+        <button class="btn-icon-only" routerLink="/grupos" aria-label="Voltar">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="app-header-title">Ajustes</h1>
+      </div>
+      <app-avatar class="header-avatar" [name]="userName()" [size]="32" />
     </div>
-    @if (displayName.touched && displayName.invalid) {
-      <span class="field-error">Máximo de 60 caracteres.</span>
+  </header>
+
+  <main class="page" style="padding-top: calc(var(--header-h) + var(--space-lg)); padding-bottom: calc(var(--bottom-nav-h) + var(--space-xl));">
+    <!-- Editorial Greeting (mesma linguagem da home) -->
+    <section class="greeting-section">
+      <div class="greeting-header">
+        <span class="label-caps">SUA CONTA • {{ monthLabel }}</span>
+      </div>
+      <div class="greeting-content">
+        <h1 class="headline-lg-mobile">
+          Ajuste fino,<br />da sua conta.
+        </h1>
+        <p class="body-md" style="color: var(--color-on-surface-variant);">
+          Perfil, aparência e sessão — sem drama.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Seu perfil -->
+    <section class="settings-section profile-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-title-dot primary"></span>
+          <h2 class="headline-sm">Seu perfil</h2>
+        </div>
+      </div>
+
+      <div class="card card-elevated" style="overflow: hidden;">
+        <div class="profile-header">
+          <div class="avatar avatar-2xl" style="background: var(--color-primary-container); color: var(--color-on-primary-container);">
+            {{ getUserInitial() }}
+          </div>
+          <div class="profile-info">
+            <h2 class="headline-md" style="color: var(--color-on-surface);">{{ user()?.name || 'Usuário' }}</h2>
+            <p class="body-md" style="color: var(--color-on-surface-variant);">{{ user()?.email }}</p>
+          </div>
+        </div>
+
+        <!-- Nome de exibição -->
+        <div class="name-field-section">
+          <span class="label-caps" style="color: var(--color-on-surface-variant);">Como quer aparecer nos grupos</span>
+          <div class="name-field">
+            <input
+              type="text"
+              placeholder="Ex: Kayki, Patrícia…"
+              [formControl]="displayName"
+              maxlength="60"
+              (keyup.enter)="saveName()"
+              class="form-input"
+            />
+            <button class="btn-secondary" type="button" [disabled]="savingName() || displayName.invalid" (click)="saveName()">
+              {{ savingName() ? 'Salvando…' : 'Salvar' }}
+            </button>
+          </div>
+          @if (displayName.touched && displayName.invalid) {
+            <span class="field-error">Máximo de 60 caracteres.</span>
+          }
+          @if (nameError()) {
+            <p class="page-error" role="alert">{{ nameError() }}</p>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção: Aparência -->
+    <section class="settings-section appearance-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-title-dot secondary"></span>
+          <h2 class="headline-sm">Aparência</h2>
+        </div>
+      </div>
+
+      <div class="card card-elevated theme-section">
+        <div class="theme-switch segmented" role="group" aria-label="Escolher tema">
+          <button
+            type="button"
+            class="segmented-btn"
+            [class.active]="theme.preference() === 'light'"
+            (click)="theme.preference.set('light')"
+          >
+            Claro
+          </button>
+          <button
+            type="button"
+            class="segmented-btn"
+            [class.active]="theme.preference() === 'dark'"
+            (click)="theme.preference.set('dark')"
+          >
+            Escuro
+          </button>
+        </div>
+        <p class="section-note">O tema salvo continua valendo depois de fechar o app.</p>
+      </div>
+    </section>
+
+    <!-- Seção: Conta -->
+    <section class="settings-section account-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-title-dot tertiary"></span>
+          <h2 class="headline-sm">Conta</h2>
+        </div>
+      </div>
+
+      <div class="card card-elevated account-card">
+        <div class="account-row">
+          <span class="material-symbols-outlined" style="color: var(--color-on-surface-variant);">mail</span>
+          <span class="body-sm" style="color: var(--color-on-surface-variant);">{{ user()?.email }}</span>
+        </div>
+        <button class="btn-danger w-full" type="button" [disabled]="loggingOut()" (click)="logout()">
+          {{ loggingOut() ? 'Saindo…' : 'Sair da conta' }}
+        </button>
+      </div>
+    </section>
+
+    @if (errorMessage()) {
+      <p class="page-error" role="alert">{{ errorMessage() }}</p>
     }
-    @if (nameError()) {
-      <p class="page-error" role="alert">{{ nameError() }}</p>
-    }
-  </div>
-
-  <div class="page-card">
-    <span class="label-caps page-card-label">Tema</span>
-    <div class="theme-switch" role="group" aria-label="Escolher tema">
-      <button
-        type="button"
-        class="theme-option"
-        [class.is-selected]="theme.preference() === 'light'"
-        (click)="theme.preference.set('light')"
-      >
-        Claro
-      </button>
-      <button
-        type="button"
-        class="theme-option"
-        [class.is-selected]="theme.preference() === 'dark'"
-        (click)="theme.preference.set('dark')"
-      >
-        Escuro
-      </button>
-    </div>
-    <p class="section-note">O tema salvo continua valendo depois de fechar o app.</p>
-  </div>
-
-  @if (errorMessage()) {
-    <p class="page-error" role="alert">{{ errorMessage() }}</p>
-  }
-
-  <button class="btn-secondary" type="button" [disabled]="loggingOut()" (click)="logout()">
-    {{ loggingOut() ? 'Saindo…' : 'Sair' }}
-  </button>
-</section>
+  </main>
+</div>

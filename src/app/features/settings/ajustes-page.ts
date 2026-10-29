@@ -1,7 +1,8 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { Avatar } from '../../shared/ui/avatar';
 import { AuthService } from '../../core/auth/auth.service';
 import { ThemeService } from '../../core/theme/theme.service';
 import { AuthApi } from '../../core/api/auth-api';
@@ -12,7 +13,7 @@ const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
 @Component({
   selector: 'app-ajustes-page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, Avatar],
   templateUrl: './ajustes-page.html',
   styleUrl: './ajustes-page.scss',
 })
@@ -26,6 +27,21 @@ export class AjustesPage implements OnInit {
   readonly user = this.auth.user;
   readonly loggingOut = signal(false);
   readonly errorMessage = signal<string | null>(null);
+
+  readonly userName = computed(() => {
+    const user = this.user();
+    if (!user) return '?';
+    return user.name?.trim() || user.email.split('@')[0] || '?';
+  });
+
+  /** Mês corrente para o greeting editorial ("OUT. 2026"). */
+  readonly monthLabel = new Intl.DateTimeFormat('pt-BR', {
+    month: 'short',
+    year: 'numeric',
+  })
+    .format(new Date())
+    .replace(' de ', ' ')
+    .toUpperCase();
 
   readonly displayName = new FormControl('', {
     nonNullable: true,
@@ -70,5 +86,19 @@ export class AjustesPage implements OnInit {
         void this.router.navigateByUrl('/login', { replaceUrl: true });
       },
     });
+  }
+
+  getThemeLabel(theme: 'light' | 'dark'): string {
+    return theme === 'light' ? 'Claro' : 'Escuro';
+  }
+
+  getUserInitial(): string {
+    const user = this.user();
+    if (!user) return '?';
+    const name = user.name?.trim();
+    if (name) return name.charAt(0).toUpperCase();
+    const local = user.email.split('@')[0]?.toLowerCase().trim() ?? '';
+    if (!local) return '?';
+    return local.charAt(0).toUpperCase();
   }
 }
