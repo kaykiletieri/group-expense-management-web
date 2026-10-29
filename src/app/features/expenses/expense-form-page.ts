@@ -4,11 +4,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable } from 'rxjs';
 import { ExpensesApi } from '../../core/api/expenses-api';
 import { ParticipantsApi } from '../../core/api/participants-api';
+import { GroupsApi } from '../../core/api/groups-api';
 import { Participant } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
 import { Avatar } from '../../shared/ui/avatar';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from '../../core/auth/auth.service';
 
 const GENERIC_ERROR = 'Não foi possível conectar. Verifique sua internet.';
 
@@ -24,6 +26,8 @@ export class ExpenseFormPage implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly expensesApi = inject(ExpensesApi);
   private readonly participantsApi = inject(ParticipantsApi);
+  private readonly groupsApi = inject(GroupsApi);
+  private readonly auth = inject(AuthService);
   private readonly title = inject(Title);
 
   readonly groupId = this.route.snapshot.paramMap.get('id') ?? '';
@@ -35,16 +39,36 @@ export class ExpenseFormPage implements OnInit {
   readonly errorMessage = signal<string | null>(null);
 
   readonly participants = signal<Participant[]>([]);
+  /** Nome real do grupo (via GET /api/groups), para o chip do cabeçalho. */
+  readonly groupName = signal('');
   readonly payerId = signal<string | null>(null);
   readonly splitIds = signal<ReadonlySet<string>>(new Set());
   readonly amountText = signal('');
 
   readonly isEdit = this.expenseId !== null;
 
+  /** Identificação do usuário logado para o avatar do header (nome ou e-mail). */
+  readonly userLabel = computed(() => {
+    const user = this.auth.user();
+    if (!user) return '?';
+    return user.name?.trim() || user.email.split('@')[0] || '?';
+  });
+
+  /** Parcela exibida ao lado de cada participante (divisão igualitária). */
+  readonly splitPercentLabel = computed(() => {
+    const count = this.splitIds().size;
+    if (count === 0) return '—';
+    return `${Math.round((100 / count) * 10) / 10}%`.replace('.', ',');
+  });
+
   readonly form = this.formBuilder.nonNullable.group({
     description: ['', [Validators.required, Validators.maxLength(120)]],
     amount: ['', [Validators.required]],
   });
+
+  protected readonly formatBrl = formatBrl;
+  protected readonly parseAmountInputToCents = parseAmountInputToCents;
+
 
   ngOnInit(): void {
     this.title.setTitle(this.expenseId ? 'Editar despesa - Rachaae' : 'Nova despesa - Rachaae');
@@ -53,10 +77,21 @@ export class ExpenseFormPage implements OnInit {
 
   private async load(): Promise<void> {
     try {
-      const participants = await firstValueFrom(this.participantsApi.list(this.groupId));
+      const [groups, participants] = await Promise.all([
+        firstValueFrom(this.groupsApi.list()),
+        firstValueFrom(this.participantsApi.list(this.groupId)),
+      ]);
+      this.groupName.set(groups.find((g) => g.id === this.groupId)?.name ?? 'Grupo');
       this.participants.set(participants);
 
       if (this.expenseId === null) {
+        // Default: select all participants for split
+        const allIds = new Set(participants.map(p => p.id));
+        this.splitIds.set(allIds);
+        // Default: first participant as payer
+        if (participants.length > 0) {
+          this.payerId.set(participants[0].id);
+        }
         return;
       }
 
@@ -82,8 +117,6 @@ export class ExpenseFormPage implements OnInit {
   }
 
   setPayer(participantId: string) {
-    // Automação: o pagador quase sempre divide a despesa que pagou, então
-    // passa a entrar no rateio. Continua possível desmarcar manualmente.
     this.payerId.set(participantId);
     const next = new Set(this.splitIds());
     next.add(participantId);
@@ -97,6 +130,19 @@ export class ExpenseFormPage implements OnInit {
     } else {
       next.add(participantId);
     }
+    this.splitIds.set(next);
+  }
+
+  toggleAllSplit() {
+    const allChecked = this.participants().every(p => this.splitIds().has(p.id));
+    const next = new Set(this.splitIds());
+    this.participants().forEach(p => {
+      if (allChecked) {
+        next.delete(p.id);
+      } else {
+        next.add(p.id);
+      }
+    });
     this.splitIds.set(next);
   }
 
@@ -135,6 +181,10 @@ export class ExpenseFormPage implements OnInit {
 
   backLink(): string[] {
     return ['/grupos', this.groupId];
+  }
+
+  goBack() {
+    this.router.navigate(this.backLink());
   }
 
   submit() {
@@ -176,6 +226,56 @@ export class ExpenseFormPage implements OnInit {
         this.errorMessage.set(getApiErrorMessage(err, GENERIC_ERROR));
       },
     });
+  }
+
+  // Helper methods for template
+  getParticipantCount(): number {
+    return this.participants().length;
+  }
+
+  getRitualNumber(): number {
+    return 4;
+  }
+
+  getParticipantAvatarColor(participantId: string): string {
+    const participant = this.participants().find(p => p.id === participantId);
+    if (!participant) return 'surface-container-high';
+    const colors = ['primary-fixed', 'secondary-fixed', 'tertiary-fixed', 'surface-container-high'];
+    const index = this.participants().findIndex(p => p.id === participantId);
+    return colors[index % colors.length];
+  }
+
+  getParticipantAvatarTextColor(participantId: string): string {
+    const color = this.getParticipantAvatarColor(participantId);
+    if (color === 'primary-fixed') return 'on-primary-fixed';
+    if (color === 'secondary-fixed') return 'on-secondary-fixed';
+    if (color === 'tertiary-fixed') return 'on-tertiary-fixed';
+    return 'on-surface';
+  }
+
+  getParticipantInitial(participantId: string): string {
+    const participant = this.participants().find(p => p.id === participantId);
+    if (!participant) return '?';
+    return participant.name.trim().charAt(0).toUpperCase();
+  }
+
+  isCurrentUser(participantId: string): boolean {
+    const user = this.auth.user();
+    if (!user) return false;
+    const savedName = user.name?.trim();
+    if (savedName) {
+      return savedName.toLowerCase() === this.participants().find(p => p.id === participantId)?.name.toLowerCase();
+    }
+    const local = user.email.split('@')[0]?.toLowerCase().trim() ?? '';
+    if (!local) return false;
+    const derivedName = local.charAt(0).toUpperCase() + local.slice(1);
+    return derivedName.toLowerCase() === this.participants().find(p => p.id === participantId)?.name.toLowerCase();
+  }
+
+  getParticipantRole(participant: Participant): string {
+    if (this.payerId() === participant.id) return 'Pagador(a)';
+    if (this.isCurrentUser(participant.id)) return 'Você bancou';
+    return 'Amigo(a)';
   }
 }
 

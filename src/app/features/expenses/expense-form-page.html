@@ -1,122 +1,223 @@
-<main class="page">
-  <header class="form-header">
-    <a class="back-btn" [routerLink]="backLink()" aria-label="Voltar">
-      <span class="material-symbols-outlined">arrow_back</span>
-    </a>
-      <h1>{{ isEdit ? 'Editar despesa' : 'Nova despesa' }}</h1>
+<main class="expense-form-page">
+  <!-- Fixed Header -->
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="flex items-center gap-space-sm">
+        <button class="btn-icon-only" [routerLink]="backLink()" aria-label="Voltar">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="app-header-title">{{ isEdit ? 'Editar Despesa' : 'Nova Despesa' }}</h1>
+      </div>
+      <app-avatar class="header-avatar" [name]="userLabel()" [size]="32" />
+    </div>
   </header>
 
-  @if (loading()) {
-    <div class="skeleton skeleton-field"></div>
-    <div class="skeleton skeleton-field"></div>
-  } @else if (notFound()) {
-    <p class="page-error" role="alert">Despesa não encontrada.</p>
-  } @else {
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="form-grid">
-        <div class="form-col">
-          <div class="field">
-            <label class="label-caps" for="expense-desc">O que foi comprado?</label>
-            <input
-              id="expense-desc"
-              type="text"
-              formControlName="description"
-              placeholder="Ex: Jantar de sábado, Pedágio…"
-              maxlength="120"
-              [class.has-error]="showError('description')"
-            />
-            @if (showError('description')) {
-              <span class="field-error">Informe a descrição.</span>
-            }
+  <div class="page expense-form-main" style="padding-top: calc(var(--header-h) + var(--space-sm)); padding-bottom: calc(var(--bottom-nav-h) + var(--space-xl));">
+    @if (loading()) {
+      <div class="skeleton skeleton-field"></div>
+      <div class="skeleton skeleton-field"></div>
+    } @else if (notFound()) {
+      <p class="page-error" role="alert">Despesa não encontrada.</p>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- Top Editorial Metadata Strip -->
+        <div class="metadata-strip">
+          <div class="flex items-center gap-space-xs">
+            <span class="badge badge-secondary">
+              <span class="w-2 h-2 rounded-full bg-surface animate-pulse"></span>
+              {{ isEdit ? 'Modo Edição' : 'Nova Despesa' }}
+            </span>
+            <span class="badge badge-surface" style="background: var(--color-surface-container-high); color: var(--color-on-surface);">
+              <span class="material-symbols-outlined chip-icon" style="font-size: 14px; color: var(--color-primary);">sailing</span>
+              {{ groupName() }}
+            </span>
           </div>
+          <div class="flex items-baseline justify-between">
+            <h2 class="headline-lg-mobile">{{ isEdit ? 'Editar despesa' : 'Nova despesa' }}</h2>
+            <span class="label-caps" style="color: var(--color-secondary); background: var(--color-secondary-fixed); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-full);">RITUAL #{{ getRitualNumber().toString().padStart(2, '0') }}</span>
+          </div>
+        </div>
 
-          <div class="field">
-            <label class="label-caps" for="expense-amount">Valor total</label>
-            <div class="amount-wrap">
-              <span class="amount-prefix">R$</span>
+        <!-- Hero Value Input Card -->
+        <div class="card">
+          <div class="form-field">
+            <div class="field-header">
+              <label class="label-caps" for="expense-amount">Valor Total</label>
+              <span class="chip chip-tertiary chip-sm">BRL</span>
+            </div>
+            <div class="input-with-prefix">
+              <span class="input-prefix">R$</span>
               <input
                 id="expense-amount"
-                class="amount tabular-nums"
+                class="form-input currency-display tabular-nums"
                 inputmode="decimal"
                 formControlName="amount"
                 placeholder="0,00"
                 #amountInput
                 (input)="amountText.set(amountInput.value)"
                 [class.has-error]="amountInvalid() || showError('amount')"
+                style="text-align: right; font-family: var(--font-display); font-size: var(--text-currency-display); font-weight: var(--text-currency-display-weight); padding-left: calc(var(--space-md) + 22px);"
               />
             </div>
             @if (amountInvalid() || showError('amount')) {
               <span class="field-error">Informe um valor válido maior que zero.</span>
             }
           </div>
+
+          <!-- Description Input -->
+          <div class="form-field" style="margin-top: var(--space-xs);">
+            <label class="label-caps" for="expense-desc">Descrição da Conta</label>
+            <div class="input-with-icon">
+              <span class="input-icon material-symbols-outlined" style="color: var(--color-primary);">shopping_basket</span>
+              <input
+                id="expense-desc"
+                type="text"
+                formControlName="description"
+                placeholder="Ex: Jantar de sábado, Pedágio…"
+                maxlength="120"
+                class="form-input"
+                [class.has-error]="showError('description')"
+              />
+            </div>
+            @if (showError('description')) {
+              <span class="field-error">Informe a descrição.</span>
+            }
+          </div>
         </div>
 
-        <div class="form-col">
-          <div class="field-chips">
-            <h2 class="label-caps">Pagador único</h2>
-            <div class="chip-list chip-list-single">
-              @for (participant of participants(); track participant.id) {
-                <button
-                  type="button"
-                  class="chip-select"
-                  [class.is-selected]="payerId() === participant.id"
-                  (click)="setPayer(participant.id)"
-                >
-                  <app-avatar [name]="participant.name" [size]="28" />
-                  {{ participant.name }}
-                </button>
-              } @empty {
-                <span class="chip-empty">Adicione participantes no grupo primeiro.</span>
-              }
+        <!-- Payer Selection (Quem pagou?) -->
+        <div class="card">
+          <div class="payer-header">
+            <span class="label-caps" style="color: var(--color-on-surface-variant); letter-spacing: 0.02em;">Quem pagou a conta?</span>
+            <span class="label-caps" style="color: var(--color-primary); font-weight: 700;">1 selecionado</span>
+          </div>
+          <div class="payer-grid">
+            @for (participant of participants(); track participant.id) {
+              <button
+                type="button"
+                class="payer-btn"
+                [class.selected]="payerId() === participant.id"
+                (click)="setPayer(participant.id)"
+              >
+                <div class="payer-avatar-wrapper">
+                  <div class="avatar avatar-md" [style.background]="getParticipantAvatarColor(participant.id)" [style.color]="getParticipantAvatarTextColor(participant.id)">
+                    {{ getParticipantInitial(participant.id) }}
+                  </div>
+                  @if (payerId() === participant.id) {
+                    <span class="payer-badge">
+                      <span class="material-symbols-outlined" style="font-size: 12px;">check</span>
+                    </span>
+                  }
+                </div>
+                <div class="payer-info">
+                  <span class="label-md" style="font-weight: 700; color: var(--color-on-surface);">{{ participant.name }}</span>
+                  <span class="body-sm" [style.color]="payerId() === participant.id ? 'var(--color-on-primary-container)' : 'var(--color-on-surface-variant)'">
+                    {{ payerId() === participant.id ? 'Pagador(a)' : (isCurrentUser(participant.id) ? 'Você bancou' : 'Amigo(a)') }}
+                  </span>
+                </div>
+              </button>
+            } @empty {
+              <span class="chip chip-surface">Adicione participantes no grupo primeiro.</span>
+            }
+          </div>
+        </div>
+
+        <!-- Split Mode & Breakdown Section -->
+        <div class="card">
+          <div class="split-header">
+            <div>
+              <span class="label-caps" style="color: var(--color-on-surface-variant); letter-spacing: 0.02em;">Divisão do Grupo</span>
+              <h3 class="headline-sm" style="margin-top: var(--space-2xs);">Dividir igualmente entre</h3>
             </div>
-            @if (payerInvalid()) {
-              <span class="field-error">Escolha quem pagou.</span>
+            <div class="chip chip-tertiary" style="display: flex; align-items: center; gap: var(--space-xs);">
+              <span class="material-symbols-outlined" style="font-size: 16px;">call_split</span>
+              <span class="label-caps" style="font-weight: 700;">{{ splitIds().size }} Pessoas</span>
+            </div>
+          </div>
+
+          <!-- Itemized Participant Split Stacks (label: tornar o item inteiro clicável) -->
+          <div class="split-list">
+            @for (participant of participants(); track participant.id) {
+              <label class="split-item" [class.selected]="splitIds().has(participant.id)">
+                <div class="flex items-center gap-space-sm min-w-0">
+                  <div class="checkbox-wrapper">
+                    <input
+                      type="checkbox"
+                      class="sr-only"
+                      [checked]="splitIds().has(participant.id)"
+                      (change)="toggleSplit(participant.id)"
+                    />
+                    <div class="check-indicator" [class.checked]="splitIds().has(participant.id)">
+                      @if (splitIds().has(participant.id)) {
+                        <span class="material-symbols-outlined" style="font-size: 18px; font-weight: 700;">check</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="avatar avatar-sm shrink-0" [style.background]="getParticipantAvatarColor(participant.id)" [style.color]="getParticipantAvatarTextColor(participant.id)">
+                    {{ getParticipantInitial(participant.id) }}
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <span class="label-md" style="font-weight: 700; color: var(--color-on-surface);">
+                      {{ participant.name }}
+                      @if (isCurrentUser(participant.id)) {
+                        <span class="body-sm" style="color: var(--color-primary); font-weight: 600;">(Você)</span>
+                      }
+                    </span>
+                    <span class="body-sm" style="color: var(--color-on-surface-variant);">
+                      {{ getParticipantRole(participant) }}
+                    </span>
+                  </div>
+                </div>
+                <div class="text-right flex-shrink-0" style="padding-left: var(--space-xs);">
+                  @if (splitIds().has(participant.id)) {
+                    <span class="currency-md" style="color: var(--color-on-surface);">{{ estimate()?.label || 'R$ 0,00' }}</span>
+                    <p class="body-sm" style="color: var(--color-on-surface-variant);">{{ splitPercentLabel() }} do total</p>
+                  } @else {
+                    <span class="currency-md" style="color: var(--color-on-surface-variant); opacity: 0.4;">R$ 0,00</span>
+                    <p class="body-sm" style="color: var(--color-on-surface-variant); opacity: 0.4;">— do total</p>
+                  }
+                </div>
+              </label>
             }
           </div>
 
-          <div class="field-chips">
-            <div class="field-chips-head">
-              <h2 class="label-caps">Dividir igualmente</h2>
-              <span class="section-note">Entre {{ splitIds().size }} pessoa(s)</span>
+          <!-- Quick Math Feedback Pill -->
+          <div class="math-feedback" style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-sm) var(--space-md); background: var(--color-surface-container-high); border-radius: var(--radius-lg); margin-top: var(--space-sm);">
+            <div class="flex items-center gap-space-xs" style="color: var(--color-on-surface-variant);">
+              <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-primary);">pie_chart</span>
+              <span class="body-sm" style="font-weight: 600;">Conta redonda</span>
             </div>
-            <div class="chip-list">
-              @for (participant of participants(); track participant.id) {
-                <button
-                  type="button"
-                  class="chip-select"
-                  [class.is-selected]="splitIds().has(participant.id)"
-                  (click)="toggleSplit(participant.id)"
-                >
-                  <app-avatar [name]="participant.name" [size]="28" />
-                  {{ participant.name }}
-                </button>
-              }
-            </div>
-            <p class="estimate tabular-nums">
-              @if (estimate()) {
-                {{ estimate()!.label }} por pessoa
-              }
+            <span class="label-caps" style="letter-spacing: 0.02em; color: var(--color-on-surface); font-weight: 700;">{{ splitIds().size }} x {{ estimate()?.label || 'R$ 0,00' }} = {{ formatBrl(parseAmountInputToCents(amountText()) || 0) }}</span>
+          </div>
+
+          <div class="split-info" style="display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs); margin-top: var(--space-xs);">
+            <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-tertiary);">info</span>
+            <p class="body-sm" style="color: var(--color-on-surface-variant);">
+              Divisão em <strong style="color: var(--color-on-surface);">{{ splitIds().size }} cotas iguais</strong> calculadas automaticamente em centavos exatos.
             </p>
-            @if (splitInvalid()) {
-              <span class="field-error">Selecione pelo menos uma pessoa para o rateio.</span>
-            }
           </div>
         </div>
-      </div>
 
-      @if (errorMessage()) {
-        <p class="page-error" role="alert">{{ errorMessage() }}</p>
-      }
+        @if (errorMessage()) {
+          <p class="page-error" role="alert">{{ errorMessage() }}</p>
+        }
 
-      @if (participants().length > 0) {
-        <button class="btn-primary" type="submit" [disabled]="submitting()">
-          @if (submitting()) {
-            Salvando…
-          } @else {
-            Salvar despesa
-          }
-        </button>
-      }
-    </form>
-  }
+        <!-- Action Buttons Block -->
+        <div class="action-buttons">
+          <button class="btn-primary w-full" type="submit" [disabled]="submitting()">
+            @if (submitting()) {
+              <span class="material-symbols-outlined btn-icon animate-spin">refresh</span>
+              Salvando…
+            } @else {
+              <span class="material-symbols-outlined btn-icon">check</span>
+              Salvar despesa
+            }
+          </button>
+          <button class="btn-tertiary w-full" type="button" (click)="goBack()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    }
+  </div>
 </main>
