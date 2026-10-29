@@ -94,6 +94,8 @@ Círculo com **iniciais** (duas letras) em fundo pastel derivado determinístico
 
 Barra fixa inferior, fundo branco, borda superior 1.5px, 2 itens ativos no MVP:
 "Grupos" e "Ajustes" (D13). Item ativo: cobalto + label caps; inativo: grafite suave.
+A nav vive **na Shell** (`core/layout/shell`) e não é replicada pelas páginas; aparece
+em todas as telas autenticadas (D27). A partir de ≥768px é substituída pela sidebar.
 
 ### Modais
 
@@ -123,14 +125,16 @@ nunca prometer função inexistente. Exemplos:
 - "Despesas pagas por X serão excluídas e as cotas serão recalculadas entre os restantes." (confirm de remoção de participante com histórico, D22)
 - CTAs: "Criar grupo", "Adicionar", "Salvar despesa", "Excluir".
 
-"rachaae" no header é placeholder (D14) até a marca final.
+Marca final: **rachaae** (D28) — na sidebar e no header de grupos, com a última
+letra em destaque verde-limão ("rachaa`e`").
 
 ## 4. Responsividade (decisão D18)
 
 Base mobile-first com duas media queries:
 
 - **≥768px**: sidebar fixa à esquerda no lugar da bottom nav (links Grupos/Ajustes,
-  ativo com fundo verde-limão), header sticky oculto, container mais largo
+  ativo com fundo verde-limão), header fica visível e é deslocado pela largura da
+  sidebar (D27 — emenda: manter back/menu nos detalhes), container mais largo
   (680px), modais como **diálogo centralizado** em vez de bottom sheet, cards de
   grupo em grade `auto-fit`.
 - **≥1120px**: container amplo (1160px); detalhe do grupo em **duas colunas**
@@ -142,6 +146,8 @@ Base mobile-first com duas media queries:
 
 O nav duplicado no DOM (sidebar e bottom nav) nunca fica visível ao mesmo tempo;
 o oculto usa `display: none` e sai da árvore de acessibilidade.
+Na prática, a nav vive uma única vez na Shell (`core/layout/shell.*`): bottom nav
+no mobile, sidebar no desktop (D27).
 
 ## 5. Tema claro/escuro (decisão D19)
 

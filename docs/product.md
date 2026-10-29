@@ -4,8 +4,8 @@
 
 Aplicação web mobile-first em pt-BR para organizar despesas compartilhadas em grupos:
 criar grupos, cadastrar pessoas, registrar despesas com pagador e participantes do rateio
-e consultar saldos. O nome "rachaae" usado nos protótipos é **provisório** — não considere
-marca-final em decisões de código (identificadores em inglês permanecem neutros).
+e consultar saldos. A marca final é **rachaae** (D28) — aplique-a nos textos
+de exibição; identificadores de código permanecem neutros.
 
 ## Persona
 

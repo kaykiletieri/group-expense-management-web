@@ -16,8 +16,8 @@ import {
 } from '../../core/api/api-models';
 import { getApiErrorMessage } from '../../core/api/api-error';
 import { formatBrl, parseAmountInputToCents } from '../../core/money/money';
-import { Avatar } from '../../shared/ui/avatar';
 import { AuthService } from '../../core/auth/auth.service';
+import { Avatar } from '../../shared/ui/avatar';
 import { copyToClipboard } from '../../core/clipboard/copy-text';
 import { Title } from '@angular/platform-browser';
 
@@ -116,6 +116,22 @@ export class GrupoDetailPage implements OnInit {
     return local.charAt(0).toUpperCase() + local.slice(1);
   });
 
+  /** Identificação da conta logada para o avatar do header (nome ou e-mail). */
+  readonly userLabel = computed(() => {
+    const user = this.auth.user();
+    if (!user) return '?';
+    return user.name?.trim() || user.email.split('@')[0] || '?';
+  });
+
+  /** Mês/ano corrente para o selo do cartão do grupo (pt-BR). */
+  readonly monthLabel = new Intl.DateTimeFormat('pt-BR', {
+    month: 'short',
+    year: 'numeric',
+  })
+    .format(new Date())
+    .replace(' de ', ' ')
+    .toUpperCase();
+
   /** Botão "Você": esconde quando não há conta válida ou nome já está no grupo. */
   readonly youAlreadyIn = computed(() => {
     const name = this.yourName();
@@ -174,6 +190,50 @@ export class GrupoDetailPage implements OnInit {
     const exact = expense.totalAmountInCents % count === 0;
     const amount = Math.floor(expense.totalAmountInCents / count);
     return exact ? formatBrl(amount) : `≈ ${formatBrl(amount)}`;
+  }
+
+  getExpenseCategoryIcon(expense: Expense): string {
+    const desc = expense.description.toLowerCase();
+    if (desc.includes('mercad') || desc.includes('supermercad') || desc.includes('comida') || desc.includes('bebida') || desc.includes('grocery')) return 'local_grocery_store';
+    if (desc.includes('restaurante') || desc.includes('jantar') || desc.includes('almoco') || desc.includes('almoço') || desc.includes('comida') || desc.includes('quiosque') || desc.includes('frutos')) return 'restaurant';
+    if (desc.includes('pedágio') || desc.includes('pedagio') || desc.includes('combust') || desc.includes('gasolina') || desc.includes('posto') || desc.includes('uber') || desc.includes('transporte')) return 'local_gas_station';
+    if (desc.includes('hotel') || desc.includes('pousada') || desc.includes('hospedagem') || desc.includes('airbnb')) return 'hotel';
+    if (desc.includes('uber') || desc.includes('taxi') || desc.includes('99') || desc.includes('carona')) return 'directions_car';
+    if (desc.includes('mercado') || desc.includes('supermercado') || desc.includes('feira')) return 'shopping_cart';
+    return 'receipt_long';
+  }
+
+  getExpenseCategoryColor(expense: Expense): string {
+    const desc = expense.description.toLowerCase();
+    if (desc.includes('mercad') || desc.includes('supermercad') || desc.includes('comida') || desc.includes('bebida') || desc.includes('grocery')) return 'surface-container-high';
+    if (desc.includes('restaurante') || desc.includes('jantar') || desc.includes('almoco') || desc.includes('almoço') || desc.includes('comida') || desc.includes('quiosque') || desc.includes('frutos')) return 'secondary-fixed';
+    if (desc.includes('pedágio') || desc.includes('pedagio') || desc.includes('combust') || desc.includes('gasolina') || desc.includes('posto') || desc.includes('uber') || desc.includes('transporte')) return 'surface-container-high';
+    if (desc.includes('hotel') || desc.includes('pousada') || desc.includes('hospedagem') || desc.includes('airbnb')) return 'primary-fixed';
+    return 'surface-container-high';
+  }
+
+  getExpenseCategoryTextColor(expense: Expense): string {
+    const desc = expense.description.toLowerCase();
+    if (desc.includes('restaurante') || desc.includes('jantar') || desc.includes('almoco') || desc.includes('almoço') || desc.includes('comida') || desc.includes('quiosque') || desc.includes('frutos')) return 'on-secondary-fixed';
+    if (desc.includes('hotel') || desc.includes('pousada') || desc.includes('hospedagem') || desc.includes('airbnb')) return 'on-primary-fixed';
+    return 'primary';
+  }
+
+  getGroupCategory(name: string): { label: string; color: string; textColor: string; icon: string } {
+    const lower = name.toLowerCase();
+    if (lower.includes('praia') || lower.includes('viagem') || lower.includes('ubatuba') || lower.includes('ferias') || lower.includes('férias')) {
+      return { label: 'PRAIA & FÉRIAS', color: 'tertiary-fixed', textColor: 'on-tertiary-fixed', icon: 'calendar_month' };
+    }
+    if (lower.includes('churrasco') || lower.includes('bbq') || lower.includes('carne') || lower.includes('final de semana') || lower.includes('fim de semana')) {
+      return { label: 'FINAL DE SEMANA', color: 'secondary-fixed', textColor: 'on-secondary-fixed', icon: 'calendar_month' };
+    }
+    if (lower.includes('apê') || lower.includes('ape') || lower.includes('casa') || lower.includes('apto') || lower.includes('moradia') || lower.includes('despesas fixas')) {
+      return { label: 'DESPESAS FIXAS', color: 'surface-container-high', textColor: 'on-surface-variant', icon: 'calendar_month' };
+    }
+    if (lower.includes('serra') || lower.includes('montanha') || lower.includes('natureza') || lower.includes('planejamento')) {
+      return { label: 'EM PLANEJAMENTO', color: 'surface-container-high', textColor: 'on-surface-variant', icon: 'calendar_month' };
+    }
+    return { label: 'GRUPO', color: 'surface-container-high', textColor: 'on-surface-variant', icon: 'calendar_month' };
   }
 
   confirmDeleteGroup() {
@@ -475,5 +535,71 @@ export class GrupoDetailPage implements OnInit {
         this.loading.set(false);
       }
     }
+  }
+
+  // Helper methods for template
+  getMyBalance(): number {
+    const user = this.auth.user();
+    if (!user) return 0;
+    const savedName = user.name?.trim();
+    let myName = savedName;
+    if (!myName) {
+      const local = user.email.split('@')[0]?.toLowerCase().trim() ?? '';
+      if (!local) return 0;
+      myName = local.charAt(0).toUpperCase() + local.slice(1);
+    }
+    const myParticipant = this.participants().find(p => p.name.trim().toLowerCase() === myName.toLowerCase());
+    if (!myParticipant) return 0;
+    const myBalance = this.balances().find(b => b.participantId === myParticipant.id);
+    return myBalance?.balanceInCents ?? 0;
+  }
+
+  absMyBalance(): number {
+    return Math.abs(this.getMyBalance());
+  }
+
+  getParticipantSpent(participantId: string): number {
+    return this.expenses()
+      .filter(e => e.payerParticipantId === participantId)
+      .reduce((sum, e) => sum + e.totalAmountInCents, 0);
+  }
+
+  isCurrentUser(participantId: string): boolean {
+    const user = this.auth.user();
+    if (!user) return false;
+    const savedName = user.name?.trim();
+    if (savedName) {
+      return savedName.toLowerCase() === this.participants().find(p => p.id === participantId)?.name.toLowerCase();
+    }
+    const local = user.email.split('@')[0]?.toLowerCase().trim() ?? '';
+    if (!local) return false;
+    const derivedName = local.charAt(0).toUpperCase() + local.slice(1);
+    return derivedName.toLowerCase() === this.participants().find(p => p.id === participantId)?.name.toLowerCase();
+  }
+
+  getParticipantAvatarColor(participantId: string): string {
+    const participant = this.participants().find(p => p.id === participantId);
+    if (!participant) return 'surface-container-high';
+    const colors = ['primary-fixed', 'secondary-fixed', 'tertiary-fixed', 'surface-container-high'];
+    const index = this.participants().findIndex(p => p.id === participantId);
+    return colors[index % colors.length];
+  }
+
+  getParticipantAvatarTextColor(participantId: string): string {
+    const color = this.getParticipantAvatarColor(participantId);
+    if (color === 'primary-fixed') return 'on-primary-fixed';
+    if (color === 'secondary-fixed') return 'on-secondary-fixed';
+    if (color === 'tertiary-fixed') return 'on-tertiary-fixed';
+    return 'on-surface';
+  }
+
+  getParticipantInitial(participantId: string): string {
+    const participant = this.participants().find(p => p.id === participantId);
+    if (!participant) return '?';
+    return participant.name.trim().charAt(0).toUpperCase();
+  }
+
+  openNewExpense() {
+    void this.router.navigate(['/grupos', this.groupId, 'despesas', 'nova']);
   }
 }

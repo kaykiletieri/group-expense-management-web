@@ -37,7 +37,10 @@ describe('ExpenseFormPage: pagador entra no rateio', () => {
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(ExpenseFormPage);
     fixture.detectChanges();
-    http.expectOne('api/groups/g1/participants').flush([
+    http.expectOne('/api/groups').flush([
+      { id: 'g1', name: 'Viagem para Ubatuba', createdAtUtc: '' },
+    ]);
+    http.expectOne('/api/groups/g1/participants').flush([
       { id: 'p1', name: 'Renata', createdAtUtc: '' },
       { id: 'p2', name: 'Lucas', createdAtUtc: '' },
     ]);
@@ -47,21 +50,29 @@ describe('ExpenseFormPage: pagador entra no rateio', () => {
 
   afterEach(() => http.verify());
 
-  it('inclui o pagador automaticamente no rateio', () => {
+  it('pré-seleciona todos os participantes no rateio e define o primeiro como pagador', () => {
     const component = fixture.componentInstance;
-    expect([...component.splitIds()]).toEqual([]);
-
-    component.setPayer('p1');
-
     expect(component.payerId()).toBe('p1');
+    expect([...component.splitIds()]).toEqual(['p1', 'p2']);
+  });
+
+  it('inclui o pagador automaticamente no rateio ao trocar o pagador', () => {
+    const component = fixture.componentInstance;
+
+    component.toggleSplit('p2');
     expect([...component.splitIds()]).toEqual(['p1']);
+
+    component.setPayer('p2');
+
+    expect(component.payerId()).toBe('p2');
+    expect([...component.splitIds()]).toEqual(['p1', 'p2']);
   });
 
   it('permite desmarcar o pagador do rateio depois', () => {
     const component = fixture.componentInstance;
 
-    component.setPayer('p1');
     component.toggleSplit('p1');
+    component.toggleSplit('p2');
 
     expect(component.payerId()).toBe('p1');
     expect([...component.splitIds()]).toEqual([]);

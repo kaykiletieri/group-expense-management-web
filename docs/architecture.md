@@ -16,7 +16,7 @@
 ## Scaffold
 
 O repo é o root da aplicação: `ng new racha-web --directory . --style=scss --ssr=false`
-(ajustar flags na execução). Nome interno provisório `racha-web` até marca final ser decidida.
+(ajustar flags na execução). Nome interno `racha-web`; marca final decidida: **rachaae** (D28).
 
 Scaffold executado com Angular CLI **21.2** (o ambiente usa Node 24.14; a CLI 22 exige
 Node 24.15+ — atualizar Node antes de migrar para a CLI 22, opcional).

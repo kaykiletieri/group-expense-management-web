@@ -1,0 +1,226 @@
+// Utilitários de layout — arsenal mínimo usado pelos templates.
+//
+// Os templates do app (portados dos protótipos Stitch) combinam classes
+// semânticas (.card, .btn-primary, .avatar…) com estes utilitários de
+// composição. Todos os utilitários mapeiam para tokens de _tokens.scss
+// — nada de valores mágicos.
+//
+// Regra de uso: utilitários servem para *compor* linhas/colunas pequenas.
+// Qualquer coisa além disso merece uma classe semântica no _components.scss
+// ou no SCSS da página.
+
+/* ===== Flexbox ===== */
+
+.flex {
+  display: flex;
+  min-width: 0;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.shrink-0,
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+/* Alinhamentos */
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-baseline {
+  align-items: baseline;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+/* ===== Gap (tokens de espaçamento) ===== */
+
+.gap-space-2xs {
+  gap: var(--space-2xs);
+}
+
+.gap-space-xs {
+  gap: var(--space-xs);
+}
+
+.gap-space-sm {
+  gap: var(--space-sm);
+}
+
+/* ===== Tamanhos fixos ===== */
+
+$fixed-sizes: (
+  1: 4px,
+  2: 8px,
+  7: 28px,
+  8: 32px,
+  10: 40px,
+);
+
+@each $name, $size in $fixed-sizes {
+  .w-#{$name} {
+    width: $size;
+  }
+
+  .h-#{$name} {
+    height: $size;
+  }
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* ===== Formas ===== */
+
+.rounded-full {
+  border-radius: var(--radius-full);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+/* ===== Cores utilitárias (superfícies/ícones decorativos) ===== */
+
+.bg-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.bg-primary-container {
+  background: var(--color-primary-container);
+  color: var(--color-on-primary);
+}
+
+.bg-surface {
+  background: var(--color-surface);
+}
+
+.bg-surface-container-lowest {
+  background: var(--color-surface-container-lowest);
+}
+
+.bg-transparent {
+  background: transparent;
+  color: var(--color-on-surface);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-primary-container {
+  color: var(--color-primary-container);
+}
+
+.text-on-primary {
+  color: var(--color-on-primary);
+}
+
+.text-on-primary-container {
+  color: var(--color-on-primary-container);
+}
+
+/* ===== Alinhamento de texto ===== */
+
+.text-right {
+  text-align: right;
+}
+
+/* ===== Bordas "zeradas" para inputs embutidos (linhas add) ===== */
+
+.bare-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: var(--text-body-md-line);
+}
+
+.bare-input::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+.bare-input:focus,
+.bare-input:focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* ===== Visibilidade ===== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Animações utilitárias ===== */
+
+@keyframes utility-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes utility-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-pulse {
+  animation: utility-pulse 1.4s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: utility-spin 900ms linear infinite;
+}
