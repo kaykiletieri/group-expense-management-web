@@ -1,102 +1,292 @@
-// Design tokens — "Bold & Playful Editorial" (ver docs/design-system.md)
+// Design tokens — "Bold & Playful Editorial" (Stitch / Material 3 based)
+// Fonts loaded via index.html (Google Fonts): Space Grotesk, Manrope, Material Symbols Outlined
 
 :root {
-  // Cores
-  --color-canvas: #fbf9f4;
-  --color-surface: #f7f3ea;
-  --color-card: #ffffff;
-  --color-ink: #20211e;
-  --color-ink-soft: #6b6a61;
-  --color-primary: #2546f0;
-  --color-cta: #ff7139;
-  --color-positive: #d9f36a;
-  --color-positive-text: #3e7c2b;
-  --color-error: #d7402b;
+  /* ===== Cores (Material 3 palette from Stitch) ===== */
+  --color-primary: #002ccc;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2546f0;
+  --color-on-primary-container: #d0d5ff;
+  --color-on-primary-fixed: #000f5d;
+  --color-on-primary-fixed-variant: #002cce;
+  --color-primary-fixed: #dee0ff;
+  --color-primary-fixed-dim: #bbc3ff;
+  --color-inverse-primary: #bbc3ff;
 
-  // Bordas e sombras "hard editorial"
+  --color-secondary: #a93800;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fd7038;
+  --color-on-secondary-container: #601c00;
+  --color-on-secondary-fixed: #380d00;
+  --color-on-secondary-fixed-variant: #812900;
+  --color-secondary-fixed: #ffdbcf;
+  --color-secondary-fixed-dim: #ffb59b;
+
+  --color-tertiary: #3e4b00;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #546400;
+  --color-on-tertiary-container: #c9e25c;
+  --color-on-tertiary-fixed: #181e00;
+  --color-on-tertiary-fixed-variant: #3f4c00;
+  --color-tertiary-fixed: #d4ee66;
+  --color-tertiary-fixed-dim: #b9d24d;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-surface: #fbf9f4;
+  --color-on-surface: #1b1c19;
+  --color-surface-variant: #e4e2dd;
+  --color-on-surface-variant: #444656;
+  --color-outline: #757688;
+  --color-outline-variant: #c4c5d9;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f4ee;
+  --color-surface-container: #efeee9;
+  --color-surface-container-high: #e9e8e3;
+  --color-surface-container-highest: #e4e2dd;
+  --color-surface-dim: #dbdad5;
+  --color-surface-bright: #fbf9f4;
+  --color-background: #fbf9f4;
+  --color-on-background: #1b1c19;
+  --color-inverse-surface: #30312d;
+  --color-inverse-on-surface: #f2f1eb;
+  --color-surface-tint: #2647f1;
+
+  /* ===== Aliases legados (para compatibilidade durante transição) ===== */
+  --color-canvas: var(--color-background);
+  --color-card: var(--color-surface-container-lowest);
+  --color-ink: var(--color-on-surface);
+  --color-ink-soft: var(--color-on-surface-variant);
+  --color-cta: var(--color-secondary-container);
+  --color-positive: var(--color-tertiary-fixed);
+  --color-positive-text: var(--color-on-tertiary-fixed);
+
+  /* ===== Bordas e sombras "hard editorial" ===== */
   --border-width: 1.5px;
-  --border-color: var(--color-ink);
-  --shadow-hard: 3px 3px 0 var(--color-ink);
-  --shadow-hard-strong: 4px 4px 0 var(--color-ink);
+  --border-color: var(--color-outline);
+  --border-color-strong: var(--color-on-surface);
+  --divider: var(--color-outline-variant);
+  --shadow-hard: 3px 3px 0 var(--color-on-surface);
+  --shadow-hard-strong: 4px 4px 0 var(--color-on-surface);
+  --shadow-md: 0 4px 12px rgba(27, 28, 25, 0.08);
+  --shadow-lg: 0 8px 24px rgba(27, 28, 25, 0.12);
 
-  // Raio
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-card: 14px;
-  --radius-pill: 999px;
+  /* ===== Raio ===== */
+  --radius-sm: 0.125rem;  /* 2px */
+  --radius-md: 0.25rem;   /* 4px */
+  --radius-lg: 0.5rem;    /* 8px */
+  --radius-xl: 0.75rem;   /* 12px */
+  --radius-full: 9999px;
 
-  // Tipografia
+  /* ===== Tipografia ===== */
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Manrope', sans-serif;
-  --text-display: 2rem;   // 32px
-  --text-h1: 1.625rem;    // 26px
-  --text-h2: 1.25rem;     // 20px
-  --text-body: 1rem;      // 16px
-  --text-small: 0.875rem; // 14px
-  --text-caption: 0.8125rem; // 13px
-  --text-label: 0.6875rem;   // 11px
 
-  // Espaçamento
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-12: 48px;
+  /* Display / Hero */
+  --text-display-hero: 3rem;        /* 48px */
+  --text-display-hero-line: 3.25rem; /* 52px */
+  --text-display-hero-track: -0.04em;
+  --text-display-hero-weight: 700;
 
-  // Layout
-  --container-max: 480px;
-  // Alturas do shell (usadas nas páginas via calc)
+  --text-display-hero-mobile: 2.375rem; /* 38px */
+  --text-display-hero-mobile-line: 2.625rem; /* 42px */
+  --text-display-hero-mobile-track: -0.03em;
+  --text-display-hero-mobile-weight: 700;
+
+  /* Headlines */
+  --text-headline-lg: 2rem;           /* 32px */
+  --text-headline-lg-line: 2.375rem;  /* 38px */
+  --text-headline-lg-track: -0.025em;
+  --text-headline-lg-weight: 700;
+
+  --text-headline-lg-mobile: 1.625rem; /* 26px */
+  --text-headline-lg-mobile-line: 2rem; /* 32px */
+  --text-headline-lg-mobile-track: -0.02em;
+  --text-headline-lg-mobile-weight: 700;
+
+  --text-headline-md: 1.375rem;    /* 22px */
+  --text-headline-md-line: 1.75rem; /* 28px */
+  --text-headline-md-track: -0.02em;
+  --text-headline-md-weight: 600;
+
+  --text-headline-sm: 1.125rem;    /* 18px */
+  --text-headline-sm-line: 1.5rem;  /* 24px */
+  --text-headline-sm-track: -0.015em;
+  --text-headline-sm-weight: 600;
+
+  /* Body */
+  --text-body-lg: 1rem;          /* 16px */
+  --text-body-lg-line: 1.5rem;   /* 24px */
+  --text-body-lg-track: -0.01em;
+  --text-body-lg-weight: 500;
+
+  --text-body-md: 0.875rem;      /* 14px */
+  --text-body-md-line: 1.25rem;  /* 20px */
+  --text-body-md-track: -0.005em;
+  --text-body-md-weight: 500;
+
+  --text-body-sm: 0.75rem;       /* 12px */
+  --text-body-sm-line: 1rem;     /* 16px */
+  --text-body-sm-track: 0em;
+  --text-body-sm-weight: 500;
+
+  /* Labels */
+  --text-label-md: 0.8125rem;    /* 13px */
+  --text-label-md-line: 1rem;    /* 16px */
+  --text-label-md-track: 0.01em;
+  --text-label-md-weight: 600;
+
+  --text-label-caps: 0.6875rem;  /* 11px */
+  --text-label-caps-line: 0.875rem; /* 14px */
+  --text-label-caps-track: 0.08em;
+  --text-label-caps-weight: 700;
+
+  /* Currency */
+  --text-currency-display: 2.5rem;    /* 40px */
+  --text-currency-display-line: 2.75rem; /* 44px */
+  --text-currency-display-track: -0.03em;
+  --text-currency-display-weight: 700;
+
+  --text-currency-md: 1.25rem;     /* 20px */
+  --text-currency-md-line: 1.5rem;  /* 24px */
+  --text-currency-md-track: -0.02em;
+  --text-currency-md-weight: 700;
+
+  /* ===== Espaçamento ===== */
+  --space-2xs: 0.125rem;  /* 2px */
+  --space-xs: 0.25rem;    /* 4px */
+  --space-sm: 0.5rem;     /* 8px */
+  --space-md: 1rem;       /* 16px */
+  --space-lg: 1.5rem;     /* 24px */
+  --space-xl: 2rem;       /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+
+  --gutter-sm: 0.75rem;   /* 12px */
+  --gutter: 1rem;         /* 16px */
+  --gutter-lg: 1.5rem;    /* 24px */
+
+  --margin-mobile: 1rem;      /* 16px */
+  --margin-tablet: 2rem;      /* 32px */
+  --margin: 1.25rem;          /* 20px */
+
+  /* ===== Layout ===== */
+  /* Container mobile centralizado; regula em telas maiores via media queries
+   (D18): 680px a partir de 768px e 1160px a partir de 1120px. */
+--container-max: 480px;
   --header-h: 60px;
   --bottom-nav-h: 64px;
-  // Largura da sidebar (desktop, ≥768px)
   --sidebar-w: 240px;
 
-  // Transições
+  /* ===== Transições ===== */
   --press-shift: 1px;
   --transition-fast: 140ms ease;
+  --transition-normal: 200ms ease;
 
-  // Anéis de foco (substituem o outline nativo do navegador)
+  /* ===== Foco ===== */
   --focus-ring: 0 0 0 3px rgba(37, 70, 240, 0.16);
-  --focus-ring-error: 0 0 0 3px rgba(215, 64, 43, 0.14);
+  --focus-ring-error: 0 0 0 3px rgba(186, 26, 26, 0.14);
+
+  /* ===== Estados de superfície/interação ===== */
+  --hover-tint: var(--color-surface-container-high);
+  --backdrop: rgba(27, 28, 25, 0.5);
+  --scrollbar-thumb: rgba(27, 28, 25, 0.25);
   --placeholder: #a3a29a;
 
-  // Extras de superfície/interação (tema dependente)
-  --divider: rgba(32, 33, 30, 0.12);
-  --hover-tint: #f2ede1;
-  --backdrop: rgba(32, 33, 30, 0.5);
-  --scrollbar-thumb: rgba(32, 33, 30, 0.25);
-
-  // Texto usado SOBRE cores fortes (limão, laranja, cobalto)
-  --on-accent: #20211e;
-  // Texto usado SOBRE o botão de erro (branco no claro e no escuro)
+  /* Texto sobre cores fortes (limão, laranja, cobalto) */
+  --on-accent: var(--color-on-surface);
   --on-danger: #ffffff;
 }
 
-/* Tema escuro: o documento recebe data-theme="auto|light|dark" em <html> (D19).
-   Paleira fria/neutra: "ink" vira quase-branco e deriva automaticamente as
-   bordas/sombras hard no escuro. Acentos (limão/laranja) ficam intactos e usam
-   texto escuro (--on-accent) para contraste. */
+/* Tema escuro: controlado via data-theme no <html> (D19) */
 [data-theme='dark'] {
-  --color-canvas: #15171b;
-  --color-surface: #1d2025;
-  --color-card: #24272d;
-  --color-ink: #f2f4f6;
-  --color-ink-soft: #a2a8b0;
-  --color-primary: #8ea3ff;
-  --color-error: #e0503f;
+  --color-primary: #7a92ff;
+  --color-on-primary: #000f5d;
+  --color-primary-container: #5268ff;
+  --color-on-primary-container: #000f5d;
+  --color-on-primary-fixed: #dee0ff;
+  --color-on-primary-fixed-variant: #bbc3ff;
+  --color-primary-fixed: #002ccc;
+  --color-primary-fixed-dim: #002cce;
+  --color-inverse-primary: #2546f0;
 
-  --focus-ring: 0 0 0 3px rgba(142, 163, 255, 0.35);
-  --focus-ring-error: 0 0 0 3px rgba(224, 80, 63, 0.3);
+  --color-secondary: #ffb59b;
+  --color-on-secondary: #380d00;
+  --color-secondary-container: #ff8c5a;
+  --color-on-secondary-container: #380d00;
+  --color-on-secondary-fixed: #ffdbcf;
+  --color-on-secondary-fixed-variant: #ffb59b;
+  --color-secondary-fixed: #812900;
+  --color-secondary-fixed-dim: #a93800;
+
+  --color-tertiary: #c9e25c;
+  --color-on-tertiary: #181e00;
+  --color-tertiary-container: #b9d24d;
+  --color-on-tertiary-container: #181e00;
+  --color-on-tertiary-fixed: #d4ee66;
+  --color-on-tertiary-fixed-variant: #b9d24d;
+  --color-tertiary-fixed: #3e4b00;
+  --color-tertiary-fixed-dim: #546400;
+
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+
+  --color-surface: #1b1c19;
+  --color-on-surface: #f2f1eb;
+  --color-surface-variant: #444656;
+  --color-on-surface-variant: #c4c5d9;
+  --color-outline: #8e90a2;
+  --color-outline-variant: #444656;
+  --color-surface-container-lowest: #151613;
+  --color-surface-container-low: #22231f;
+  --color-surface-container: #2a2b26;
+  --color-surface-container-high: #343530;
+  --color-surface-container-highest: #3e3f3a;
+  --color-surface-dim: #1b1c19;
+  --color-surface-bright: #444656;
+  --color-background: #1b1c19;
+  --color-on-background: #f2f1eb;
+  --color-inverse-surface: #f2f1eb;
+  --color-inverse-on-surface: #1b1c19;
+  --color-surface-tint: #7a92ff;
+
+  /* Aliases legados */
+  --color-canvas: var(--color-background);
+  --color-card: var(--color-surface-container-lowest);
+  --color-ink: var(--color-on-surface);
+  --color-ink-soft: var(--color-on-surface-variant);
+  --color-cta: var(--color-secondary-container);
+  --color-positive: var(--color-tertiary-fixed);
+  --color-positive-text: var(--color-on-tertiary-fixed);
+
+  --border-color: var(--color-outline);
+  --border-color-strong: var(--color-on-surface);
+  --divider: var(--color-outline-variant);
+  --shadow-hard: 3px 3px 0 var(--color-on-surface);
+  --shadow-hard-strong: 4px 4px 0 var(--color-on-surface);
+
+  --focus-ring: 0 0 0 3px rgba(122, 146, 255, 0.35);
+  --focus-ring-error: 0 0 0 3px rgba(255, 180, 171, 0.3);
   --placeholder: #6e747d;
-
-  --divider: rgba(255, 255, 255, 0.1);
-  --hover-tint: #2c2f36;
+  --hover-tint: var(--color-surface-container-high);
   --backdrop: rgba(0, 0, 0, 0.65);
   --scrollbar-thumb: rgba(255, 255, 255, 0.22);
+  --on-accent: var(--color-on-surface);
+  --on-danger: #f2f1eb;
+}
+/* Larguras de container responsivas (D18) */
+@media (min-width: 768px) {
+  :root {
+    --container-max: 680px;
+  }
+}
 
-  --on-accent: #1a1c20;
-  --on-danger: #f2f4f6;
+@media (min-width: 1120px) {
+  :root {
+    --container-max: 1160px;
+  }
 }
